@@ -290,7 +290,8 @@ reading <- function(dir.c,
     } else if (output.c == "exp") {
       
       sam_all.vc <- sort(unique(Reduce("union", lapply(eset.ls, Biobase::sampleNames))))
-      sam_var.vc <- sort(unique(Reduce("intersect", lapply(eset.ls, Biobase::varLabels))))
+      sam_var.vc <- setdiff(sort(unique(Reduce("intersect", lapply(eset.ls, Biobase::varLabels)))),
+                            c("sampleType", "injectionOrder", "batch"))
       
       first.eset <- eset.ls[[1]]
       sam.df <- Biobase::pData(first.eset)[, sam_var.vc, drop = FALSE]

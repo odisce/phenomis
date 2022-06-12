@@ -86,7 +86,7 @@ correcting(
 \arguments{
 \item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}}
 
-\item{method.vc}{character of length 1 or the total number of datasets: method(s) to be used for each dataset (either 'serrf' or 'loess'); in case the parameter is of length 1 and x contains multiple datasets, the same method will be used for all datasets}
+\item{method.vc}{character of length 1 or the total number of datasets: method(s) to be used for each dataset (either 'serrf' or 'loess'); for the 'serrf' approach, the seed is internally set to 123 for reproducibility; in case the parameter is of length 1 and x contains multiple datasets, the same method will be used for all datasets}
 
 \item{reference.vc}{character of length 1 or the total number of datasets: sample type to be used as reference for
 the correction (as indicated in the 'sampleType' column from the
@@ -129,5 +129,6 @@ Signal drift and batch effect correction
 \examples{
 sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
 sacurine.se <- correcting(sacurine.se)
+
 # MultiDataSet (to be done)
 }

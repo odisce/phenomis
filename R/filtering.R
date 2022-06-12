@@ -22,12 +22,22 @@ setMethod("filtering", signature(x = "MultiAssayExperiment"),
               if (report.c != "none")
                 message("Filtering the '", set.c, "' dataset...")
               
-              x[[set.c]] <- filtering(x = x[[set.c]],
-                                      class.c = class.c,
-                                      max_na_prop.n = max_na_prop.n,
-                                      min_variance.n = min_variance.n,
-                                      dims.vc = dims.vc,
-                                      report.c = report_set.c)
+              set.se <- x[[set.c]]
+              
+              if (class.c != "")
+                colData(set.se)[[class.c]] <- colData(x[, , set.c])[[class.c]]
+              
+              set.se <- filtering(x = set.se,
+                                  class.c = class.c,
+                                  max_na_prop.n = max_na_prop.n,
+                                  min_variance.n = min_variance.n,
+                                  dims.vc = dims.vc,
+                                  report.c = report_set.c)
+              
+              if (class.c != "")
+                colData(set.se)[[class.c]] <- NULL
+              
+              x[[set.c]] <- set.se
               
             }
             
@@ -61,7 +71,7 @@ setMethod("filtering", signature(x = "SummarizedExperiment"),
             
             filt_names.ls <- .filtering(data.mn = t(SummarizedExperiment::assay(x)),
                                         samp.df = SummarizedExperiment::colData(x),
-                                        set.c = x@metadata$experimentData@title,
+                                        set.c = "",
                                         class.c = class.c,
                                         max_na_prop.n = max_na_prop.n,
                                         min_variance.n = min_variance.n,
@@ -236,11 +246,11 @@ setMethod("filtering", signature(x = "ExpressionSet"),
       stop("All ", dim.c, " would be discarded (because of too many missing values or too low variances). Please check your dataset or your thresholds.")
     
     if (dim.c == "samples") {
-      dimnames.ls[[1]] <- dimnames.ls[[1]][!filter.vl]
       discard.c <- paste(dimnames.ls[[1]][filter.vl], collapse = ", ")
+      dimnames.ls[[1]] <- dimnames.ls[[1]][!filter.vl]
     } else {
-      dimnames.ls[[2]] <- dimnames.ls[[2]][!filter.vl]
       discard.c <- paste(dimnames.ls[[2]][filter.vl], collapse = ", ")
+      dimnames.ls[[2]] <- dimnames.ls[[2]][!filter.vl]
     }
     
     if (verbose.l)

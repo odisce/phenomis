@@ -82,14 +82,16 @@ setGeneric("annotating",
 #' @examples
 #' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
 #' sacurine.se <- correcting(sacurine.se)
-#' sacurine.se <- sacurine.se[, pData(sacurine.se)[, "sampleType"] != "pool"]
+#' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 #' sacurine.se <- transforming(sacurine.se)
-#' sacurine.se <- sacurine.se[, sampleNames(sacurine.se) != "HU_neg_096_b2"]
+#' sacurine.se <- sacurine.se[, colnames(sacurine.se) != "HU_neg_096_b2"]
 #' sacurine.se <- clustering(sacurine.se)
-#' utils::head(fData(sacurine.se))
-#' # MultiDataSet
-#' prometis.mset <- reading(system.file("extdata/prometis/", package="phenomis"))
-#' prometis.mset <- clustering(prometis.mset, clusters.vi = c(3, 3))
+#' utils::head(rowData(sacurine.se))
+#' 
+#' # MultiAssayExperiment
+#' 
+#' prometis.mae <- reading(system.file("extdata/prometis/", package="phenomis"))
+#' prometis.mae <- clustering(prometis.mae, clusters.vi = c(3, 3))
 setGeneric("clustering",
            function(x,
                     dissym.c = c("euclidean",
@@ -158,6 +160,7 @@ setGeneric("clustering",
 #' @examples
 #' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
 #' sacurine.se <- correcting(sacurine.se)
+#' 
 #' # MultiDataSet (to be done)
 setGeneric("correcting",
            function(x,
@@ -209,8 +212,23 @@ setGeneric("correcting",
 #' filtering(sacurine.se)
 #' filtering(sacurine.se, class.c = "gender")
 #' filtering(sacurine.se, class.c = "sampleType")
+#' 
+#' # MultiAssayExperiment
+#' 
+#' prometis.mae <- reading(system.file("extdata/prometis", package="phenomis"))
+#' filtering(prometis.mae)
+#' for (set.c in names(prometis.mae)) {
+#' set.se <- prometis.mae[[set.c]]
+#' assay.mn <- assay(set.se)
+#' assay.mn[assay.mn < quantile(c(assay.mn), 0.2)] <- NA
+#' assay(set.se) <- assay.mn
+#' prometis.mae[[set.c]] <- set.se
+#' }
+#' filtering(prometis.mae)
+#' 
 #' # MultiDataSet
-#' prometis.mset <- reading(system.file("extdata/prometis", package="phenomis"))
+#' 
+#' prometis.mset <- reading(system.file("extdata/prometis", package="phenomis"), output.c = "set")
 #' filtering(prometis.mset)
 #' for (set.c in names(prometis.mset)) {
 #' eset <- prometis.mset[[set.c]]
@@ -292,7 +310,15 @@ setGeneric("filtering",
 #'                                                      return("fifty")}},
 #'                                                  FUN.VALUE = character(1))
 #' sacurine.se <- hypotesting(sacurine.se, "anova", "ageGroup")
-#' prometis.mset <- reading(system.file("extdata/prometis", package="phenomis"))
+#' 
+#' # MultiAssayExperiment
+#' 
+#' prometis.mae <- reading(system.file("extdata/prometis", package="phenomis"))
+#' prometis.mae <- hypotesting(prometis.mae, "limma", "gene")
+#' 
+#' # MultiDataSet
+#' 
+#' prometis.mset <- reading(system.file("extdata/prometis", package="phenomis"), output.c = "set")
 #' prometis.mset <- hypotesting(prometis.mset, "limma", "gene")
 setGeneric("hypotesting",
            function(x,
@@ -359,6 +385,7 @@ setGeneric("hypotesting",
 #' sacurine.se <- inspecting(sacurine.se)
 #' sacurine.se <- transforming(sacurine.se)
 #' sacurine.se <- inspecting(sacurine.se)
+#' 
 #' # MultiAssayExperiment
 #' prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
 #'\dontrun{
@@ -401,6 +428,7 @@ setGeneric("inspecting",
 #' sacurine.se <- sacurine.se[, colnames(sacurine.se) != 'HU_neg_096_b2']
 #' sacurine.se <- transforming(sacurine.se, method.vc = "log10")
 #' norm.se <- normalizing(sacurine.se, method.vc = "pqn")
+#' 
 #' # MultiDataSet
 
 setGeneric("normalizing",
@@ -494,9 +522,9 @@ setGeneric("reducing",
 #' sacurine.se <- correcting(sacurine.se)
 #' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 #' sacurine.se <- transforming(sacurine.se)
-#' # MultiDataSet
+#' # MultiAssayExperiment
 #' prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
-#' prometis.mset <- transforming(prometis.mset)
+#' prometis.mae <- transforming(prometis.mae)
 setGeneric("transforming",
            function(x,
                     method.vc = c("log2", "log10", "sqrt")[1],

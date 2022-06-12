@@ -138,6 +138,7 @@ sacurine.se <- correcting(sacurine.se)
 sacurine.se <- inspecting(sacurine.se)
 sacurine.se <- transforming(sacurine.se)
 sacurine.se <- inspecting(sacurine.se)
+
 # MultiAssayExperiment
 prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
 \dontrun{

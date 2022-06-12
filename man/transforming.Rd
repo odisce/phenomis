@@ -59,7 +59,7 @@ sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", packa
 sacurine.se <- correcting(sacurine.se)
 sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 sacurine.se <- transforming(sacurine.se)
-# MultiDataSet
+# MultiAssayExperiment
 prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
-prometis.mset <- transforming(prometis.mset)
+prometis.mae <- transforming(prometis.mae)
 }

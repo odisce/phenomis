@@ -60,5 +60,6 @@ sacurine.se <- reading(file.path(system.file(package = "phenomis"),
 sacurine.se <- sacurine.se[, colnames(sacurine.se) != 'HU_neg_096_b2']
 sacurine.se <- transforming(sacurine.se, method.vc = "log10")
 norm.se <- normalizing(sacurine.se, method.vc = "pqn")
+
 # MultiDataSet
 }

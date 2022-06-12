@@ -46,8 +46,8 @@ invisible ggplot2 object
 Pie with ggplot2
 }
 \examples{
-sacurine.eset <- phenomis::reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
-sacurine_pda.df <- Biobase::pData(sacurine.eset)
+sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine_pda.df <- colData(sacurine.se)
 sacurine_pda.df <- sacurine_pda.df[!grepl("QC", rownames(sacurine_pda.df)), ]
 gg_pie(sacurine_pda.df, y.c = "gender", label.c = "value")
 }

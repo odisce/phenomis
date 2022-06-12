@@ -46,16 +46,16 @@ invisible grid object
 Venn diagram with VennDiagram
 }
 \examples{
-sacurine.eset <- phenomis::reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
-sacurine.eset <- phenomis::correcting(sacurine.eset, figure.c = 'none')
-sacurine.eset <- sacurine.eset[, Biobase::pData(sacurine.eset)[, "sampleType"] != "pool"]
-sacurine.eset <- phenomis::transforming(sacurine.eset)
-sacurine.eset <- sacurine.eset[, Biobase::sampleNames(sacurine.eset) != "HU_neg_096_b2"]
+sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- correcting(sacurine.se, figure.c = 'none')
+sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
+sacurine.se <- transforming(sacurine.se)
+sacurine.se <- sacurine.se[, colnames(sacurine.se) != "HU_neg_096_b2"]
 # Student's T test
-sacurine.eset <- phenomis::hypotesting(sacurine.eset, "ttest", "gender")
+sacurine.se <- hypotesting(sacurine.se, "ttest", "gender")
 # Wilcoxon T test
-sacurine.eset <- phenomis::hypotesting(sacurine.eset, "wilcoxon", "gender")
-signif.ls <- list(ttest = which(Biobase::fData(sacurine.eset)[, "ttest_gender_Female.Male_signif"] > 0),
-wilcoxon =  which(Biobase::fData(sacurine.eset)[, "wilcoxon_gender_Female.Male_signif"] > 0))
+sacurine.se <- hypotesting(sacurine.se, "wilcoxon", "gender")
+signif.ls <- list(ttest = which(rowData(sacurine.se)[, "ttest_gender_Female.Male_signif"] > 0),
+wilcoxon =  which(rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_signif"] > 0))
 vennplot(signif.ls, label_col.c = "black", title.c = "Signif. features\nwith Student or Wilcoxon tests")
 }

@@ -72,7 +72,7 @@ imported to/exported from R as tabular files:
 The following methods are available:
 
 | Methods                                         | Description                                         | Returned class                    |
-|--------------------------|---------------------------|-------------------|
+|-------------------------------------------------|-----------------------------------------------------|-----------------------------------|
 | **Constructors**                                |                                                     |                                   |
 | **`SummarizedExperiment`**                      | Create a SummarizedExperiment object                | `SummarizedExperiment`            |
 | **`makeSummarizedExperimentFromExpressionSet`** |                                                     | `SummarizedExperiment`            |
@@ -95,7 +95,7 @@ The following methods are available ([Ramos et al.,
 2016](https://doi.org/10.1158/0008-5472.CAN-17-0344)):
 
 | Methods                    | Description                                                          | Returned class           |
-|------------------|-------------------------------------|------------------|
+|----------------------------|----------------------------------------------------------------------|--------------------------|
 | **Constructors**           |                                                                      |                          |
 | **`MultiAssayExperiment`** | Create a MultiAssayExperiment object                                 | `MultiAssayExperiment`   |
 | **`ExperimentList`**       | Create an ExperimentList from a List or list                         | `ExperimentList`         |
@@ -137,7 +137,7 @@ A legacy representation of ID-based datasets, supported for convenience
 and supplanted by `SummarizedExperiment` and `MultiAssayExperiment`.
 
 | Biobase methods        | Description                                                     |
-|---------------------|---------------------------------------------------|
+|------------------------|-----------------------------------------------------------------|
 | **exprs(eset)**        | 'variable times samples' numeric matrix - dataMatrix            |
 | **pData(eset)**        | sample metadata data frame - sampleMetadata                     |
 | **fData(eset)**        | variable metadata data frame - variableMetadata                 |
@@ -150,7 +150,7 @@ and supplanted by `SummarizedExperiment` and `MultiAssayExperiment`.
 ### **MultiDataSet** class for multiple datasets
 
 | MultiDataSet methods | Description                                      | Returned class       |
-|------------------|------------------------------------|------------------|
+|----------------------|--------------------------------------------------|----------------------|
 | **as.list(mae)**     | Get the list of data matrices                    | List                 |
 | **mds2mae**          | Convert a MultiDataSet to a MultiAssayExperiment | MultiAssayExperiment |
 

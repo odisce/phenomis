@@ -1,4 +1,7 @@
 .Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+tests/testthat/*.pdf
 vignettes/figures/temp/
-archive/
 vignettes/phenomis.html

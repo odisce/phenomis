@@ -42,18 +42,28 @@ setMethod("hypotesting", signature(x = "MultiAssayExperiment"),
               if (report.c != "none")
                 message("Hypothesis testing for the '", set.c, "' dataset:")
               
-              x[[set.c]] <- hypotesting(x = x[[set.c]],
-                                        test.c = test.c,
-                                        factor_names.vc = factor_names.vc,
-                                        factor_levels.ls = factor_levels.ls,
-                                        adjust.c = adjust.c,
-                                        adjust_thresh.n = adjust_thresh.n,
-                                        signif_maxprint.i = signif_maxprint.i,
-                                        title.c = main.c,
-                                        display_signif.l = display_signif.l,
-                                        prefix.c = prefix.c,
-                                        figure.c = figure_set.c,
-                                        report.c = report_set.c)
+              set.se <- x[[set.c]]
+              
+              for (factor.c in factor_names.vc)
+                colData(set.se)[[factor.c]] <- colData(x[, , set.c])[[factor.c]]
+              
+              set.se <- hypotesting(x = set.se,
+                                    test.c = test.c,
+                                    factor_names.vc = factor_names.vc,
+                                    factor_levels.ls = factor_levels.ls,
+                                    adjust.c = adjust.c,
+                                    adjust_thresh.n = adjust_thresh.n,
+                                    signif_maxprint.i = signif_maxprint.i,
+                                    title.c = main.c,
+                                    display_signif.l = display_signif.l,
+                                    prefix.c = prefix.c,
+                                    figure.c = figure_set.c,
+                                    report.c = report_set.c)
+              
+              for (factor.c in factor_names.vc)
+                colData(set.se)[[factor.c]] <- NULL
+              
+              x[[set.c]] <- set.se
               
             }
             

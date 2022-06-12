@@ -20,12 +20,11 @@
 #' @return invisible ggplot2 object
 #' @export
 #' @examples
-#' prometis.mset <- phenomis::reading(system.file("extdata/prometis", package = "phenomis"))
-#' dims.mn <- sapply(names(prometis.mset), function(set.c) { Biobase::dims(prometis.mset[[set.c]])})
+#' prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
+#' dims.mn <- sapply(names(prometis.mae), function(set.c) { dim(prometis.mae[[set.c]])})
 #' dims.mn <- t(dims.mn)
 #' colnames(dims.mn) <- c("Features", "Samples")
 #' gg_barplot(dims.mn, title.c = "ProMetIS data")
-#' prometis_dims.ls <- Biobase::dims(prometis.mset)
 gg_barplot <- function(data.mn,
                        row_levels.vc = NA,
                        col_levels.vc = NA,
@@ -204,12 +203,12 @@ gg_barplot <- function(data.mn,
 #' @return character vector of outlier labels (same dimension as the number of rows from data.tb)
 #' @export
 #' @examples
-#' sacurine.eset <- phenomis::reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
-#' sacurine_pda.df <- Biobase::pData(sacurine.eset)
+#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine_pda.df <- as.data.frame(colData(sacurine.se))
 #' sacurine_pda.df <- sacurine_pda.df[!grepl("QC", rownames(sacurine_pda.df)), ]
-#' phenomis::gg_boxplot(sacurine_pda.df, y.c = "age")
-#' phenomis::gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender")
-#' phenomis::gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender", label.vc = rownames(sacurine_pda.df))
+#' gg_boxplot(sacurine_pda.df, y.c = "age")
+#' gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender")
+#' gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender", label.vc = rownames(sacurine_pda.df))
 gg_boxplot <- function(data.tb,
                        x.c = "",
                        y.c = "",
@@ -352,8 +351,8 @@ gg_boxplot <- function(data.tb,
 #' @return invisible ggplot2 object
 #' @export
 #' @examples
-#' sacurine.eset <- phenomis::reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
-#' sacurine_pda.df <- Biobase::pData(sacurine.eset)
+#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine_pda.df <- colData(sacurine.se)
 #' sacurine_pda.df <- sacurine_pda.df[!grepl("QC", rownames(sacurine_pda.df)), ]
 #' gg_pie(sacurine_pda.df, y.c = "gender", label.c = "value")
 gg_pie <- function(data.tb,
@@ -498,28 +497,28 @@ gg_pie <- function(data.tb,
 #' @return invisible ggplot2 object
 #' @export
 #' @examples
-#' sacurine.eset <- phenomis::reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
-#' sacurine.eset <- phenomis::correcting(sacurine.eset, figure.c = "none")
-#' sacurine.eset <- sacurine.eset[, Biobase::pData(sacurine.eset)[, "sampleType"] != "pool"]
-#' sacurine.eset <- phenomis::transforming(sacurine.eset)
-#' sacurine.eset <- phenomis::hypotesting(sacurine.eset, test.c = "wilcoxon",
+#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- correcting(sacurine.se, figure.c = "none")
+#' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
+#' sacurine.se <- transforming(sacurine.se)
+#' sacurine.se <- hypotesting(sacurine.se, test.c = "wilcoxon",
 #'                                       factor_names.vc = "gender",
 #'                                       figure.c = "none", report.c = "none")
-#' fold.vn <- Biobase::fData(sacurine.eset)[, "wilcoxon_gender_Female.Male_diff"]
-#' fdr.vn <- Biobase::fData(sacurine.eset)[, "wilcoxon_gender_Female.Male_BH"]
-#' feat.vc <- Biobase::featureNames(sacurine.eset)
-#' phenomis::gg_volcanoplot(fold.vn,
-#'                          fdr.vn,
-#'                          label.vc = feat.vc,
-#'                          adjust_method.c = "BH")
+#' fold.vn <- rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_diff"]
+#' fdr.vn <- rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_BH"]
+#' feat.vc <- rownames(sacurine.se)
+#' gg_volcanoplot(fold.vn,
+#'                fdr.vn,
+#'                label.vc = feat.vc,
+#'                adjust_method.c = "BH")
 #' feat_signif.vc <-  sapply(seq_along(feat.vc),
 #'                           function(feat.i)
 #'                            ifelse(fdr.vn[feat.i] <= 0.05, feat.vc[feat.i], ""))
-#' phenomis::gg_volcanoplot(fold.vn,
-#'                          fdr.vn,
-#'                          label.vc = feat_signif.vc,
-#'                          adjust_method.c = "BH",
-#'                          figure.c = "interactive")
+#' gg_volcanoplot(fold.vn,
+#'                fdr.vn,
+#'                label.vc = feat_signif.vc,
+#'                adjust_method.c = "BH",
+#'                figure.c = "interactive")
 gg_volcanoplot <- function(fold_change.vn,
                            adjusted_pvalue.vn,
                            adjust_method.c = "",
@@ -684,17 +683,17 @@ gg_volcanoplot <- function(fold_change.vn,
 #' @return invisible grid object
 #' @export
 #' @examples
-#' sacurine.eset <- phenomis::reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
-#' sacurine.eset <- phenomis::correcting(sacurine.eset, figure.c = 'none')
-#' sacurine.eset <- sacurine.eset[, Biobase::pData(sacurine.eset)[, "sampleType"] != "pool"]
-#' sacurine.eset <- phenomis::transforming(sacurine.eset)
-#' sacurine.eset <- sacurine.eset[, Biobase::sampleNames(sacurine.eset) != "HU_neg_096_b2"]
+#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- correcting(sacurine.se, figure.c = 'none')
+#' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
+#' sacurine.se <- transforming(sacurine.se)
+#' sacurine.se <- sacurine.se[, colnames(sacurine.se) != "HU_neg_096_b2"]
 #' # Student's T test
-#' sacurine.eset <- phenomis::hypotesting(sacurine.eset, "ttest", "gender")
+#' sacurine.se <- hypotesting(sacurine.se, "ttest", "gender")
 #' # Wilcoxon T test
-#' sacurine.eset <- phenomis::hypotesting(sacurine.eset, "wilcoxon", "gender")
-#' signif.ls <- list(ttest = which(Biobase::fData(sacurine.eset)[, "ttest_gender_Female.Male_signif"] > 0),
-#' wilcoxon =  which(Biobase::fData(sacurine.eset)[, "wilcoxon_gender_Female.Male_signif"] > 0))
+#' sacurine.se <- hypotesting(sacurine.se, "wilcoxon", "gender")
+#' signif.ls <- list(ttest = which(rowData(sacurine.se)[, "ttest_gender_Female.Male_signif"] > 0),
+#' wilcoxon =  which(rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_signif"] > 0))
 #' vennplot(signif.ls, label_col.c = "black", title.c = "Signif. features\nwith Student or Wilcoxon tests")
 vennplot <- function(input.ls,
                      palette.vc = RColorBrewer::brewer.pal(9, "Set1")[1:5],

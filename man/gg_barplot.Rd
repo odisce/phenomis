@@ -54,10 +54,9 @@ invisible ggplot2 object
 Barplot with ggplot2
 }
 \examples{
-prometis.mset <- phenomis::reading(system.file("extdata/prometis", package = "phenomis"))
-dims.mn <- sapply(names(prometis.mset), function(set.c) { Biobase::dims(prometis.mset[[set.c]])})
+prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
+dims.mn <- sapply(names(prometis.mae), function(set.c) { dim(prometis.mae[[set.c]])})
 dims.mn <- t(dims.mn)
 colnames(dims.mn) <- c("Features", "Samples")
 gg_barplot(dims.mn, title.c = "ProMetIS data")
-prometis_dims.ls <- Biobase::dims(prometis.mset)
 }

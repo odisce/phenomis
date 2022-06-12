@@ -127,12 +127,14 @@ Hierarchical clustering of both samples and variables
 \examples{
 sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
 sacurine.se <- correcting(sacurine.se)
-sacurine.se <- sacurine.se[, pData(sacurine.se)[, "sampleType"] != "pool"]
+sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 sacurine.se <- transforming(sacurine.se)
-sacurine.se <- sacurine.se[, sampleNames(sacurine.se) != "HU_neg_096_b2"]
+sacurine.se <- sacurine.se[, colnames(sacurine.se) != "HU_neg_096_b2"]
 sacurine.se <- clustering(sacurine.se)
-utils::head(fData(sacurine.se))
-# MultiDataSet
-prometis.mset <- reading(system.file("extdata/prometis/", package="phenomis"))
-prometis.mset <- clustering(prometis.mset, clusters.vi = c(3, 3))
+utils::head(rowData(sacurine.se))
+
+# MultiAssayExperiment
+
+prometis.mae <- reading(system.file("extdata/prometis/", package="phenomis"))
+prometis.mae <- clustering(prometis.mae, clusters.vi = c(3, 3))
 }

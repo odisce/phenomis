@@ -65,26 +65,26 @@ invisible ggplot2 object
 Volcano plot with ggplot2
 }
 \examples{
-sacurine.eset <- phenomis::reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
-sacurine.eset <- phenomis::correcting(sacurine.eset, figure.c = "none")
-sacurine.eset <- sacurine.eset[, Biobase::pData(sacurine.eset)[, "sampleType"] != "pool"]
-sacurine.eset <- phenomis::transforming(sacurine.eset)
-sacurine.eset <- phenomis::hypotesting(sacurine.eset, test.c = "wilcoxon",
+sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- correcting(sacurine.se, figure.c = "none")
+sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
+sacurine.se <- transforming(sacurine.se)
+sacurine.se <- hypotesting(sacurine.se, test.c = "wilcoxon",
                                       factor_names.vc = "gender",
                                       figure.c = "none", report.c = "none")
-fold.vn <- Biobase::fData(sacurine.eset)[, "wilcoxon_gender_Female.Male_diff"]
-fdr.vn <- Biobase::fData(sacurine.eset)[, "wilcoxon_gender_Female.Male_BH"]
-feat.vc <- Biobase::featureNames(sacurine.eset)
-phenomis::gg_volcanoplot(fold.vn,
-                         fdr.vn,
-                         label.vc = feat.vc,
-                         adjust_method.c = "BH")
+fold.vn <- rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_diff"]
+fdr.vn <- rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_BH"]
+feat.vc <- rownames(sacurine.se)
+gg_volcanoplot(fold.vn,
+               fdr.vn,
+               label.vc = feat.vc,
+               adjust_method.c = "BH")
 feat_signif.vc <-  sapply(seq_along(feat.vc),
                           function(feat.i)
                            ifelse(fdr.vn[feat.i] <= 0.05, feat.vc[feat.i], ""))
-phenomis::gg_volcanoplot(fold.vn,
-                         fdr.vn,
-                         label.vc = feat_signif.vc,
-                         adjust_method.c = "BH",
-                         figure.c = "interactive")
+gg_volcanoplot(fold.vn,
+               fdr.vn,
+               label.vc = feat_signif.vc,
+               adjust_method.c = "BH",
+               figure.c = "interactive")
 }
