@@ -16,9 +16,6 @@ inspecting(
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
   plot_dims.l = TRUE,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -31,9 +28,6 @@ inspecting(
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
   plot_dims.l = TRUE,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -46,9 +40,6 @@ inspecting(
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
   plot_dims.l = TRUE,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -61,9 +52,6 @@ inspecting(
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
   plot_dims.l = TRUE,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -76,9 +64,6 @@ inspecting(
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
   plot_dims.l = TRUE,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -104,15 +89,6 @@ will be used)}
 \item{plot_dims.l}{(MultiAssayExperiment) Logical: should an overview of the number of samples and
 variables in all datasets be barplotted?}
 
-\item{col_batch.c}{Character: name of the column from colData(x) containing
-the batch information (encoded as characters)}
-
-\item{col_injectionOrder.c}{Character: name of the column from colData(x)
-containing the injection order information (encoded as numerics)}
-
-\item{col_sampleType.c}{Character:  name of the column from colData(x)
-containing the sample type information (encoded as characters)}
-
 \item{figure.c}{Character: File name with '.pdf' extension for the figure;
 if 'interactive' (default), figures will be displayed interactively; if 'none',
 no figure will be generated}
@@ -123,7 +99,7 @@ printed on the screen; if 'none', no verbose will be generated}
 }
 \value{
 \code{SummarizedExperiment} or \code{MultiAssayExperiment} including the computed
-in rowData and colData sample and variable metrics
+sample and variable metrics in the rowData and colData metadata.
 }
 \description{
 Provides numerical metrics and graphical overview of an ExpressionSet or MultiDataSet instance

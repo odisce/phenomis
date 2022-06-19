@@ -10,9 +10,6 @@ setMethod("inspecting", signature(x = "MultiAssayExperiment"),
                    sample_intensity.c = c("median", "mean", "sum")[2],
                    title.c = NA,
                    plot_dims.l = TRUE,
-                   col_batch.c = "batch",
-                   col_injectionOrder.c = "injectionOrder",
-                   col_sampleType.c = "sampleType",
                    figure.c = c("none", "interactive", "myfile.pdf")[2],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
@@ -74,9 +71,6 @@ setMethod("inspecting", signature(x = "SummarizedExperiment"),
                    sample_intensity.c = c("median", "mean", "sum")[2],
                    title.c = NA,
                    plot_dims.l = TRUE,
-                   col_batch.c = "batch",
-                   col_injectionOrder.c = "injectionOrder",
-                   col_sampleType.c = "sampleType",
                    figure.c = c("none", "interactive", "myfile.pdf")[2],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
@@ -95,9 +89,6 @@ setMethod("inspecting", signature(x = "SummarizedExperiment"),
                                         loess_span.n = loess_span.n,
                                         sample_intensity.c = sample_intensity.c,
                                         title.c = title.c,
-                                        col_batch.c = col_batch.c,
-                                        col_injectionOrder.c = col_injectionOrder.c,
-                                        col_sampleType.c = col_sampleType.c,
                                         figure.c = figure.c,
                                         report.c = report.c)
             
@@ -127,9 +118,6 @@ setMethod("inspecting", signature(x = "MultiDataSet"),
                    sample_intensity.c = c("median", "mean", "sum")[2],
                    title.c = NA,
                    plot_dims.l = TRUE,
-                   col_batch.c = "batch",
-                   col_injectionOrder.c = "injectionOrder",
-                   col_sampleType.c = "sampleType",
                    figure.c = c("none", "interactive", "myfile.pdf")[2],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
@@ -224,9 +212,6 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                    sample_intensity.c = c("median", "mean", "sum")[2],
                    title.c = NA,
                    plot_dims.l = TRUE,
-                   col_batch.c = "batch",
-                   col_injectionOrder.c = "injectionOrder",
-                   col_sampleType.c = "sampleType",
                    figure.c = c("none", "interactive", "myfile.pdf")[2],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
@@ -245,9 +230,6 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                                         loess_span.n = loess_span.n,
                                         sample_intensity.c = sample_intensity.c,
                                         title.c = title.c,
-                                        col_batch.c = col_batch.c,
-                                        col_injectionOrder.c = col_injectionOrder.c,
-                                        col_sampleType.c = col_sampleType.c,
                                         figure.c = figure.c,
                                         report.c = report.c)
             
@@ -274,9 +256,6 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                         loess_span.n,
                         sample_intensity.c,
                         title.c = title.c,
-                        col_batch.c,
-                        col_injectionOrder.c,
-                        col_sampleType.c,
                         figure.c,
                         report.c) {
   
@@ -302,9 +281,9 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     message("median: ", signif(stats::median(data.mn, na.rm = TRUE), 2))
     message("max: ", signif(max(data.mn, na.rm = TRUE), 2))
     
-    if (col_sampleType.c %in% colnames(samp.df)) {
+    if ("sampleType" %in% colnames(samp.df)) {
       message("Sample types:")
-      print(table(samp.df[, col_sampleType.c]))
+      print(table(samp.df[, "sampleType"]))
     }
   }
   
@@ -321,8 +300,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   feat.df <- .variableMetrics(data.mn = data.mn,
                               samp.df = samp.df,
                               feat.df = feat.df,
-                              pool_as_pool1.l = pool_as_pool1.l,
-                              col_sampleType.c = col_sampleType.c)
+                              pool_as_pool1.l = pool_as_pool1.l)
   
   ## Figure
   
@@ -338,9 +316,6 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                  pool_cv.n = pool_cv.n,
                  loess_span.n = loess_span.n,
                  sample_intensity.c = sample_intensity.c,
-                 col_batch.c = col_batch.c,
-                 col_injectionOrder.c = col_injectionOrder.c,
-                 col_sampleType.c = col_sampleType.c,
                  title.c = title.c)
     
     if (figure.c != "interactive")
@@ -492,16 +467,15 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
 .variableMetrics <- function(data.mn,
                              samp.df,
                              feat.df,
-                             pool_as_pool1.l,
-                             col_sampleType.c) { ## for the call to 'univariate'
+                             pool_as_pool1.l) { ## for the call to 'univariate'
   
   temp.df <- feat.df ## some of the intermediate metrics will not be included in feature metadata
   
   ## 'blank' observations
   
-  if (col_sampleType.c %in% colnames(samp.df) && "blank" %in% samp.df[, col_sampleType.c]) {
+  if ("sampleType" %in% colnames(samp.df) && "blank" %in% samp.df[, "sampleType"]) {
     
-    blank.vl <- samp.df[, col_sampleType.c] == "blank"
+    blank.vl <- samp.df[, "sampleType"] == "blank"
     
     if (sum(blank.vl) == 1) {
       temp.df[, "blank_mean"] <- data.mn[blank.vl, ]
@@ -525,10 +499,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   ## 'sample' observations
   
-  if (col_sampleType.c %in% colnames(samp.df) &&
-      "sample" %in% samp.df[, col_sampleType.c]) {
+  if ("sampleType" %in% colnames(samp.df) &&
+      "sample" %in% samp.df[, "sampleType"]) {
     
-    samp.vl <- samp.df[, col_sampleType.c] == "sample"
+    samp.vl <- samp.df[, "sampleType"] == "sample"
     
     if (sum(samp.vl) == 1) {
       temp.df[, "sample_mean"] <- data.mn[samp.vl, ]
@@ -555,10 +529,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   ## 'pool' observations
   
-  if (col_sampleType.c %in% colnames(samp.df) &&
-      "pool" %in% samp.df[, col_sampleType.c]) {
+  if ("sampleType" %in% colnames(samp.df) &&
+      "pool" %in% samp.df[, "sampleType"]) {
     
-    pool.vl <- samp.df[, col_sampleType.c] == "pool"
+    pool.vl <- samp.df[, "sampleType"] == "pool"
     
     if (sum(pool.vl) == 1) {
       temp.df[, "pool_mean"] <- data.mn[pool.vl, ]
@@ -585,12 +559,12 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   ## 'pool' dilutions
   
-  if (col_sampleType.c %in% colnames(samp.df) &&
-      any(grepl("pool.+", samp.df[, col_sampleType.c]))) {
+  if ("sampleType" %in% colnames(samp.df) &&
+      any(grepl("pool.+", samp.df[, "sampleType"]))) {
     
-    pool.vi <- grep("pool.*", samp.df[, col_sampleType.c]) ## pool, pool2, pool4, poolInter, ...
+    pool.vi <- grep("pool.*", samp.df[, "sampleType"]) ## pool, pool2, pool4, poolInter, ...
     
-    pool_name.vc <- samp.df[pool.vi, col_sampleType.c]
+    pool_name.vc <- samp.df[pool.vi, "sampleType"]
     
     if (pool_as_pool1.l) {
       
@@ -649,9 +623,6 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                          pool_cv.n,
                          loess_span.n,
                          sample_intensity.c,
-                         col_batch.c,
-                         col_injectionOrder.c,
-                         col_sampleType.c,
                          title.c) {
   
   ## Constants
@@ -680,8 +651,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   # Colors
   
-  sample_color.vc <- .sample_color(samp.df = samp.df,
-                                   col_sampleType.c = col_sampleType.c)
+  sample_color.vc <- .sample_color(samp.df = samp.df)
  
   ## tit: Title
   
@@ -696,8 +666,8 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   graphics::text(1, 0.54, adj = 0, labels = paste0("median: ", signif(stats::median(data.mn, na.rm = TRUE), 2)))
   graphics::text(1, 0.47, adj = 0, labels = paste0("mean: ", signif(mean(data.mn, na.rm = TRUE), 2)))
   graphics::text(1, 0.40, adj = 0, labels = paste0("max: ", signif(max(data.mn, na.rm = TRUE), 2)))
-  if (col_sampleType.c %in% colnames(samp.df) &&
-      "pool" %in% samp.df[, col_sampleType.c])
+  if ("sampleType" %in% colnames(samp.df) &&
+      "pool" %in% samp.df[, "sampleType"])
     graphics::text(1,
                    0.33,
                    adj = 0,
@@ -722,9 +692,6 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
               samp.df = samp.df,
               loess_span.n = loess_span.n,
               sample_intensity.c = sample_intensity.c,
-              col_batch.c = col_batch.c,
-              col_injectionOrder.c = col_injectionOrder.c,
-              col_sampleType.c = col_sampleType.c,
               mar.vn = marLs[["dri"]])
   
   ## pca: PCA and Hotelling ellipse
@@ -732,7 +699,6 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   .plot_pca_metrics(data.mn = data.mn,
                     samp.df = samp.df,
                     pca_metrics.ls = pca_metrics.ls,
-                    col_sampleType.c = col_sampleType.c,
                     mar.vn = marLs[["pca"]])
   
   ## resetting par
@@ -912,13 +878,9 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                         samp.df,
                         loess_span.n = 1,
                         sample_intensity.c = "mean",
-                        col_batch.c = "batch",
-                        col_injectionOrder.c = "injectionOrder",
-                        col_sampleType.c = "sampleType",
                         mar.vn = c(3.5, 3.6, 1.1, 0.6)) {
   
-  sample_color.vc <- .sample_color(samp.df = samp.df,
-                                   col_sampleType.c = col_sampleType.c)
+  sample_color.vc <- .sample_color(samp.df = samp.df)
   
   graphics::par(mar = mar.vn)
   
@@ -926,13 +888,13 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
 
   samp.df[, "ordIniVi"] <- 1:nrow(data.mn)
   
-  if (col_injectionOrder.c %in% colnames(samp.df)) {
+  if ("injectionOrder" %in% colnames(samp.df)) {
     ordNamC <- "Injection Order"
-    if (col_batch.c %in% colnames(samp.df)) {
-      ordVi <- order(samp.df[, col_batch.c],
-                     samp.df[, col_injectionOrder.c])
+    if ("batch" %in% colnames(samp.df)) {
+      ordVi <- order(samp.df[, "batch"],
+                     samp.df[, "injectionOrder"])
     } else
-      ordVi <- order(samp.df[, col_injectionOrder.c])
+      ordVi <- order(samp.df[, "injectionOrder"])
   } else {
     ordNamC <- "Samples"
     ordVi <- 1:nrow(data.mn)
@@ -942,8 +904,8 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   samp.df <- samp.df[ordVi, ]
   sample_color_ordered.vc <- sample_color.vc[ordVi]
   
-  if (col_batch.c %in% colnames(samp.df))
-    batch.table <- table(samp.df[, col_batch.c])
+  if ("batch" %in% colnames(samp.df))
+    batch.table <- table(samp.df[, "batch"])
   
   sample_means.vn <- eval(parse(text = paste0("apply(data.mn, 1, function(obsVn) ",
                                               sample_intensity.c, "(obsVn, na.rm = TRUE))")))
@@ -976,7 +938,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                   line = 2,
                   side = 2)
   
-  if (col_batch.c %in% colnames(samp.df) && length(unique(samp.df[, "batch"])) > 1) {
+  if ("batch" %in% colnames(samp.df) && length(unique(samp.df[, "batch"])) > 1) {
     
     graphics::abline(v = cumsum(batch.table) + 0.5,
                      col = "red")
@@ -987,11 +949,11 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     
     for (batC in names(batch.table)) {
       
-      batch_seq.vi <- which(samp.df[, col_batch.c] == batC)
+      batch_seq.vi <- which(samp.df[, "batch"] == batC)
       
-      if (col_sampleType.c %in% colnames(samp.df)) {
+      if ("sampleType" %in% colnames(samp.df)) {
         batch_sample.vi <- intersect(batch_seq.vi,
-                                     grep("sample", samp.df[, col_sampleType.c]))
+                                     grep("sample", samp.df[, "sampleType"]))
       } else
         batch_sample.vi <- batch_seq.vi
       
@@ -999,11 +961,11 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                       .loess(sample_means.vn, batch_sample.vi, batch_seq.vi, loess_span.n),
                       col = .sample_palette("sample"))
       
-      if (col_sampleType.c %in% colnames(samp.df) &&
-          "pool" %in% samp.df[, col_sampleType.c]) {
+      if ("sampleType" %in% colnames(samp.df) &&
+          "pool" %in% samp.df[, "sampleType"]) {
         
         batch_pool.vi <- intersect(batch_seq.vi,
-                                   grep("^pool$", samp.df[, col_sampleType.c]))
+                                   grep("^pool$", samp.df[, "sampleType"]))
         
         graphics::lines(batch_seq.vi,
                         .loess(sample_means.vn, batch_pool.vi, batch_seq.vi, loess_span.n),
@@ -1017,9 +979,9 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     
     batch_seq.vi <- 1:nrow(samp.df)
     
-    if (col_sampleType.c %in% colnames(samp.df)) {
+    if ("sampleType" %in% colnames(samp.df)) {
       batch_sample.vi <- intersect(batch_seq.vi,
-                                   grep("sample", samp.df[, col_sampleType.c]))
+                                   grep("sample", samp.df[, "sampleType"]))
     } else
       batch_sample.vi <- batch_seq.vi
     
@@ -1027,11 +989,11 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                     .loess(sample_means.vn, batch_sample.vi, batch_seq.vi, loess_span.n),
                     col = .sample_palette("sample"))
     
-    if (col_sampleType.c %in% colnames(samp.df) &&
-        "pool" %in% samp.df[, col_sampleType.c]) {
+    if ("sampleType" %in% colnames(samp.df) &&
+        "pool" %in% samp.df[, "sampleType"]) {
       
       batch_pool.vi <- intersect(batch_seq.vi,
-                                 grep("^pool$", samp.df[, col_sampleType.c]))
+                                 grep("^pool$", samp.df[, "sampleType"]))
       
       graphics::lines(batch_seq.vi,
                       .loess(sample_means.vn, batch_pool.vi, batch_seq.vi, loess_span.n),
@@ -1044,7 +1006,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   # legend
   
-  if (col_sampleType.c %in% colnames(samp.df)) {
+  if ("sampleType" %in% colnames(samp.df)) {
     obsColVuc <- sample_color_ordered.vc[sort(unique(names(sample_color_ordered.vc)))]
     legOrdVc <- c("blank", paste0("pool", 8:1), "pool", "other", "sample")
     obsColVuc <- obsColVuc[legOrdVc[legOrdVc %in% names(obsColVuc)]]
@@ -1066,7 +1028,6 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                               pred.i = 2,
                               show_pred.vi = c(1, 2),
                               pca_metrics.ls = NULL,
-                              col_sampleType.c = "sampleType",
                               labels.l = TRUE,
                               mar.vn = c(3.5, 3.6, 1.1, 0.9)) {
   
@@ -1080,7 +1041,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   if (ncol(score_pca.mn) < max(show_pred.vi))
     stop("Not enough pca components computed")
   
-  sample_color.vc <- .sample_color(samp.df = samp.df, col_sampleType.c = col_sampleType.c)
+  sample_color.vc <- .sample_color(samp.df = samp.df)
   if ("injectionOrder" %in% colnames(samp.df) &&
       "sampleType" %in% colnames(samp.df)) {
     palette.vc <- rev(rainbow(100, end = 4/6))
@@ -1164,12 +1125,11 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
 }
 
 
-.sample_color <- function(samp.df,
-                          col_sampleType.c = "sampleType") {
+.sample_color <- function(samp.df) {
   
-  if (col_sampleType.c %in% colnames(samp.df)) {
+  if ("sampleType" %in% colnames(samp.df)) {
     
-    sample_types.vc <- samp.df[, col_sampleType.c]
+    sample_types.vc <- samp.df[, "sampleType"]
     
   } else {
     

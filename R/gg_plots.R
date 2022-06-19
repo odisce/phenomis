@@ -208,7 +208,8 @@ gg_barplot <- function(data.mn,
 #' sacurine_pda.df <- sacurine_pda.df[!grepl("QC", rownames(sacurine_pda.df)), ]
 #' gg_boxplot(sacurine_pda.df, y.c = "age")
 #' gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender")
-#' gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender", label.vc = rownames(sacurine_pda.df))
+#' gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender",
+#' label.vc = rownames(sacurine_pda.df))
 gg_boxplot <- function(data.tb,
                        x.c = "",
                        y.c = "",
@@ -694,7 +695,8 @@ gg_volcanoplot <- function(fold_change.vn,
 #' sacurine.se <- hypotesting(sacurine.se, "wilcoxon", "gender")
 #' signif.ls <- list(ttest = which(rowData(sacurine.se)[, "ttest_gender_Female.Male_signif"] > 0),
 #' wilcoxon =  which(rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_signif"] > 0))
-#' vennplot(signif.ls, label_col.c = "black", title.c = "Signif. features\nwith Student or Wilcoxon tests")
+#' vennplot(signif.ls, label_col.c = "black",
+#' title.c = "Signif. features\nwith Student or Wilcoxon tests")
 vennplot <- function(input.ls,
                      palette.vc = RColorBrewer::brewer.pal(9, "Set1")[1:5],
                      title.c = NA,

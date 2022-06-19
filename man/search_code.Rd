@@ -28,6 +28,6 @@ This function is useful for code inspection, development, and debugging
 }
 \examples{
 \dontrun{
-phenomis::search_code("aes", filename_pattern.c = ".R")
+search_code("aes", filename_pattern.c = ".R")
 }
 }

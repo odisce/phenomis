@@ -20,7 +20,11 @@
 #' # see the (default) parameters (e.g. for ChEBI query)
 #' annotating_parameters("chebi")
 #' # mz annotation with ChEBI
-#' sacurine.se <- annotating(sacurine.se, database.c = "chebi", param.ls = list(query.type = "mz", query.col = "mass_to_charge", ms.mode = "neg", prefix = "chebiMZ."))
+#' \dontrun{
+#' sacurine.se <- annotating(sacurine.se, database.c = "chebi",
+#' param.ls = list(query.type = "mz", query.col = "mass_to_charge",
+#' ms.mode = "neg", prefix = "chebiMZ."))
+#' }
 #' # mz annotation with local database
 #' msdbDF <- read.table(system.file("extdata/local_ms_db.tsv", package = "phenomis"),
 #' header = TRUE, sep = "\t", stringsAsFactors = FALSE)
@@ -29,10 +33,12 @@
 #' mz.tol = 5, mz.tol.unit = "ppm", local.ms.db = msdbDF, prefix = "localMS."))
 #' rowData(sacurine.se)[!is.na(rowData(sacurine.se)[, "localMS.accession"]), ]
 #' # annotation from ChEBI identifiers
+#' \dontrun{
 #' sacurine.se <- annotating(sacurine.se, database.c = "chebi",
 #' param.ls = list(query.type = "chebi.id", query.col = "database_identifier",
 #' prefix = "chebiID."))
 #' head(rowData(sacurine.se))
+#' }
 setGeneric("annotating",
            function(x,
                     database.c = c("chebi", "local.ms")[1],
@@ -128,7 +134,16 @@ setGeneric("clustering",
 
 #' correcting
 #'
-#' Signal drift and batch effect correction
+#' Signal drift and batch effect correction. The normalization strategy relies 
+#' on the measurements of a pooled (or QC) sample injected periodically: 
+#' for each variable, a regression model is fitted to the values of the pool and
+#' subsequently used to adjust the intensities of the samples of interest (van
+#' der Kloet et al, 2009; Dunn et al, 2011). In case the number of pool observations is below 5,
+#' the linear method is used (for all variables) and a warning is generated. In case no pool is available, the
+#' samples themselves can be used to computed the regression model (Thevenot et al., 2015).
+#' The sample metadata of each datasets (e.g. colData Data Frames) must contain 3 columns:
+#' 1) 'sampleType' (character): either 'sample', 'blank', or 'pool', 2) 'injectionOrder' (integer):
+#' order of injection in the instrument and 3) 'batch' (character): batch name.
 #'
 #' @param x An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}
 #' @param method.vc character of length 1 or the total number of datasets: method(s) to be used for each dataset (either 'serrf' or 'loess'); for the 'serrf' approach, the seed is internally set to 123 for reproducibility; in case the parameter is of length 1 and x contains multiple datasets, the same method will be used for all datasets
@@ -141,12 +156,6 @@ setGeneric("clustering",
 #' @param sample_intensity.c Character: metric to be used when displaying the sample intensities
 #' @param title.c Character: Graphic title: if NA [default] the
 #' 'title' slot from the experimentData will be used (metadata)
-#' @param col_batch.c Character: name of the column from colData(x) containing
-#' the batch information (encoded as characters)
-#' @param col_injectionOrder.c Character: name of the column from colData(x)
-#' containing the injection order information (encoded as numerics)
-#' @param col_sampleType.c Character:  name of the column from colData(x)
-#' containing the sample type information (encoded as characters)
 #' @param figure.c Character: File name with '.pdf' extension for the figure;
 #' if 'interactive' (default), figures will be displayed interactively; if 'none',
 #' no figure will be generated
@@ -170,9 +179,6 @@ setGeneric("correcting",
                     serrf_corvar.vi = 10,
                     sample_intensity.c = c("median", "mean", "sum")[2],
                     title.c = NA,
-                    col_batch.c = "batch",
-                    col_injectionOrder.c = "injectionOrder",
-                    col_sampleType.c = "sampleType",
                     figure.c = c("none", "interactive", "myfile.pdf")[2],
                     report.c = c("none", "interactive", "myfile.txt")[2])
              standardGeneric("correcting"))
@@ -253,7 +259,11 @@ setGeneric("filtering",
 
 #' Univariate hypothesis testing
 #'
-#' Univariate hypothesis testing
+#' The hypotesting method is a wrapper of the main R functions for hypothesis testing
+#' and corrections for multiple testing. The list of available tests includes 
+#' two sample tests (t-test and Wilcoxon rank test, but also the limma test), 
+#' analysis of variance (for one and two factors) and Kruskal-Wallis rank test, 
+#' and correlation tests (by using either the pearson or the spearman correlation). 
 #'
 #' @param x An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}
 #' @param test.c Character: One of the 9 available hypothesis tests can be selected
@@ -363,12 +373,6 @@ setGeneric("hypotesting",
 #' will be used)
 #' @param plot_dims.l (MultiAssayExperiment) Logical: should an overview of the number of samples and
 #' variables in all datasets be barplotted?
-#' @param col_batch.c Character: name of the column from colData(x) containing
-#' the batch information (encoded as characters)
-#' @param col_injectionOrder.c Character: name of the column from colData(x)
-#' containing the injection order information (encoded as numerics)
-#' @param col_sampleType.c Character:  name of the column from colData(x)
-#' containing the sample type information (encoded as characters)
 #' @param figure.c Character: File name with '.pdf' extension for the figure;
 #' if 'interactive' (default), figures will be displayed interactively; if 'none',
 #' no figure will be generated
@@ -376,7 +380,7 @@ setGeneric("hypotesting",
 #' results (call to sink()'); if 'interactive' (default), messages will be
 #' printed on the screen; if 'none', no verbose will be generated
 #' @return \code{SummarizedExperiment} or \code{MultiAssayExperiment} including the computed
-#' in rowData and colData sample and variable metrics
+#' sample and variable metrics in the rowData and colData metadata.
 #' @rdname inspecting
 #' @examples
 #' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
@@ -399,9 +403,6 @@ setGeneric("inspecting",
                     sample_intensity.c = c("median", "mean", "sum")[2],
                     title.c = NA,
                     plot_dims.l = TRUE,
-                    col_batch.c = "batch",
-                    col_injectionOrder.c = "injectionOrder",
-                    col_sampleType.c = "sampleType",
                     figure.c = c("none", "interactive", "myfile.pdf")[2],
                     report.c = c("none", "interactive", "myfile.txt")[2])
              standardGeneric("inspecting"))
@@ -409,9 +410,10 @@ setGeneric("inspecting",
 
 #### normalizing ####
 
-#' Normalization of the dataMatrix
+#' Normalization of the data matrix intensities
 #'
-#' Normalization of the dataMatrix intensities
+#' The matrix intensities may be normalized by using the Probabilistic Quotient
+#' Normalization to scale the spectra to the same virtual overall concentration
 #'
 #' @param x An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}
 #' @param method.vc character of length 1 or the total number of datasets: method(s) to be used for each dataset (default is 'pqn'); in case the parameter is of length 1 and x contains multiple datasets, the same method will be used for all datasets
@@ -504,9 +506,10 @@ setGeneric("reducing",
 
 #### transforming ####
 
-#' Transformation of the dataMatrix
+#' Transformation of the data matrix intensities
 #'
-#' Transformation of the dataMatrix intensities
+#' A logarithmic or square root transformation may be applied to the data matrix
+#' intensities in (each of) the data set (e.g. to stabilize the variance)
 #'
 #' @param x An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet} are deprecated)
 #' @param method.vc character(): type of transformation (either 'log2', 'log10', or 'sqrt'); in case of a MultiAssayExperiment, distinct methods may be provided for each dataset
@@ -564,12 +567,18 @@ setGeneric("transforming",
 #' # alternatively
 #' writing(prometis.mae,
 #'          dir.c = NA,
-#'          files.ls = list(metabolomics = list(dataMatrix.tsvC = file.path(getwd(), "met_dataMatrix.tsv"),
-#'                                       sampleMetadata.tsvC = file.path(getwd(), "met_sampleMetadata.tsv"),
-#'                                       variableMetadata.tsvC = file.path(getwd(), "met_variableMetadata.tsv")),
-#'                         proteomics = list(dataMatrix.tsvC = file.path(getwd(), "pro_dataMatrix.tsv"),
-#'                                       sampleMetadata.tsvC = file.path(getwd(), "pro_sampleMetadata.tsv"),
-#'                                       variableMetadata.tsvC = file.path(getwd(), "pro_variableMetadata.tsv"))))
+#'          files.ls = list(metabolomics = list(dataMatrix.tsvC = file.path(getwd(),
+#'                                              "met_dataMatrix.tsv"),
+#'                                       sampleMetadata.tsvC = file.path(getwd(),
+#'                                       "met_sampleMetadata.tsv"),
+#'                                       variableMetadata.tsvC = file.path(getwd(),
+#'                                       "met_variableMetadata.tsv")),
+#'                         proteomics = list(dataMatrix.tsvC = file.path(getwd(),
+#'                                       "pro_dataMatrix.tsv"),
+#'                                       sampleMetadata.tsvC = file.path(getwd(),
+#'                                       "pro_sampleMetadata.tsv"),
+#'                                       variableMetadata.tsvC = file.path(getwd(),
+#'                                       "pro_variableMetadata.tsv"))))
 #'}
 setGeneric("writing",
            function(x,

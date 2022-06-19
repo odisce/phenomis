@@ -10,16 +10,16 @@ testthat::test_that("ttest", {
   
   # .twoSampCorTests
   
-  ttestLs <- phenomis:::.twoSampCorTests(data.mn = t(assay(sacurine.se)),
-                                         samp.df = colData(sacurine.se),
-                                         feat.df = rowData(sacurine.se),
-                                         test.c = "ttest",
-                                         factorNameC = "gender",
-                                         factorLevelsVc = "default",
-                                         adjust.c = "BH",
-                                         adjust_thresh.n = 0.05,
-                                         prefix.c = "",
-                                         figure.c = "none")
+  ttestLs <- .twoSampCorTests(data.mn = t(assay(sacurine.se)),
+                              samp.df = colData(sacurine.se),
+                              feat.df = rowData(sacurine.se),
+                              test.c = "ttest",
+                              factorNameC = "gender",
+                              factorLevelsVc = "default",
+                              adjust.c = "BH",
+                              adjust_thresh.n = 0.05,
+                              prefix.c = "",
+                              figure.c = "none")
   testthat::expect_equivalent(ttestLs[["feat.df"]]["Testosterone glucuronide", "ttest_gender_Female.Male_diff"],
                               2.42603,
                               tolerance = 1e-6)
@@ -131,16 +131,16 @@ testthat::test_that("anova", {
                                                  } else {
                                                    return("fifty")}},
                                                FUN.VALUE = character(1))
-  feat.df <- phenomis:::.anovas(data.mn = t(assay(sacurine.se)),
-                                samp.df = colData(sacurine.se),
-                                feat.df = rowData(sacurine.se),
-                                test.c = "anova",
-                                factorNameC = "ageGroup",
-                                factorLevelsVc = "default",
-                                adjust.c = "BH",
-                                adjust_thresh.n = 0.05,
-                                prefix.c = "",
-                                figure.c = "none")[["feat.df"]]
+  feat.df <- .anovas(data.mn = t(assay(sacurine.se)),
+                     samp.df = colData(sacurine.se),
+                     feat.df = rowData(sacurine.se),
+                     test.c = "anova",
+                     factorNameC = "ageGroup",
+                     factorLevelsVc = "default",
+                     adjust.c = "BH",
+                     adjust_thresh.n = 0.05,
+                     prefix.c = "",
+                     figure.c = "none")[["feat.df"]]
   testthat::expect_equivalent(feat.df["1-Methylxanthine", "anova_ageGroup_BH"],
                               0.003023911,
                               tolerance = 1e-6)
@@ -151,16 +151,16 @@ testthat::test_that("anova", {
                               0.01544621,
                               tolerance = 1e-6)
   
-  feat.df <- phenomis:::.anovas(data.mn = t(assay(sacurine.se)),
-                                samp.df = colData(sacurine.se),
-                                feat.df = rowData(sacurine.se),
-                                test.c = "anova",
-                                factorNameC = "ageGroup",
-                                factorLevelsVc = c("thirty", "fourty", "fifty"),
-                                adjust.c = "BH",
-                                adjust_thresh.n = 0.05,
-                                prefix.c = "",
-                                figure.c = "none")[["feat.df"]]
+  feat.df <- .anovas(data.mn = t(assay(sacurine.se)),
+                     samp.df = colData(sacurine.se),
+                     feat.df = rowData(sacurine.se),
+                     test.c = "anova",
+                     factorNameC = "ageGroup",
+                     factorLevelsVc = c("thirty", "fourty", "fifty"),
+                     adjust.c = "BH",
+                     adjust_thresh.n = 0.05,
+                     prefix.c = "",
+                     figure.c = "none")[["feat.df"]]
   testthat::expect_equivalent(feat.df["1-Methylxanthine", "anova_ageGroup_thirty.fourty_diff"],
                               0.8841594,
                               tolerance = 1e-6)
@@ -194,16 +194,16 @@ testthat::test_that("kruskal", {
                                                    return("fifty")}},
                                                FUN.VALUE = character(1))
   
-  feat.df <- phenomis:::.anovas(data.mn = t(assay(sacurine.se)),
-                                samp.df = colData(sacurine.se),
-                                feat.df = rowData(sacurine.se),
-                                test.c = "kruskal",
-                                factorNameC = "ageGroup",
-                                factorLevelsVc = "default",
-                                adjust.c = "BH",
-                                adjust_thresh.n = 0.05,
-                                prefix.c = "testthat_",
-                                figure.c = "none")[["feat.df"]]
+  feat.df <- .anovas(data.mn = t(assay(sacurine.se)),
+                     samp.df = colData(sacurine.se),
+                     feat.df = rowData(sacurine.se),
+                     test.c = "kruskal",
+                     factorNameC = "ageGroup",
+                     factorLevelsVc = "default",
+                     adjust.c = "BH",
+                     adjust_thresh.n = 0.05,
+                     prefix.c = "testthat_",
+                     figure.c = "none")[["feat.df"]]
   testthat::expect_equivalent(feat.df["1-Methylxanthine", "testthat_kruskal_ageGroup_fourty.thirty_BH"],
                               0.03497385,
                               tolerance = 1e-6)
@@ -218,17 +218,17 @@ testthat::test_that("anova2ways", {
                                    package = "phenomis"))
   
   ## .anova2ways
-  anova2ways.ls <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                           samp.df = colData(metabo.se),
-                                           feat.df = rowData(metabo.se),
-                                           test.c = "anova2ways",
-                                           factor_names.vc = c("gene", "sex"),
-                                           factor_levels.ls = list(factor1Vc = c("WT", "KO"),
-                                                                   factor2Vc = c("M", "F")),
-                                           adjust.c = "BH",
-                                           adjust_thresh.n = 0.05,
-                                           prefix.c = "prefix_",
-                                           figure.c = "none")
+  anova2ways.ls <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                                samp.df = colData(metabo.se),
+                                feat.df = rowData(metabo.se),
+                                test.c = "anova2ways",
+                                factor_names.vc = c("gene", "sex"),
+                                factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                                                        factor2Vc = c("M", "F")),
+                                adjust.c = "BH",
+                                adjust_thresh.n = 0.05,
+                                prefix.c = "prefix_",
+                                figure.c = "none")
   
   testthat::expect_equivalent(anova2ways.ls[["metric.mn"]]["v11", "prefix_anova2ways_sex_M.F_diff"],
                               -0.03642992,
@@ -238,33 +238,33 @@ testthat::test_that("anova2ways", {
                               0.800139,
                               tolerance = 1e-6)
   
-  anova2ways.ls <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                           samp.df = colData(metabo.se),
-                                           feat.df = rowData(metabo.se),
-                                           test.c = "anova2ways",
-                                           factor_names.vc = c("gene", "sex"),
-                                           factor_levels.ls = list(factor1 = "default",
-                                                                   factor2 = "default"),
-                                           adjust.c = "BH",
-                                           adjust_thresh.n = 0.05,
-                                           prefix.c = "",
-                                           figure.c = "none")
+  anova2ways.ls <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                                samp.df = colData(metabo.se),
+                                feat.df = rowData(metabo.se),
+                                test.c = "anova2ways",
+                                factor_names.vc = c("gene", "sex"),
+                                factor_levels.ls = list(factor1 = "default",
+                                                        factor2 = "default"),
+                                adjust.c = "BH",
+                                adjust_thresh.n = 0.05,
+                                prefix.c = "",
+                                figure.c = "none")
   
   testthat::expect_equivalent(anova2ways.ls[["metric.mn"]]["v11", "anova2ways_sex_F.M_diff"],
                               0.03642992,
                               tolerance = 1e-6)
   
-  testthat::expect_error(phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                                 samp.df = colData(metabo.se),
-                                                 feat.df = rowData(metabo.se),
-                                                 test.c = "anova2ways",
-                                                 factor_names.vc = c("gene", "sex"),
-                                                 factor_levels.ls = list(factor1 = c("WT", "OK"),
-                                                                         factor2 = c("M", "F")),
-                                                 adjust.c = "BH",
-                                                 adjust_thresh.n = 0.05,
-                                                 prefix.c = "",
-                                                 figure.c = "none"))
+  testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
+                                      samp.df = colData(metabo.se),
+                                      feat.df = rowData(metabo.se),
+                                      test.c = "anova2ways",
+                                      factor_names.vc = c("gene", "sex"),
+                                      factor_levels.ls = list(factor1 = c("WT", "OK"),
+                                                              factor2 = c("M", "F")),
+                                      adjust.c = "BH",
+                                      adjust_thresh.n = 0.05,
+                                      prefix.c = "",
+                                      figure.c = "none"))
   
   metabo.se <- hypotesting(metabo.se,
                            test.c = "anova2ways",
@@ -284,17 +284,17 @@ testthat::test_that("anova2waysInter", {
                                    package = "phenomis"))
   
   ## .anova2waysInter
-  anova2waysInterLs <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                               samp.df = colData(metabo.se),
-                                               feat.df = rowData(metabo.se),
-                                               test.c = "anova2waysInter",
-                                               factor_names.vc = c("gene", "sex"),
-                                               factor_levels.ls = list(factor1Vc = c("WT", "KO"),
-                                                                       factor2Vc = c("M", "F")),
-                                               adjust.c = "BH",
-                                               adjust_thresh.n = 0.05,
-                                               prefix.c = "",
-                                               figure.c = "none")
+  anova2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                                    samp.df = colData(metabo.se),
+                                    feat.df = rowData(metabo.se),
+                                    test.c = "anova2waysInter",
+                                    factor_names.vc = c("gene", "sex"),
+                                    factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                                                            factor2Vc = c("M", "F")),
+                                    adjust.c = "BH",
+                                    adjust_thresh.n = 0.05,
+                                    prefix.c = "",
+                                    figure.c = "none")
   
   testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["v11", "anova2waysInter_sex_M.F_diff"],
                               -0.03642992,
@@ -308,33 +308,33 @@ testthat::test_that("anova2waysInter", {
                               0.9967691,
                               tolerance = 1e-6)
   
-  anova2waysInterLs <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                               samp.df = colData(metabo.se),
-                                               feat.df = rowData(metabo.se),
-                                               test.c = "anova2waysInter",
-                                               factor_names.vc = c("gene", "sex"),
-                                               factor_levels.ls = list(factor1 = "default",
-                                                                       factor2 = "default"),
-                                               adjust.c = "BH",
-                                               adjust_thresh.n = 0.05,
-                                               prefix.c = "",
-                                               figure.c = "none")
+  anova2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                                    samp.df = colData(metabo.se),
+                                    feat.df = rowData(metabo.se),
+                                    test.c = "anova2waysInter",
+                                    factor_names.vc = c("gene", "sex"),
+                                    factor_levels.ls = list(factor1 = "default",
+                                                            factor2 = "default"),
+                                    adjust.c = "BH",
+                                    adjust_thresh.n = 0.05,
+                                    prefix.c = "",
+                                    figure.c = "none")
   
   testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["v11", "anova2waysInter_sex_F.M_diff"],
                               0.03642992,
                               tolerance = 1e-6)
   
-  testthat::expect_error(phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                                 samp.df = colData(metabo.se),
-                                                 feat.df = rowData(metabo.se),
-                                                 test.c = "anova2waysInter",
-                                                 factor_names.vc = c("gene", "sex"),
-                                                 factor_levels.ls = list(factor1 = c("WT", "OK"),
-                                                                         factor2 = c("M", "F")),
-                                                 adjust.c = "BH",
-                                                 adjust_thresh.n = 0.05,
-                                                 prefix.c = "",
-                                                 figure.c = "none"))
+  testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
+                                      samp.df = colData(metabo.se),
+                                      feat.df = rowData(metabo.se),
+                                      test.c = "anova2waysInter",
+                                      factor_names.vc = c("gene", "sex"),
+                                      factor_levels.ls = list(factor1 = c("WT", "OK"),
+                                                              factor2 = c("M", "F")),
+                                      adjust.c = "BH",
+                                      adjust_thresh.n = 0.05,
+                                      prefix.c = "",
+                                      figure.c = "none"))
   
   metabo.se <- hypotesting(metabo.se,
                            test.c = "anova2waysInter",
@@ -354,17 +354,17 @@ testthat::test_that("anova2waysInter", {
                                    package = "phenomis"))
   
   ## .anova2waysInter
-  anova2waysInterLs <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                               samp.df = colData(metabo.se),
-                                               feat.df = rowData(metabo.se),
-                                               test.c = "anova2waysInter",
-                                               factor_names.vc = c("gene", "sex"),
-                                               factor_levels.ls = list(factor1Vc = c("WT", "KO"),
-                                                                       factor2Vc = c("M", "F")),
-                                               adjust.c = "BH",
-                                               adjust_thresh.n = 0.05,
-                                               prefix.c = "",
-                                               figure.c = "none")
+  anova2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                                    samp.df = colData(metabo.se),
+                                    feat.df = rowData(metabo.se),
+                                    test.c = "anova2waysInter",
+                                    factor_names.vc = c("gene", "sex"),
+                                    factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                                                            factor2Vc = c("M", "F")),
+                                    adjust.c = "BH",
+                                    adjust_thresh.n = 0.05,
+                                    prefix.c = "",
+                                    figure.c = "none")
   
   testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["v11", "anova2waysInter_sex_M.F_diff"],
                               -0.03642992,
@@ -378,33 +378,33 @@ testthat::test_that("anova2waysInter", {
                               0.9967691,
                               tolerance = 1e-6)
   
-  anova2waysInterLs <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                               samp.df = colData(metabo.se),
-                                               feat.df = rowData(metabo.se),
-                                               test.c = "anova2waysInter",
-                                               factor_names.vc = c("gene", "sex"),
-                                               factor_levels.ls = list(factor1 = "default",
-                                                                       factor2 = "default"),
-                                               adjust.c = "BH",
-                                               adjust_thresh.n = 0.05,
-                                               prefix.c = "",
-                                               figure.c = "none")
+  anova2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                                    samp.df = colData(metabo.se),
+                                    feat.df = rowData(metabo.se),
+                                    test.c = "anova2waysInter",
+                                    factor_names.vc = c("gene", "sex"),
+                                    factor_levels.ls = list(factor1 = "default",
+                                                            factor2 = "default"),
+                                    adjust.c = "BH",
+                                    adjust_thresh.n = 0.05,
+                                    prefix.c = "",
+                                    figure.c = "none")
   
   testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["v11", "anova2waysInter_sex_F.M_diff"],
                               0.03642992,
                               tolerance = 1e-6)
   
-  testthat::expect_error(phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                                 samp.df = colData(metabo.se),
-                                                 feat.df = rowData(metabo.se),
-                                                 test.c = "anova2waysInter",
-                                                 factor_names.vc = c("gene", "sex"),
-                                                 factor_levels.ls = list(factor1 = c("WT", "OK"),
-                                                                         factor2 = c("M", "F")),
-                                                 adjust.c = "BH",
-                                                 adjust_thresh.n = 0.05,
-                                                 prefix.c = "",
-                                                 figure.c = "none"))
+  testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
+                                      samp.df = colData(metabo.se),
+                                      feat.df = rowData(metabo.se),
+                                      test.c = "anova2waysInter",
+                                      factor_names.vc = c("gene", "sex"),
+                                      factor_levels.ls = list(factor1 = c("WT", "OK"),
+                                                              factor2 = c("M", "F")),
+                                      adjust.c = "BH",
+                                      adjust_thresh.n = 0.05,
+                                      prefix.c = "",
+                                      figure.c = "none"))
   
   metabo.se <- hypotesting(metabo.se,
                            test.c = "anova2waysInter",
@@ -428,17 +428,17 @@ testthat::test_that("limma2ways", {
                                    package = "phenomis"))
   
   ## .limma2ways
-  limma2waysLs <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                          samp.df = colData(metabo.se),
-                                          feat.df = rowData(metabo.se),
-                                          test.c = "limma2ways",
-                                          factor_names.vc = c("gene", "sex"),
-                                          factor_levels.ls = list(factor1Vc = c("WT", "KO"),
-                                                                  factor2Vc = c("M", "F")),
-                                          adjust.c = "BH",
-                                          adjust_thresh.n = 0.05,
-                                          prefix.c = "",
-                                          figure.c = "none")
+  limma2waysLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                               samp.df = colData(metabo.se),
+                               feat.df = rowData(metabo.se),
+                               test.c = "limma2ways",
+                               factor_names.vc = c("gene", "sex"),
+                               factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                                                       factor2Vc = c("M", "F")),
+                               adjust.c = "BH",
+                               adjust_thresh.n = 0.05,
+                               prefix.c = "",
+                               figure.c = "none")
   
   testthat::expect_equivalent(limma2waysLs[["metric.mn"]]["v11", "limma2ways_sex_M.F_diff"],
                               -0.03642992,
@@ -448,33 +448,33 @@ testthat::test_that("limma2ways", {
                               0.9296763,
                               tolerance = 1e-6)
   
-  limma2waysLs <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                          samp.df = colData(metabo.se),
-                                          feat.df = rowData(metabo.se),
-                                          test.c = "limma2ways",
-                                          factor_names.vc = c("gene", "sex"),
-                                          factor_levels.ls = list(factor1 = "default",
-                                                                  factor2 = "default"),
-                                          adjust.c = "BH",
-                                          adjust_thresh.n = 0.05,
-                                          prefix.c = "testing_",
-                                          figure.c = "none")
+  limma2waysLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                               samp.df = colData(metabo.se),
+                               feat.df = rowData(metabo.se),
+                               test.c = "limma2ways",
+                               factor_names.vc = c("gene", "sex"),
+                               factor_levels.ls = list(factor1 = "default",
+                                                       factor2 = "default"),
+                               adjust.c = "BH",
+                               adjust_thresh.n = 0.05,
+                               prefix.c = "testing_",
+                               figure.c = "none")
   
   testthat::expect_equivalent(limma2waysLs[["metric.mn"]]["v11", "testing_limma2ways_sex_F.M_diff"],
                               0.03642992,
                               tolerance = 1e-6)
   
-  testthat::expect_error(phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                                 samp.df = colData(metabo.se),
-                                                 feat.df = rowData(metabo.se),
-                                                 test.c = "limma2ways",
-                                                 factor_names.vc = c("gene", "sex"),
-                                                 factor_levels.ls = list(factor1 = c("WT", "OK"),
-                                                                         factor2 = c("M", "F")),
-                                                 adjust.c = "BH",
-                                                 adjust_thresh.n = 0.05,
-                                                 prefix.c = "",
-                                                 figure.c = "none"))
+  testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
+                                      samp.df = colData(metabo.se),
+                                      feat.df = rowData(metabo.se),
+                                      test.c = "limma2ways",
+                                      factor_names.vc = c("gene", "sex"),
+                                      factor_levels.ls = list(factor1 = c("WT", "OK"),
+                                                              factor2 = c("M", "F")),
+                                      adjust.c = "BH",
+                                      adjust_thresh.n = 0.05,
+                                      prefix.c = "",
+                                      figure.c = "none"))
   
   metabo.se <- hypotesting(metabo.se,
                            test.c = "limma2ways",
@@ -498,17 +498,17 @@ testthat::test_that("limma2waysInter", {
                                    package = "phenomis"))
   
   ## .limma2waysInter
-  limma2waysInterLs <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                               samp.df = colData(metabo.se),
-                                               feat.df = rowData(metabo.se),
-                                               test.c = "limma2waysInter",
-                                               factor_names.vc = c("gene", "sex"),
-                                               factor_levels.ls = list(factor1Vc = c("WT", "KO"),
-                                                                       factor2Vc = c("M", "F")),
-                                               adjust.c = "BH",
-                                               adjust_thresh.n = 0.05,
-                                               prefix.c = "",
-                                               figure.c = "none")
+  limma2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                                    samp.df = colData(metabo.se),
+                                    feat.df = rowData(metabo.se),
+                                    test.c = "limma2waysInter",
+                                    factor_names.vc = c("gene", "sex"),
+                                    factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                                                            factor2Vc = c("M", "F")),
+                                    adjust.c = "BH",
+                                    adjust_thresh.n = 0.05,
+                                    prefix.c = "",
+                                    figure.c = "none")
   
   testthat::expect_equivalent(limma2waysInterLs[["metric.mn"]]["v11", "limma2waysInter_gene_WT.KO_diff"],
                               0.3291035,
@@ -522,17 +522,17 @@ testthat::test_that("limma2waysInter", {
                               0.996654,
                               tolerance = 1e-6)
   
-  limma2waysInterLs <- phenomis:::.anovas2ways(data.mn = t(assay(metabo.se)),
-                                               samp.df = colData(metabo.se),
-                                               feat.df = rowData(metabo.se),
-                                               test.c = "limma2waysInter",
-                                               factor_names.vc = c("gene", "sex"),
-                                               factor_levels.ls = list(factor1 = "default",
-                                                                       factor2 = "default"),
-                                               adjust.c = "BH",
-                                               adjust_thresh.n = 0.05,
-                                               prefix.c = "",
-                                               figure.c = "none")
+  limma2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+                                    samp.df = colData(metabo.se),
+                                    feat.df = rowData(metabo.se),
+                                    test.c = "limma2waysInter",
+                                    factor_names.vc = c("gene", "sex"),
+                                    factor_levels.ls = list(factor1 = "default",
+                                                            factor2 = "default"),
+                                    adjust.c = "BH",
+                                    adjust_thresh.n = 0.05,
+                                    prefix.c = "",
+                                    figure.c = "none")
   
   testthat::expect_equivalent(limma2waysInterLs[["metric.mn"]]["v11", "limma2waysInter_gene_KO.WT_diff"],
                               -0.3291035,

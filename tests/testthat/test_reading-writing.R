@@ -4,7 +4,7 @@ testthat::test_that(".reading", {
   
   sacdir.c <- system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis")
   
-  sacurine.se1 <- phenomis:::.reading(sacdir.c)
+  sacurine.se1 <- .reading(sacdir.c)
   
   testthat::expect_true(class(sacurine.se1) == "SummarizedExperiment")
   
@@ -12,10 +12,10 @@ testthat::test_that(".reading", {
                          477491,
                          tolerance = 1e-3)
   # alternatively
-  sacurine.se2 <- phenomis:::.reading(NA,
-                                      file.path(sacdir.c, "Galaxy1_dataMatrix.tabular"),
-                                      file.path(sacdir.c, "Galaxy2_sampleMetadata.tabular"),
-                                      file.path(sacdir.c, "Galaxy3_variableMetadata.tabular"))
+  sacurine.se2 <- .reading(NA,
+                           file.path(sacdir.c, "Galaxy1_dataMatrix.tabular"),
+                           file.path(sacdir.c, "Galaxy2_sampleMetadata.tabular"),
+                           file.path(sacdir.c, "Galaxy3_variableMetadata.tabular"))
   
   testthat::expect_true(class(sacurine.se2) == "SummarizedExperiment")
   
@@ -24,10 +24,10 @@ testthat::test_that(".reading", {
                          tolerance = 1e-3)
   
   
-  testthat::expect_error(phenomis:::.reading(NA,
-                                             file.path(sacdir.c, "Galaxy1_dataMatrix.tsv"),
-                                             file.path(sacdir.c, "Galaxy2_sampleMetadata.tabular"),
-                                             file.path(sacdir.c, "Galaxy3_variableMetadata.tabular")))
+  testthat::expect_error(.reading(NA,
+                                  file.path(sacdir.c, "Galaxy1_dataMatrix.tsv"),
+                                  file.path(sacdir.c, "Galaxy2_sampleMetadata.tabular"),
+                                  file.path(sacdir.c, "Galaxy3_variableMetadata.tabular")))
   
 })
 
@@ -86,7 +86,7 @@ testthat::test_that("reading_MultiAssayExperiment", {
   testthat::expect_equal(MultiAssayExperiment::assays(met.mae)[["metabolomics"]][1, 1],
                          5.576,
                          tolerance = 1e-3)
-
+  
 })
 
 

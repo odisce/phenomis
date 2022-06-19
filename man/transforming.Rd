@@ -6,7 +6,7 @@
 \alias{transforming,SummarizedExperiment-method}
 \alias{transforming,MultiDataSet-method}
 \alias{transforming,ExpressionSet-method}
-\title{Transformation of the dataMatrix}
+\title{Transformation of the data matrix intensities}
 \usage{
 transforming(
   x,
@@ -52,7 +52,8 @@ printed on the screen; if 'none', no verbose will be generated}
 with transformed intensities
 }
 \description{
-Transformation of the dataMatrix intensities
+A logarithmic or square root transformation may be applied to the data matrix
+intensities in (each of) the data set (e.g. to stabilize the variance)
 }
 \examples{
 sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))

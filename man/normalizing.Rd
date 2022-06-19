@@ -6,7 +6,7 @@
 \alias{normalizing,SummarizedExperiment-method}
 \alias{normalizing,MultiDataSet-method}
 \alias{normalizing,ExpressionSet-method}
-\title{Normalization of the dataMatrix}
+\title{Normalization of the data matrix intensities}
 \usage{
 normalizing(
   x,
@@ -52,7 +52,8 @@ printed on the screen; if 'none', no verbose will be generated}
 with normalized intensities
 }
 \description{
-Normalization of the dataMatrix intensities
+The matrix intensities may be normalized by using the Probabilistic Quotient
+Normalization to scale the spectra to the same virtual overall concentration
 }
 \examples{
 sacurine.se <- reading(file.path(system.file(package = "phenomis"),

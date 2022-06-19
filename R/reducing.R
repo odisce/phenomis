@@ -102,7 +102,7 @@ setMethod("reducing", signature(x = "SummarizedExperiment"),
             assay(x) <- t(redund.ls[["data.mn"]])
             rowData(x) <- redund.ls[["feat.df"]]
             adjacency.mi <- redund.ls[["corrtmz.mi"]]
- 
+            
             if (!(report.c %in% c("none", "interactive")))
               sink()
             
@@ -152,15 +152,15 @@ setMethod("reducing", signature(x = "MultiDataSet"),
               if (report.c != "none")
                 message("Reducing the '", set.c, "' dataset...")
               
-              reduce_res <- phenomis::reducing(x = x[[set.c]],
-                                               cor_method.c = cor_method.c,
-                                               cor_threshold.n = cor_threshold.n,
-                                               rt_tol.n = rt_tol.n,
-                                               rt_colname.c = rt_colname.c,
-                                               mzdiff_tol.n = mzdiff_tol.n,
-                                               mz_colname.c = mz_colname.c,
-                                               return_adjacency.l = return_adjacency.l,
-                                               report.c = report_set.c)
+              reduce_res <- reducing(x = x[[set.c]],
+                                     cor_method.c = cor_method.c,
+                                     cor_threshold.n = cor_threshold.n,
+                                     rt_tol.n = rt_tol.n,
+                                     rt_colname.c = rt_colname.c,
+                                     mzdiff_tol.n = mzdiff_tol.n,
+                                     mz_colname.c = mz_colname.c,
+                                     return_adjacency.l = return_adjacency.l,
+                                     report.c = report_set.c)
               
               if (!return_adjacency.l) {
                 
@@ -418,7 +418,7 @@ setMethod("reducing", signature(x = "ExpressionSet"),
         if (annot.c != "") {
           
           annot_split.vc <- unlist(strsplit(annot.c, split = "_"))
-         
+          
           if (length(annot_split.vc)) {
             
             annot.c <- paste(vapply(annot_split.vc,
@@ -438,7 +438,7 @@ setMethod("reducing", signature(x = "ExpressionSet"),
                                         }
                                         
                                         return(code.c)
-                                                         
+                                        
                                         
                                       } else {
                                         
@@ -649,7 +649,7 @@ setMethod("reducing", signature(x = "ExpressionSet"),
 
 .mzdiff_db <- function() {
   # table of referenced losses (fragments, adducts, isotopes)
-
+  
   mzdiff_db.df <- read.table(system.file("extdata/mzdiff_db.tsv", package = "phenomis"),
                              header = TRUE,
                              quote = "",
@@ -658,7 +658,7 @@ setMethod("reducing", signature(x = "ExpressionSet"),
   
   mzdiff_db.df[ , "losses_or_gains"] <- gsub(" ", "", mzdiff_db.df[ , "losses_or_gains"])
   
-
+  
   
   add_and_frag.vi <- integer(nrow(mzdiff_db.df))
   
@@ -683,7 +683,7 @@ setMethod("reducing", signature(x = "ExpressionSet"),
     add_and_frag.vi[dup.vi[2]] <- 1
     
   }
-
+  
   mzdiff_db.df[, "add_and_frag_dup"] <- add_and_frag.vi
   
   mzdiff_db.df

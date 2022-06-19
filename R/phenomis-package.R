@@ -1,11 +1,27 @@
-#' Phenomics data analysis and integration
+#' Postprocessing and univariate analysis of omics data
 #'
-#' Package description
+#' The 'phenomis' package provides methods to perform post-processing (i.e. quality control
+#' and normalization) as well as univariate statistical analysis of single and multi-omics data sets.
+#' These methods include quality control metrics, signal drift and batch effect correction,
+#' intensity transformation, univariate hypothesis testing, but also clustering (as well as
+#' annotation of metabolomics data). The data are handled in the standard Bioconductor formats
+#' (i.e. SummarizedExperiment and MultiAssayExperiment for single and multi-omics datasets,
+#' respectively; the alternative ExpressionSet and MultiDataSet formats are also supported for
+#' convenience). As a result, all methods can be readily chained as workflows. The pipeline can
+#' be further enriched by multivariate analysis and feature selection, by using the 'ropls' and
+#' 'biosigner' packages, which support the same formats. Data can be conveniently imported from
+#' and exported to text files. Although the methods were initially targeted to metabolomics data,
+#' most of the methods can be applied to other types of omics data (e.g., transcriptomics, proteomics).
 #'
+#' @importFrom grDevices boxplot.stats rainbow
+#' @importFrom graphics title
+#' @importFrom methods as
+#' @importFrom stats IQR cor median predict quantile rnorm runif sd
+#' @importFrom utils head read.table tail
 #' @name phenomis-package
 #' @aliases phenomis phenomis-package
 #' @docType package
-#' @author E. A. Thevenot (CEA, LIST, MetaboHUB)
+#' @author E. A. Thévenot (CEA)
 #'
 #' Maintainer: Etienne Thevenot <etienne.thevenot@@cea.fr>
 #' @keywords package
@@ -26,7 +42,7 @@ NULL
 #' @export
 #' @examples
 #' \dontrun{
-#' phenomis::search_code("aes", filename_pattern.c = ".R")
+#' search_code("aes", filename_pattern.c = ".R")
 #' }
 search_code <- function(pattern.c,
                         dir.c = getwd(),

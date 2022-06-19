@@ -16,9 +16,6 @@ correcting(
   serrf_corvar.vi = 10,
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -31,9 +28,6 @@ correcting(
   serrf_corvar.vi = 10,
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -46,9 +40,6 @@ correcting(
   serrf_corvar.vi = 10,
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -61,9 +52,6 @@ correcting(
   serrf_corvar.vi = 10,
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -76,9 +64,6 @@ correcting(
   serrf_corvar.vi = 10,
   sample_intensity.c = c("median", "mean", "sum")[2],
   title.c = NA,
-  col_batch.c = "batch",
-  col_injectionOrder.c = "injectionOrder",
-  col_sampleType.c = "sampleType",
   figure.c = c("none", "interactive", "myfile.pdf")[2],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
@@ -102,15 +87,6 @@ between 0 and 1; (default set to 1); in case the parameter is of length 1 and x 
 \item{title.c}{Character: Graphic title: if NA [default] the
 'title' slot from the experimentData will be used (metadata)}
 
-\item{col_batch.c}{Character: name of the column from colData(x) containing
-the batch information (encoded as characters)}
-
-\item{col_injectionOrder.c}{Character: name of the column from colData(x)
-containing the injection order information (encoded as numerics)}
-
-\item{col_sampleType.c}{Character:  name of the column from colData(x)
-containing the sample type information (encoded as characters)}
-
 \item{figure.c}{Character: File name with '.pdf' extension for the figure;
 if 'interactive' (default), figures will be displayed interactively; if 'none',
 no figure will be generated}
@@ -124,7 +100,16 @@ printed on the screen; if 'none', no verbose will be generated}
 intensities in the assay matrix (matrices)
 }
 \description{
-Signal drift and batch effect correction
+Signal drift and batch effect correction. The normalization strategy relies 
+on the measurements of a pooled (or QC) sample injected periodically: 
+for each variable, a regression model is fitted to the values of the pool and
+subsequently used to adjust the intensities of the samples of interest (van
+der Kloet et al, 2009; Dunn et al, 2011). In case the number of pool observations is below 5,
+the linear method is used (for all variables) and a warning is generated. In case no pool is available, the
+samples themselves can be used to computed the regression model (Thevenot et al., 2015).
+The sample metadata of each datasets (e.g. colData Data Frames) must contain 3 columns:
+1) 'sampleType' (character): either 'sample', 'blank', or 'pool', 2) 'injectionOrder' (integer):
+order of injection in the instrument and 3) 'batch' (character): batch name.
 }
 \examples{
 sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))

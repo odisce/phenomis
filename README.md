@@ -36,8 +36,7 @@ since version 0.4.0 and are therefore no longer maintained.*
 
 ## Contributors
 
-Natacha Lenuzza, Alyssa Imbert, Pierrick Roger, Eric Venot, Sylvain
-Dechaumet, and Etienne A. Thevenot.
+Natacha Lenuzza, Alyssa Imbert, Pierrick Roger and Etienne A. Thevenot.
 
 ## Maintainer
 

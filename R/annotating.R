@@ -208,12 +208,12 @@ setMethod("annotating", signature(x = "ExpressionSet"),
 #' @rdname annotating
 #' @export
 #' @examples
-#' phenomis::annotating_parameters()
-#' phenomis::annotating_parameters("chebi")
+#' annotating_parameters()
+#' annotating_parameters("chebi")
 annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]) {
   
-  phenomis:::.annot_param_default(database.c = database.c,
-                                  printL = TRUE)
+  .annot_param_default(database.c = database.c,
+                       printL = TRUE)
   
 }
 
@@ -369,7 +369,7 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
 
 
 .annot_chebi <- function(feat.df, param.ls, paramDefaultLs, verboseL) {
-  
+
   param.ls <- c(param.ls,
                 paramDefaultLs[setdiff(names(paramDefaultLs),
                                        names(param.ls))])

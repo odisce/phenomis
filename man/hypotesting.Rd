@@ -141,7 +141,11 @@ printed on the screen; if 'none', no verbose will be generated}
 means/medians or correlations and the adjusted p-values in feature metadata
 }
 \description{
-Univariate hypothesis testing
+The hypotesting method is a wrapper of the main R functions for hypothesis testing
+and corrections for multiple testing. The list of available tests includes 
+two sample tests (t-test and Wilcoxon rank test, but also the limma test), 
+analysis of variance (for one and two factors) and Kruskal-Wallis rank test, 
+and correlation tests (by using either the pearson or the spearman correlation).
 }
 \examples{
 sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))

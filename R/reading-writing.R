@@ -31,21 +31,30 @@
 #' sacurine.se <- reading(sacurine_dir.c)
 #' # or
 #' sacurine.se <- reading(NA,
-#'                   files.ls = list(dataMatrix = file.path(sacurine_dir.c, "Galaxy1_dataMatrix.tabular"),
-#'                                   sampleMetadata = file.path(sacurine_dir.c, "Galaxy2_sampleMetadata.tabular"),
-#'                                   variableMetadata = file.path(sacurine_dir.c, "Galaxy3_variableMetadata.tabular")))
+#'                   files.ls = list(dataMatrix = file.path(sacurine_dir.c,
+#'                                   "Galaxy1_dataMatrix.tabular"),
+#'                                   sampleMetadata = file.path(sacurine_dir.c,
+#'                                   "Galaxy2_sampleMetadata.tabular"),
+#'                                   variableMetadata = file.path(sacurine_dir.c,
+#'                                   "Galaxy3_variableMetadata.tabular")))
 #' ## 2) Multiple sets
 #' prometis_dir.c <- file.path(data_dir.c, "prometis")
 #' prometis.mae <- reading(prometis_dir.c)
 #' metabo.mae <- reading(prometis_dir.c, subsets.vc = "metabolomics")
 #' # or
 #' prometis.mae <- reading(NA,
-#'                        files.ls = list(metabolomics = list(dataMatrix = file.path(prometis_dir.c, "metabolomics", "dataMatrix.tsv"),
-#'                                                            sampleMetadata = file.path(prometis_dir.c, "metabolomics", "sampleMetadata.tsv"),
-#'                                                            variableMetadata = file.path(prometis_dir.c, "metabolomics", "variableMetadata.tsv")),
-#'                                       proteomics = list(dataMatrix = file.path(prometis_dir.c, "proteomics", "dataMatrix.tsv"),
-#'                                                         sampleMetadata = file.path(prometis_dir.c, "proteomics", "sampleMetadata.tsv"),
-#'                                                         variableMetadata = file.path(prometis_dir.c, "proteomics", "variableMetadata.tsv"))))
+#'                        files.ls = list(metabolomics = list(dataMatrix = file.path(prometis_dir.c,
+#'                        "metabolomics", "dataMatrix.tsv"),
+#'                                                            sampleMetadata = file.path(prometis_dir.c,
+#'                                                            "metabolomics", "sampleMetadata.tsv"),
+#'                                                            variableMetadata = file.path(prometis_dir.c,
+#'                                                            "metabolomics", "variableMetadata.tsv")),
+#'                                                             proteomics = list(dataMatrix = file.path(prometis_dir.c,
+#'                                                            "proteomics", "dataMatrix.tsv"),
+#'                                                            sampleMetadata = file.path(prometis_dir.c,
+#'                                                            "proteomics", "sampleMetadata.tsv"),
+#'                                                            variableMetadata = file.path(prometis_dir.c,
+#'                                                            "proteomics", "variableMetadata.tsv"))))
 #' @rdname reading
 #' @export
 reading <- function(dir.c,
@@ -94,12 +103,12 @@ reading <- function(dir.c,
       names(subdir.vc) <- basename(subdir.vc)
       
       subdir.vl <- sapply(subdir.vc,
-                         function(sub_dir.c) {
-                           fileC <- list.files(sub_dir.c,
-                                               pattern = "(dataMatrix|DM)",
-                                               full.names = TRUE)
-                           length(fileC) == 1 && file.exists(fileC)
-                         })
+                          function(sub_dir.c) {
+                            fileC <- list.files(sub_dir.c,
+                                                pattern = "(dataMatrix|DM)",
+                                                full.names = TRUE)
+                            length(fileC) == 1 && file.exists(fileC)
+                          })
       
       if (sum(subdir.vl) == 0) {
         
@@ -337,7 +346,7 @@ reading <- function(dir.c,
                                                       sampleMap = map.df)
       
     }
-  
+    
   }
   
   # Printing
@@ -347,8 +356,8 @@ reading <- function(dir.c,
   if (report.c != "none") {
     
     if ((class(x) %in% c("MultiAssayExperiment", "MultiDataSet")) && length(x) > 1 && any(is.na(disagree.mc))) {
-    warning("Discrepancies between the sampleMetadata from the datasets:")
-    print(disagree.mc)
+      warning("Discrepancies between the sampleMetadata from the datasets:")
+      print(disagree.mc)
     }
     
     print(x)
@@ -468,11 +477,11 @@ reading <- function(dir.c,
       .checkRformat(tab_file.c)
       
       tab.df <- data.frame(data.table::fread(tab_file.c,
-                                            header = TRUE,
-                                            sep = "\t"),
-                          check.names = FALSE,
-                          row.names = 1,
-                          stringsAsFactors = FALSE)
+                                             header = TRUE,
+                                             sep = "\t"),
+                           check.names = FALSE,
+                           row.names = 1,
+                           stringsAsFactors = FALSE)
       
       # looking for duplicates in column names
       colname_dup.vi <- which(duplicated(colnames(tab.df)))
@@ -527,10 +536,10 @@ reading <- function(dir.c,
   
   if (output.c == "exp") {
     
-   x <- as(x, "SummarizedExperiment")
+    x <- as(x, "SummarizedExperiment")
     
   }
- 
+  
   methods::validObject(x)
   
   return(x)
@@ -879,11 +888,11 @@ setMethod("writing", "MultiDataSet",
                   dir.create(set_dir.c,
                              showWarnings = report.c != "none")
                 
-                phenomis::writing(x[[set.c]],
-                                  set_dir.c,
-                                  prefix.c = prefix.c,
-                                  overwrite.l = overwrite.l,
-                                  report.c = report_set.c)
+                writing(x[[set.c]],
+                        set_dir.c,
+                        prefix.c = prefix.c,
+                        overwrite.l = overwrite.l,
+                        report.c = report_set.c)
                 
               }
               
@@ -952,13 +961,13 @@ setMethod("writing", "MultiDataSet",
                 if (report.c != "none")
                   message("Writing the '", set.c, "' dataset")
                 
-                phenomis::writing(x[[set.c]],
-                                  NA,
-                                  files.ls = list(dataMatrix = filLs[["dataMatrix"]],
-                                                  sampleMetadata = filLs[["sampleMetadata"]],
-                                                  variableMetadata = filLs[["variableMetadata"]]),
-                                  overwrite.l = overwrite.l,
-                                  report.c = report_set.c)
+                writing(x[[set.c]],
+                        NA,
+                        files.ls = list(dataMatrix = filLs[["dataMatrix"]],
+                                        sampleMetadata = filLs[["sampleMetadata"]],
+                                        variableMetadata = filLs[["variableMetadata"]]),
+                        overwrite.l = overwrite.l,
+                        report.c = report_set.c)
                 
               }
             }

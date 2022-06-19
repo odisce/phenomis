@@ -59,5 +59,6 @@ sacurine_pda.df <- as.data.frame(colData(sacurine.se))
 sacurine_pda.df <- sacurine_pda.df[!grepl("QC", rownames(sacurine_pda.df)), ]
 gg_boxplot(sacurine_pda.df, y.c = "age")
 gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender")
-gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender", label.vc = rownames(sacurine_pda.df))
+gg_boxplot(sacurine_pda.df, x.c = "gender", y.c = "bmi", color.c = "gender",
+label.vc = rownames(sacurine_pda.df))
 }

@@ -10,9 +10,6 @@ setMethod("correcting", signature(x = "MultiAssayExperiment"),
                    serrf_corvar.vi = 10,
                    sample_intensity.c = c("median", "mean", "sum")[2],
                    title.c = NA,
-                   col_batch.c = "batch",
-                   col_injectionOrder.c = "injectionOrder",
-                   col_sampleType.c = "sampleType",
                    figure.c = c("none", "interactive", "myfile.pdf")[2],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
@@ -68,9 +65,6 @@ setMethod("correcting", signature(x = "MultiAssayExperiment"),
                                        reference.vc = reference.vc[[set.c]],
                                        loess_span.vn = loess_span.vn[[set.c]],
                                        serrf_corvar.vi = serrf_corvar.vi[[set.c]],
-                                       col_batch.c = col_batch.c,
-                                       col_injectionOrder.c = col_injectionOrder.c,
-                                       col_sampleType.c = col_sampleType.c,
                                        sample_intensity.c = sample_intensity.c,
                                        title.c = set.c,
                                        figure.c = figure_set.c,
@@ -105,9 +99,6 @@ setMethod("correcting", signature(x = "SummarizedExperiment"),
                    serrf_corvar.vi = 10,
                    sample_intensity.c = c("median", "mean", "sum")[2],
                    title.c = NA,
-                   col_batch.c = "batch",
-                   col_injectionOrder.c = "injectionOrder",
-                   col_sampleType.c = "sampleType",
                    figure.c = c("none", "interactive", "myfile.pdf")[2],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
@@ -135,9 +126,6 @@ setMethod("correcting", signature(x = "SummarizedExperiment"),
                                    reference.c = reference.vc,
                                    loess_span.n = loess_span.vn,
                                    serrf_corvar.i = serrf_corvar.vi,
-                                   col_batch.c = col_batch.c,
-                                   col_injectionOrder.c = col_injectionOrder.c,
-                                   col_sampleType.c = col_sampleType.c,
                                    sample_intensity.c = sample_intensity.c,
                                    title.c = title.c,
                                    figure.c = figure.c)
@@ -166,9 +154,6 @@ setMethod("correcting", signature(x = "MultiDataSet"),
                    serrf_corvar.vi = 10,
                    sample_intensity.c = c("median", "mean", "sum")[2],
                    title.c = NA,
-                   col_batch.c = "batch",
-                   col_injectionOrder.c = "injectionOrder",
-                   col_sampleType.c = "sampleType",
                    figure.c = c("none", "interactive", "myfile.pdf")[2],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
@@ -224,9 +209,6 @@ setMethod("correcting", signature(x = "MultiDataSet"),
                                 reference.vc = reference.vc[[set.c]],
                                 loess_span.vn = loess_span.vn[[set.c]],
                                 serrf_corvar.vi = serrf_corvar.vi[[set.c]],
-                                col_batch.c = col_batch.c,
-                                col_injectionOrder.c = col_injectionOrder.c,
-                                col_sampleType.c = col_sampleType.c,
                                 sample_intensity.c = sample_intensity.c,
                                 title.c = set.c,
                                 figure.c = figure_set.c,
@@ -267,9 +249,6 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                    serrf_corvar.vi = 10,
                    sample_intensity.c = c("median", "mean", "sum")[2],
                    title.c = NA,
-                   col_batch.c = "batch",
-                   col_injectionOrder.c = "injectionOrder",
-                   col_sampleType.c = "sampleType",
                    figure.c = c("none", "interactive", "myfile.pdf")[2],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
@@ -297,9 +276,6 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                                    reference.c = reference.vc,
                                    loess_span.n = loess_span.vn,
                                    serrf_corvar.i = serrf_corvar.vi,
-                                   col_batch.c = col_batch.c,
-                                   col_injectionOrder.c = col_injectionOrder.c,
-                                   col_sampleType.c = col_sampleType.c,
                                    sample_intensity.c = sample_intensity.c,
                                    title.c = title.c,
                                    figure.c = figure.c)
@@ -323,9 +299,6 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                         serrf_corvar.i,
                         title.c,
                         figure.c,
-                        col_batch.c,
-                        col_injectionOrder.c,
-                        col_sampleType.c,
                         sample_intensity.c) {
  
   ## checking
@@ -333,12 +306,11 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   if (method.c == "serrf" && reference.c != "pool")
     stop("'reference' should be set to 'pool' for the serrf method.")
   
-  if (sum(grepl(reference.c, samp.df[, col_sampleType.c])) == 0)
-    stop("No '", reference.c, "' reference sample type found in the '",
-         col_sampleType.c, "' column of the sampleMetadata.")
+  if (sum(grepl(reference.c, samp.df[, "sampleType"])) == 0)
+    stop("No '", reference.c, "' reference sample type found in the 'sampleType' column of the sampleMetadata.")
   
-  ref_data.mn <- data.mn[samp.df[, col_sampleType.c] == reference.c, ]
-  ref_samp.df <- samp.df[samp.df[, col_sampleType.c] == reference.c, ]
+  ref_data.mn <- data.mn[samp.df[, "sampleType"] == reference.c, ]
+  ref_samp.df <- samp.df[samp.df[, "sampleType"] == reference.c, ]
   
   ref_nazeros.vl <- apply(ref_data.mn, 2,
                           function(ref.vn)
@@ -355,8 +327,8 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   ## ordering (batch and injection order)
   
   samp.df[, "initial_order"] <- 1:nrow(samp.df)
-  order_batch_inj.vi <- order(samp.df[, col_batch.c],
-                              samp.df[, col_injectionOrder.c])
+  order_batch_inj.vi <- order(samp.df[, "batch"],
+                              samp.df[, "injectionOrder"])
   data.mn <- data.mn[order_batch_inj.vi, ]
   samp.df <- samp.df[order_batch_inj.vi, ]
   
@@ -367,9 +339,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                                   method.c = method.c,
                                   reference.c = reference.c,
                                   loess_span.n = loess_span.n,
-                                  serrf_corvar.i = serrf_corvar.i,
-                                  col_batch.c = col_batch.c,
-                                  col_sampleType.c = col_sampleType.c)
+                                  serrf_corvar.i = serrf_corvar.i)
   
   ## figure
   
@@ -383,19 +353,13 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                     loess_span.n = loess_span.n,
                     sample_intensity.c = sample_intensity.c,
                     title.c = title.c,
-                    raw_vs_normalized.c = "raw",
-                    col_batch.c = col_batch.c,
-                    col_injectionOrder.c = col_injectionOrder.c,
-                    col_sampleType.c = col_sampleType.c)
+                    raw_vs_normalized.c = "raw")
     .plot_drift_pca(data.mn = normalized.mn,
                     samp.df = samp.df,
                     loess_span.n = loess_span.n,
                     sample_intensity.c = sample_intensity.c,
                     title.c = title.c,
-                    raw_vs_normalized.c = method.c,
-                    col_batch.c = col_batch.c,
-                    col_injectionOrder.c = col_injectionOrder.c,
-                    col_sampleType.c = col_sampleType.c)
+                    raw_vs_normalized.c = method.c)
     
     if (figure.c != "interactive")
       grDevices::dev.off()
@@ -420,24 +384,22 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                            method.c,
                            reference.c,
                            loess_span.n,
-                           serrf_corvar.i,
-                           col_batch.c,
-                           col_sampleType.c) {
+                           serrf_corvar.i) {
   
   message("Correction method: ", method.c)
   message("Reference observations: ", reference.c)
   
   ## computing means of all pools (or samples) for each variable (medians used in Fan et al., 2019)
   
-  ref_mean.vn <- apply(data.mn[samp.df[, col_sampleType.c] == reference.c, ], 2,
+  ref_mean.vn <- apply(data.mn[samp.df[, "sampleType"] == reference.c, ], 2,
                        function(feat.vn) {
                          mean(feat.vn, na.rm = TRUE)
                        })
-  ref_median.vn <- apply(data.mn[samp.df[, col_sampleType.c] == reference.c, ], 2,
+  ref_median.vn <- apply(data.mn[samp.df[, "sampleType"] == reference.c, ], 2,
                        function(feat.vn) {
                          median(feat.vn, na.rm = TRUE)
                        })
-  pred_median.vn <- apply(data.mn[samp.df[, col_sampleType.c] != reference.c, ], 2,
+  pred_median.vn <- apply(data.mn[samp.df[, "sampleType"] != reference.c, ], 2,
                           function(feat.vn) {
                             median(feat.vn, na.rm = TRUE)
                           })
@@ -445,11 +407,11 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   ## splitting data and sample metadata from each batch
   
   batch_data.ls <- split(as.data.frame(data.mn),
-                         f = samp.df[, col_batch.c])
+                         f = samp.df[, "batch"])
   batch_data.ls <- lapply(batch_data.ls, function(input.df) as.matrix(input.df))
   
   batch_samp.ls <- split(as.data.frame(samp.df),
-                         f = samp.df[, col_batch.c])
+                         f = samp.df[, "batch"])
   
   ## checking extrapolation: are there pools at the first and last observations of each batch
   
@@ -457,7 +419,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                           dimnames = list(c("first", "last"), names(batch_data.ls)))
   
   for (batch.c in names(batch_samp.ls)) {
-    batch_sampleType.vc <- batch_samp.ls[[batch.c]][, col_sampleType.c]
+    batch_sampleType.vc <- batch_samp.ls[[batch.c]][, "sampleType"]
     pool_extra.ml["first", batch.c] <- utils::head(batch_sampleType.vc, 1) == reference.c
     pool_extra.ml["last", batch.c] <- utils::tail(batch_sampleType.vc, 1) == reference.c
   }
@@ -485,7 +447,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
     batch_samp.df <- batch_samp.ls[[batch.c]]
     
     batch_all.vi <- 1:nrow(batch_data.mn)
-    batch_ref.vi <- which(batch_samp.df[, col_sampleType.c] == reference.c)
+    batch_ref.vi <- which(batch_samp.df[, "sampleType"] == reference.c)
     
     
     if (method.c == "loess") {
@@ -695,10 +657,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                             loess_span.n = 1,
                             sample_intensity.c = "mean",
                             title.c = NA,
-                            raw_vs_normalized.c = "",
-                            col_batch.c = "batch",
-                            col_injectionOrder.c = "injectionOrder",
-                            col_sampleType.c = "sampleType") {
+                            raw_vs_normalized.c = "") {
   
   main.c <- paste0(raw_vs_normalized.c, 
                    ifelse(!is.na(title.c) && title.c != "",
@@ -712,7 +671,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   
   obsNamVc <- rownames(samp.df)
   
-  obsColVc <- .sample_color(samp.df = samp.df, col_sampleType.c = col_sampleType.c)
+  obsColVc <- .sample_color(samp.df = samp.df)
   
   ## Graphic 1: Mean of intensities for each sample
   
@@ -720,10 +679,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
               samp.df = samp.df,
               loess_span.n = loess_span.n,
               sample_intensity.c = sample_intensity.c,
-              mar.vn = c(3.6, 3.6, 3.1, 0.6),
-              col_batch.c = col_batch.c,
-              col_injectionOrder.c = col_injectionOrder.c,
-              col_sampleType.c = col_sampleType.c)
+              mar.vn = c(3.6, 3.6, 3.1, 0.6))
   
   title(main.c)
   
@@ -738,7 +694,6 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                     pred.i = 4,
                     show_pred.vi = c(1, 2),
                     pca_metrics.ls = pca_metrics.ls,
-                    col_sampleType.c = "sampleType",
                     mar.vn = c(3.6, 3.6, 0.6, 1.1))
   
   .plot_pca_metrics(data.mn = data.mn,
@@ -746,7 +701,6 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                     pred.i = 4,
                     show_pred.vi = c(3, 4),
                     pca_metrics.ls = pca_metrics.ls,
-                    col_sampleType.c = "sampleType",
                     mar.vn = c(3.6, 3.6, 0.6, 1.1))
   
   
