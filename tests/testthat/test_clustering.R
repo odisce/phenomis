@@ -2,7 +2,7 @@ testthat::context("Testing 'clustering'")
 
 testthat::test_that("clustering-se", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
   sacurine.se <- correcting(sacurine.se, figure.c = "none")
   sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
   sacurine.se <- transforming(sacurine.se)
@@ -22,10 +22,10 @@ testthat::test_that("clustering-mae", {
   
   prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
   
-  prometis.mae <- clustering(prometis.mae, clusters.vi = c(10, 10))
+  prometis.mae <- clustering(prometis.mae, clusters.vi = c(2, 2))
   
-  testthat::expect_equal(as.numeric(colData(prometis.mae[["metabolomics"]])["s6", "hclust"]),
-                         3,
+  testthat::expect_equal(as.numeric(colData(prometis.mae[["metabo"]])["W617f", "hclust"]),
+                         1,
                          tolerance = 1e-6)
   
 })

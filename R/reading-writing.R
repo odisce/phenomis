@@ -27,7 +27,7 @@
 #' @examples
 #' data_dir.c <- system.file("extdata", package = "phenomis")
 #' ## 1) Single set
-#' sacurine_dir.c <- file.path(data_dir.c, "W4M00001_Sacurine-statistics")
+#' sacurine_dir.c <- file.path(data_dir.c, "sacurine")
 #' sacurine.se <- reading(sacurine_dir.c)
 #' # or
 #' sacurine.se <- reading(NA,
@@ -40,21 +40,21 @@
 #' ## 2) Multiple sets
 #' prometis_dir.c <- file.path(data_dir.c, "prometis")
 #' prometis.mae <- reading(prometis_dir.c)
-#' metabo.mae <- reading(prometis_dir.c, subsets.vc = "metabolomics")
+#' metabo.mae <- reading(prometis_dir.c, subsets.vc = "metabo")
 #' # or
 #' prometis.mae <- reading(NA,
-#'                        files.ls = list(metabolomics = list(dataMatrix = file.path(prometis_dir.c,
-#'                        "metabolomics", "dataMatrix.tsv"),
-#'                                                            sampleMetadata = file.path(prometis_dir.c,
-#'                                                            "metabolomics", "sampleMetadata.tsv"),
-#'                                                            variableMetadata = file.path(prometis_dir.c,
-#'                                                            "metabolomics", "variableMetadata.tsv")),
-#'                                                             proteomics = list(dataMatrix = file.path(prometis_dir.c,
-#'                                                            "proteomics", "dataMatrix.tsv"),
-#'                                                            sampleMetadata = file.path(prometis_dir.c,
-#'                                                            "proteomics", "sampleMetadata.tsv"),
-#'                                                            variableMetadata = file.path(prometis_dir.c,
-#'                                                            "proteomics", "variableMetadata.tsv"))))
+#'                        files.ls = list(metabo = list(dataMatrix = file.path(prometis_dir.c,
+#'                                                            "metabo", "dataMatrix.tsv"),
+#'                                                      sampleMetadata = file.path(prometis_dir.c,
+#'                                                            "metabo", "sampleMetadata.tsv"),
+#'                                                      variableMetadata = file.path(prometis_dir.c,
+#'                                                            "metabo", "variableMetadata.tsv")),
+#'                                        proteo = list(dataMatrix = file.path(prometis_dir.c,
+#'                                                            "proteo", "dataMatrix.tsv"),
+#'                                                      sampleMetadata = file.path(prometis_dir.c,
+#'                                                            "proteo", "sampleMetadata.tsv"),
+#'                                                      variableMetadata = file.path(prometis_dir.c,
+#'                                                            "proteo", "variableMetadata.tsv"))))
 #' @rdname reading
 #' @export
 reading <- function(dir.c,
@@ -609,9 +609,8 @@ setMethod("writing", "MultiAssayExperiment",
                 
                 set.se <- x[[set.c]]
                 ## including the common sample metadata in each data set
-                colData(set.se) <- as(cbind.data.frame(colData(x)[colnames(set.se), ],
-                                                       colData(set.se)),
-                                      "DataFrame")
+                colData(set.se) <- cbind(colData(x)[colnames(set.se), ],
+                                         colData(set.se))
                 colData(set.se)[, ".id"] <- NULL
                 
                 writing(set.se,
@@ -688,8 +687,8 @@ setMethod("writing", "MultiAssayExperiment",
                   message("Writing the '", set.c, "' dataset")
                 
                 set.se <- x[[set.c]]
-                colData(set.se) <- cbind.data.frame(colData(x)[rownames(set.se), ],
-                                                    colData(set.se))
+                colData(set.se) <- cbind(colData(x)[colnames(set.se), ],
+                                         colData(set.se))
                 
                 writing(set.se,
                         NA,
@@ -775,8 +774,8 @@ setMethod("writing", "SummarizedExperiment",
             ## Writing
             
             tdat.mn <- SummarizedExperiment::assay(x)
-            sam.df <- SummarizedExperiment::colData(x)
-            var.df <- SummarizedExperiment::rowData(x)
+            sam.df <- as.data.frame(SummarizedExperiment::colData(x))
+            var.df <- as.data.frame(SummarizedExperiment::rowData(x))
             chkLs <- .checkW4Mformat(t(tdat.mn), sam.df, var.df, infCw = report.c)
             
             if (!chkLs[["chkL"]]) {
@@ -1066,7 +1065,7 @@ setMethod("writing", "ExpressionSet",
             if (!is.na(dir.c) || !is.na(tab_file.vc["sampleMetadata"])) {
               
               sam.df <- cbind.data.frame(sampleMetadata = rownames(sam.df),
-                                         sam.df)
+                                         as.data.frame(sam.df))
               utils::write.table(sam.df,
                                  file = tab_file.vc['sampleMetadata'],
                                  quote = FALSE,
@@ -1078,7 +1077,7 @@ setMethod("writing", "ExpressionSet",
             if (!is.na(dir.c) || !is.na(tab_file.vc["variableMetadata"])) {
               
               var.df <- cbind.data.frame(variableMetadata = rownames(var.df),
-                                         var.df)
+                                         as.data.frame(var.df))
               utils::write.table(var.df,
                                  file = tab_file.vc['variableMetadata'],
                                  quote = FALSE,

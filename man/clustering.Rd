@@ -125,7 +125,7 @@ the clusters in rowData and colData if 'clusters.vi' has been specified
 Hierarchical clustering of both samples and variables
 }
 \examples{
-sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 sacurine.se <- correcting(sacurine.se)
 sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 sacurine.se <- transforming(sacurine.se)
@@ -135,6 +135,6 @@ utils::head(rowData(sacurine.se))
 
 # MultiAssayExperiment
 
-prometis.mae <- reading(system.file("extdata/prometis/", package="phenomis"))
-prometis.mae <- clustering(prometis.mae, clusters.vi = c(3, 3))
+prometis.mae <- reading(system.file("extdata/prometis", package="phenomis"))
+prometis.mae <- clustering(prometis.mae)
 }

@@ -13,6 +13,8 @@
 #' and exported to text files. Although the methods were initially targeted to metabolomics data,
 #' most of the methods can be applied to other types of omics data (e.g., transcriptomics, proteomics).
 #'
+#' @import biodbChebi MultiAssayExperiment SummarizedExperiment
+#' @importClassesFrom MultiDataSet MultiDataSet
 #' @importFrom grDevices boxplot.stats rainbow
 #' @importFrom graphics title
 #' @importFrom methods as

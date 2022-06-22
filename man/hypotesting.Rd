@@ -148,7 +148,7 @@ analysis of variance (for one and two factors) and Kruskal-Wallis rank test,
 and correlation tests (by using either the pearson or the spearman correlation).
 }
 \examples{
-sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 sacurine.se <- correcting(sacurine.se, figure.c = 'none')
 sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 sacurine.se <- transforming(sacurine.se)

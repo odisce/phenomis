@@ -48,23 +48,32 @@ tables), a MultiAssayExperiment instance is created.
 \examples{
 data_dir.c <- system.file("extdata", package = "phenomis")
 ## 1) Single set
-sacurine_dir.c <- file.path(data_dir.c, "W4M00001_Sacurine-statistics")
+sacurine_dir.c <- file.path(data_dir.c, "sacurine")
 sacurine.se <- reading(sacurine_dir.c)
 # or
 sacurine.se <- reading(NA,
-                  files.ls = list(dataMatrix = file.path(sacurine_dir.c, "Galaxy1_dataMatrix.tabular"),
-                                  sampleMetadata = file.path(sacurine_dir.c, "Galaxy2_sampleMetadata.tabular"),
-                                  variableMetadata = file.path(sacurine_dir.c, "Galaxy3_variableMetadata.tabular")))
+                  files.ls = list(dataMatrix = file.path(sacurine_dir.c,
+                                  "Galaxy1_dataMatrix.tabular"),
+                                  sampleMetadata = file.path(sacurine_dir.c,
+                                  "Galaxy2_sampleMetadata.tabular"),
+                                  variableMetadata = file.path(sacurine_dir.c,
+                                  "Galaxy3_variableMetadata.tabular")))
 ## 2) Multiple sets
 prometis_dir.c <- file.path(data_dir.c, "prometis")
 prometis.mae <- reading(prometis_dir.c)
-metabo.mae <- reading(prometis_dir.c, subsets.vc = "metabolomics")
+metabo.mae <- reading(prometis_dir.c, subsets.vc = "metabo")
 # or
 prometis.mae <- reading(NA,
-                       files.ls = list(metabolomics = list(dataMatrix = file.path(prometis_dir.c, "metabolomics", "dataMatrix.tsv"),
-                                                           sampleMetadata = file.path(prometis_dir.c, "metabolomics", "sampleMetadata.tsv"),
-                                                           variableMetadata = file.path(prometis_dir.c, "metabolomics", "variableMetadata.tsv")),
-                                      proteomics = list(dataMatrix = file.path(prometis_dir.c, "proteomics", "dataMatrix.tsv"),
-                                                        sampleMetadata = file.path(prometis_dir.c, "proteomics", "sampleMetadata.tsv"),
-                                                        variableMetadata = file.path(prometis_dir.c, "proteomics", "variableMetadata.tsv"))))
+                       files.ls = list(metabo = list(dataMatrix = file.path(prometis_dir.c,
+                                                           "metabo", "dataMatrix.tsv"),
+                                                     sampleMetadata = file.path(prometis_dir.c,
+                                                           "metabo", "sampleMetadata.tsv"),
+                                                     variableMetadata = file.path(prometis_dir.c,
+                                                           "metabo", "variableMetadata.tsv")),
+                                       proteo = list(dataMatrix = file.path(prometis_dir.c,
+                                                           "proteo", "dataMatrix.tsv"),
+                                                     sampleMetadata = file.path(prometis_dir.c,
+                                                           "proteo", "sampleMetadata.tsv"),
+                                                     variableMetadata = file.path(prometis_dir.c,
+                                                           "proteo", "variableMetadata.tsv"))))
 }

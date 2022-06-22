@@ -1,8 +1,8 @@
 Package: phenomis
 Type: Package
 Title: Postprocessing and univariate analysis of omics data
-Version: 0.4.8
-Date: 2022-06-19
+Version: 0.4.12
+Date: 2022-06-21
 Authors@R: c(
 	   person(given = "Etienne A.", family = "Thevenot",
 	   email = "etienne.thevenot@cea.fr",
@@ -16,6 +16,9 @@ Authors@R: c(
 	   role = "ctb"),
 	   person(given = "Pierrick", family = "Roger",
 	   email = "pierrick.roger@cea.fr",
+	   role = "ctb"),
+	   person(given = "Sylvain", family = "Dechaumet",
+	   email = "sylvain.dechaumet@cea.fr",
 	   role = "ctb")
 	   )
 Description: The 'phenomis' package provides methods to perform post-processing (i.e. quality control
@@ -65,6 +68,7 @@ Suggests:
     BiocGenerics,
     BiocStyle,
     biosigner,
+    CLL,
     knitr,
     MultiDataSet,
     omicade4,

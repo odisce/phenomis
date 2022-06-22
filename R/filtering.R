@@ -223,8 +223,11 @@ setMethod("filtering", signature(x = "ExpressionSet"),
     class.vc <- as.character(samp.df[, class.c])
     filter.vl <- apply(data.mn, 2,
                        function(feat.vn) {
-                         all(tapply(feat.vn, class.vc, function(x) sum(is.na(x))/length(x)) > max_na_prop.n) ||
-                           any(tapply(feat.vn, class.vc, function(x) stats::var(x, na.rm = TRUE)) < min_variance.n)
+                         class_na.vl <- tapply(feat.vn, class.vc, function(x) sum(is.na(x))/length(x)) > max_na_prop.n
+                         class_zerovar.vl <- tapply(feat.vn, class.vc, function(x) stats::var(x, na.rm = TRUE)) < min_variance.n
+                         if(any(is.na(class_zerovar.vl)))
+                           class_zerovar.vl[is.na(class_zerovar.vl)] <- TRUE
+                         all(class_na.vl) || any(class_zerovar.vl)
                        })
   } else
     filter.vl <- apply(data.mn, ifelse(dim.c == "features", 2, 1),

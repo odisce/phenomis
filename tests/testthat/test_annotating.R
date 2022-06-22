@@ -2,7 +2,7 @@ testthat::context("Testing 'annotating'")
 
 # testthat::test_that("annotating-se-chebi", {
 #   
-#   sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#   sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #   sacurine.se <- sacurine.se[tail(rownames(sacurine.se)), ]
 #   sacurine.se <- annotating(sacurine.se, database.c = "chebi",
 #                             param.ls = list(query.type = "mz",
@@ -42,7 +42,7 @@ testthat::context("Testing 'annotating'")
 
 testthat::test_that("annotating-se-localms", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
   msdbDF <- read.table(system.file("extdata/local_ms_db.tsv", package = "phenomis"),
                        header = TRUE,
                        sep = "\t",
@@ -61,7 +61,7 @@ testthat::test_that("annotating-se-localms", {
 
 # testthat::test_that("annotating-se-chebiID", {
 #   
-#   sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#   sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #   sacurine.se <- sacurine.se[tail(rownames(sacurine.se)), ]
 #   sacurine.se <- annotating(sacurine.se, database.c = "chebi",
 #                             param.ls = list(query.type = "chebi.id", query.col = "database_identifier",
@@ -73,8 +73,29 @@ testthat::test_that("annotating-se-localms", {
 # })
 
 # testthat::test_that("annotating-mae", {
+# 
+#   sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
+#   sacurine.se <- sacurine.se[tail(rownames(sacurine.se)), ]
+#   map.ls <- list(sacurine = data.frame(primary = colnames(sacurine.se),
+#                                        colname = colnames(sacurine.se)))
+#   map.df <- MultiAssayExperiment::listToMap(map.ls)
+#   sac.mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = list(sacurine = sacurine.se),
+#                                                         colData = colData(sacurine.se),
+#                                                         sampleMap = map.df)
+#   sac.mae <- annotating(sac.mae, database.c = "chebi",
+#                         param.ls = list(query.type = "chebi.id", query.col = "database_identifier",
+#                                         prefix = "chebiID."))
+# 
+#   testthat::expect_identical(rowData(sac.mae[["sacurine"]])["Tryptophan", "chebiID.formula"],
+#                              "C11H12N2O2")
+# 
+# 
+# })
+
+
+# testthat::test_that("annotating-mae", {
 #   
-#   sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#   sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #   sacurine.se <- sacurine.se[tail(rownames(sacurine.se)), ]
 #   map.ls <- list(sacurine = data.frame(primary = colnames(sacurine.se),
 #                                        colname = colnames(sacurine.se)))

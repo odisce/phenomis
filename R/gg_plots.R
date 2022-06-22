@@ -203,7 +203,7 @@ gg_barplot <- function(data.mn,
 #' @return character vector of outlier labels (same dimension as the number of rows from data.tb)
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine_pda.df <- as.data.frame(colData(sacurine.se))
 #' sacurine_pda.df <- sacurine_pda.df[!grepl("QC", rownames(sacurine_pda.df)), ]
 #' gg_boxplot(sacurine_pda.df, y.c = "age")
@@ -352,7 +352,7 @@ gg_boxplot <- function(data.tb,
 #' @return invisible ggplot2 object
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine_pda.df <- colData(sacurine.se)
 #' sacurine_pda.df <- sacurine_pda.df[!grepl("QC", rownames(sacurine_pda.df)), ]
 #' gg_pie(sacurine_pda.df, y.c = "gender", label.c = "value")
@@ -498,7 +498,7 @@ gg_pie <- function(data.tb,
 #' @return invisible ggplot2 object
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine.se <- correcting(sacurine.se, figure.c = "none")
 #' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 #' sacurine.se <- transforming(sacurine.se)
@@ -684,7 +684,7 @@ gg_volcanoplot <- function(fold_change.vn,
 #' @return invisible grid object
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine.se <- correcting(sacurine.se, figure.c = 'none')
 #' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 #' sacurine.se <- transforming(sacurine.se)

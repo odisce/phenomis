@@ -1,0 +1,101 @@
+variableMetadata	accession	description	uniprot_id
+Q8C196_Carbamoyl-phosphate synt.	sp|Q8C196|CPSM_MOUSE	Carbamoyl-phosphate synthase [ammonia], mitochondrial  OS=Mus musculus (Mouse) GN=Cps1 PE=1 SV=2	Q8C196
+Q9DBM2_Peroxisomal bifunctional.	sp|Q9DBM2|ECHP_MOUSE	Peroxisomal bifunctional enzyme  OS=Mus musculus (Mouse) GN=Ehhadh PE=1 SV=4	Q9DBM2
+Q9EQ20_Methylmalonate-semialdeh.	sp|Q9EQ20|MMSA_MOUSE	Methylmalonate-semialdehyde dehydrogenase [acylating], mitochondrial  OS=Mus musculus (Mouse) GN=Aldh6a1 PE=1 SV=1	Q9EQ20
+Q8VCW8_Acyl-CoA synthetase fami.	sp|Q8VCW8|ACSF2_MOUSE	Acyl-CoA synthetase family member 2, mitochondrial  OS=Mus musculus (Mouse) GN=Acsf2 PE=1 SV=1	Q8VCW8
+O35945_Aldehyde dehydrogenase, .	sp|O35945|AL1A7_MOUSE	Aldehyde dehydrogenase, cytosolic 1  OS=Mus musculus (Mouse) GN=Aldh1a7 PE=1 SV=1	O35945
+Q91Y97_Fructose-bisphosphate al.	sp|Q91Y97|ALDOB_MOUSE	Fructose-bisphosphate aldolase B  OS=Mus musculus (Mouse) GN=Aldob PE=1 SV=3	Q91Y97
+Q9CZN7_Serine hydroxymethyltran.	sp|Q9CZN7|GLYM_MOUSE	Serine hydroxymethyltransferase, mitochondrial  OS=Mus musculus (Mouse) GN=Shmt2 PE=1 SV=1	Q9CZN7
+O88428_Bifunctional 3'-phosphoa.	sp|O88428|PAPS2_MOUSE	Bifunctional 3'-phosphoadenosine 5'-phosphosulfate synthase 2  OS=Mus musculus (Mouse) GN=Papss2 PE=1 SV=2	O88428
+Q9QXF8_Glycine N-methyltransfer.	sp|Q9QXF8|GNMT_MOUSE	Glycine N-methyltransferase  OS=Mus musculus (Mouse) GN=Gnmt PE=1 SV=3	Q9QXF8
+O08749_Dihydrolipoyl dehydrogen.	sp|O08749|DLDH_MOUSE	Dihydrolipoyl dehydrogenase, mitochondrial  OS=Mus musculus (Mouse) GN=Dld PE=1 SV=2	O08749
+Q8BWF0_Succinate-semialdehyde d.	sp|Q8BWF0|SSDH_MOUSE	Succinate-semialdehyde dehydrogenase, mitochondrial  OS=Mus musculus (Mouse) GN=Aldh5a1 PE=1 SV=1	Q8BWF0
+O08709_Peroxiredoxin-6	sp|O08709|PRDX6_MOUSE	Peroxiredoxin-6  OS=Mus musculus (Mouse) GN=Prdx6 PE=1 SV=3	O08709
+P02088_Hemoglobin subunit beta-1	sp|P02088|HBB1_MOUSE	Hemoglobin subunit beta-1  OS=Mus musculus (Mouse) GN=Hbb-b1 PE=1 SV=2	P02088
+Q8QZS1_3-hydroxyisobutyryl-CoA .	sp|Q8QZS1|HIBCH_MOUSE	3-hydroxyisobutyryl-CoA hydrolase, mitochondrial  OS=Mus musculus (Mouse) GN=Hibch PE=1 SV=1	Q8QZS1
+Q8BWQ1_UDP-glucuronosyltransfer.	sp|Q8BWQ1|UD2A3_MOUSE	UDP-glucuronosyltransferase 2A3  OS=Mus musculus (Mouse) GN=Ugt2a3 PE=1 SV=1	Q8BWQ1
+Q9CW42_Mitochondrial amidoxime-.	sp|Q9CW42|MARC1_MOUSE	Mitochondrial amidoxime-reducing component 1  OS=Mus musculus (Mouse) GN=Marc1 PE=1 SV=2	Q9CW42
+Q8BJ64_Choline dehydrogenase, m.	sp|Q8BJ64|CHDH_MOUSE	Choline dehydrogenase, mitochondrial  OS=Mus musculus (Mouse) GN=Chdh PE=1 SV=1	Q8BJ64
+P40124_Adenylyl cyclase-associa.	sp|P40124|CAP1_MOUSE	Adenylyl cyclase-associated protein 1  OS=Mus musculus (Mouse) GN=Cap1 PE=1 SV=4	P40124
+Q8BK48_Pyrethroid hydrolase Ces.	sp|Q8BK48|EST2E_MOUSE	Pyrethroid hydrolase Ces2e  OS=Mus musculus (Mouse) GN=Ces2e PE=1 SV=1	Q8BK48
+Q8BG32_26S proteasome non-ATPas.	sp|Q8BG32|PSD11_MOUSE	26S proteasome non-ATPase regulatory subunit 11  OS=Mus musculus (Mouse) GN=Psmd11 PE=1 SV=3	Q8BG32
+Q99L13_3-hydroxyisobutyrate deh.	sp|Q99L13|3HIDH_MOUSE	3-hydroxyisobutyrate dehydrogenase, mitochondrial  OS=Mus musculus (Mouse) GN=Hibadh PE=1 SV=1	Q99L13
+Q91W43_Glycine dehydrogenase (d.	sp|Q91W43|GCSP_MOUSE	Glycine dehydrogenase (decarboxylating), mitochondrial  OS=Mus musculus (Mouse) GN=Gldc PE=1 SV=1	Q91W43
+Q61316_Heat shock 70 kDa protei.	sp|Q61316|HSP74_MOUSE	Heat shock 70 kDa protein 4  OS=Mus musculus (Mouse) GN=Hspa4 PE=1 SV=1	Q61316
+Q8JZZ0_UDP-glucuronosyltransfer.	sp|Q8JZZ0|UD3A2_MOUSE	UDP-glucuronosyltransferase 3A2  OS=Mus musculus (Mouse) GN=Ugt3a2 PE=1 SV=2	Q8JZZ0
+Q8VE09_Tetratricopeptide repeat.	sp|Q8VE09|TT39C_MOUSE	Tetratricopeptide repeat protein 39C  OS=Mus musculus (Mouse) GN=Ttc39c PE=1 SV=2	Q8VE09
+P63242_Eukaryotic translation i.	sp|P63242|IF5A1_MOUSE	Eukaryotic translation initiation factor 5A-1  OS=Mus musculus (Mouse) GN=Eif5a PE=1 SV=2	P63242
+Q91YH5_Atlastin-3	sp|Q91YH5|ATLA3_MOUSE	Atlastin-3  OS=Mus musculus (Mouse) GN=Atl3 PE=1 SV=1	Q91YH5
+P61982_14-3-3 protein gamma	sp|P61982|1433G_MOUSE	14-3-3 protein gamma  OS=Mus musculus (Mouse) GN=Ywhag PE=1 SV=2	P61982
+Q8R146_Acylamino-acid-releasing.	sp|Q8R146|APEH_MOUSE	Acylamino-acid-releasing enzyme  OS=Mus musculus (Mouse) GN=Apeh PE=1 SV=3	Q8R146
+Q8CC88_von Willebrand factor A .	sp|Q8CC88|VWA8_MOUSE	von Willebrand factor A domain-containing protein 8  OS=Mus musculus (Mouse) GN=Vwa8 PE=1 SV=2	Q8CC88
+Q8VEK3_Heterogeneous nuclear ri.	sp|Q8VEK3|HNRPU_MOUSE	Heterogeneous nuclear ribonucleoprotein U  OS=Mus musculus (Mouse) GN=Hnrnpu PE=1 SV=1	Q8VEK3
+P28843_Dipeptidyl peptidase 4	sp|P28843|DPP4_MOUSE	Dipeptidyl peptidase 4  OS=Mus musculus (Mouse) GN=Dpp4 PE=1 SV=3	P28843
+P58281_Dynamin-like 120 kDa pro.	sp|P58281|OPA1_MOUSE	Dynamin-like 120 kDa protein, mitochondrial  OS=Mus musculus (Mouse) GN=Opa1 PE=1 SV=1	P58281
+Q9D1D4_Transmembrane emp24 doma.	sp|Q9D1D4|TMEDA_MOUSE	Transmembrane emp24 domain-containing protein 10  OS=Mus musculus (Mouse) GN=Tmed10 PE=1 SV=1	Q9D1D4
+Q8C0C7_Phenylalanine--tRNA liga.	sp|Q8C0C7|SYFA_MOUSE	Phenylalanine--tRNA ligase alpha subunit  OS=Mus musculus (Mouse) GN=Farsa PE=1 SV=1	Q8C0C7
+Q8BML9_Glutamine--tRNA ligase	sp|Q8BML9|SYQ_MOUSE	Glutamine--tRNA ligase  OS=Mus musculus (Mouse) GN=Qars PE=1 SV=1	Q8BML9
+Q8K0D5_Elongation factor G, mit.	sp|Q8K0D5|EFGM_MOUSE	Elongation factor G, mitochondrial  OS=Mus musculus (Mouse) GN=Gfm1 PE=1 SV=1	Q8K0D5
+Q9CQE1_Protein NipSnap homolog .	sp|Q9CQE1|NPS3B_MOUSE	Protein NipSnap homolog 3B  OS=Mus musculus (Mouse) GN=Nipsnap3b PE=1 SV=1	Q9CQE1
+Q9CQM9_Glutaredoxin-3	sp|Q9CQM9|GLRX3_MOUSE	Glutaredoxin-3  OS=Mus musculus (Mouse) GN=Glrx3 PE=1 SV=1	Q9CQM9
+Q64523_Histone H2A type 2-C	sp|Q64523|H2A2C_MOUSE	Histone H2A type 2-C  OS=Mus musculus (Mouse) GN=Hist2h2ac PE=1 SV=3	Q64523
+Q9DB05_Alpha-soluble NSF attach.	sp|Q9DB05|SNAA_MOUSE	Alpha-soluble NSF attachment protein  OS=Mus musculus (Mouse) GN=Napa PE=1 SV=1	Q9DB05
+Q9R1J0_Sterol-4-alpha-carboxyla.	sp|Q9R1J0|NSDHL_MOUSE	Sterol-4-alpha-carboxylate 3-dehydrogenase, decarboxylating  OS=Mus musculus (Mouse) GN=Nsdhl PE=1 SV=1	Q9R1J0
+Q99020_Heterogeneous nuclear ri.	sp|Q99020|ROAA_MOUSE	Heterogeneous nuclear ribonucleoprotein A/B  OS=Mus musculus (Mouse) GN=Hnrnpab PE=1 SV=1	Q99020
+P46735_Unconventional myosin-Ib	sp|P46735|MYO1B_MOUSE	Unconventional myosin-Ib  OS=Mus musculus (Mouse) GN=Myo1b PE=1 SV=3	P46735
+P68433_Histone H3.1	sp|P68433|H31_MOUSE	Histone H3.1  OS=Mus musculus (Mouse) GN=Hist1h3a PE=1 SV=2	P68433
+Q9CZX8_40S ribosomal protein S19	sp|Q9CZX8|RS19_MOUSE	40S ribosomal protein S19  OS=Mus musculus (Mouse) GN=Rps19 PE=1 SV=3	Q9CZX8
+Q9CQ65_S-methyl-5'-thioadenosin.	sp|Q9CQ65|MTAP_MOUSE	S-methyl-5'-thioadenosine phosphorylase  OS=Mus musculus (Mouse) GN=Mtap PE=1 SV=1	Q9CQ65
+Q9D8U8_Sorting nexin-5	sp|Q9D8U8|SNX5_MOUSE	Sorting nexin-5  OS=Mus musculus (Mouse) GN=Snx5 PE=1 SV=1	Q9D8U8
+Q61102_ATP-binding cassette sub.	sp|Q61102|ABCB7_MOUSE	ATP-binding cassette sub-family B member 7, mitochondrial  OS=Mus musculus (Mouse) GN=Abcb7 PE=1 SV=3	Q61102
+Q02257_Junction plakoglobin	sp|Q02257|PLAK_MOUSE	Junction plakoglobin  OS=Mus musculus (Mouse) GN=Jup PE=1 SV=3	Q02257
+Q62264_Thyroid hormone-inducibl.	sp|Q62264|THRSP_MOUSE	Thyroid hormone-inducible hepatic protein  OS=Mus musculus (Mouse) GN=Thrsp PE=1 SV=1	Q62264
+Q9QYA2_Mitochondrial import rec.	sp|Q9QYA2|TOM40_MOUSE	Mitochondrial import receptor subunit TOM40 homolog  OS=Mus musculus (Mouse) GN=Tomm40 PE=1 SV=3	Q9QYA2
+P08030_Adenine phosphoribosyltr.	sp|P08030|APT_MOUSE	Adenine phosphoribosyltransferase  OS=Mus musculus (Mouse) GN=Aprt PE=1 SV=2	P08030
+P00397_Cytochrome c oxidase sub.	sp|P00397|COX1_MOUSE	Cytochrome c oxidase subunit 1  OS=Mus musculus (Mouse) GN=Mtco1 PE=1 SV=2	P00397
+P01864_Ig gamma-2A chain C regi.	sp|P01864|GCAB_MOUSE	Ig gamma-2A chain C region secreted form  OS=Mus musculus (Mouse) PE=1 SV=1	P01864
+O70325_Phospholipid hydroperoxi.	sp|O70325|GPX4_MOUSE	Phospholipid hydroperoxide glutathione peroxidase  OS=Mus musculus (Mouse) GN=Gpx4 PE=1 SV=4	O70325
+Q9R0Q9_Mannose-P-dolichol utili.	sp|Q9R0Q9|MPU1_MOUSE	Mannose-P-dolichol utilization defect 1 protein  OS=Mus musculus (Mouse) GN=Mpdu1 PE=1 SV=1	Q9R0Q9
+P36536_GTP-binding protein SAR1a	sp|P36536|SAR1A_MOUSE	GTP-binding protein SAR1a  OS=Mus musculus (Mouse) GN=Sar1a PE=1 SV=1	P36536
+Q9CR61_NADH dehydrogenase [ubiq.	sp|Q9CR61|NDUB7_MOUSE	NADH dehydrogenase [ubiquinone] 1 beta subcomplex subunit 7  OS=Mus musculus (Mouse) GN=Ndufb7 PE=1 SV=3	Q9CR61
+Q9CRC0_Vitamin K epoxide reduct.	sp|Q9CRC0|VKOR1_MOUSE	Vitamin K epoxide reductase complex subunit 1  OS=Mus musculus (Mouse) GN=Vkorc1 PE=1 SV=1	Q9CRC0
+Q99JT9_1,2-dihydroxy-3-keto-5-m.	sp|Q99JT9|MTND_MOUSE	1,2-dihydroxy-3-keto-5-methylthiopentene dioxygenase  OS=Mus musculus (Mouse) GN=Adi1 PE=1 SV=1	Q99JT9
+P01872_Immunoglobulin heavy con.	sp|P01872|IGHM_MOUSE	Immunoglobulin heavy constant mu  OS=Mus musculus (Mouse) GN=Ighm PE=1 SV=2	P01872
+Q9R013_Cathepsin F	sp|Q9R013|CATF_MOUSE	Cathepsin F  OS=Mus musculus (Mouse) GN=Ctsf PE=1 SV=1	Q9R013
+Q9JK53_Prolargin	sp|Q9JK53|PRELP_MOUSE	Prolargin  OS=Mus musculus (Mouse) GN=Prelp PE=1 SV=2	Q9JK53
+Q9CZ04_COP9 signalosome complex.	sp|Q9CZ04|CSN7A_MOUSE	COP9 signalosome complex subunit 7a  OS=Mus musculus (Mouse) GN=Cops7a PE=1 SV=2	Q9CZ04
+Q61733_28S ribosomal protein S3.	sp|Q61733|RT31_MOUSE	28S ribosomal protein S31, mitochondrial  OS=Mus musculus (Mouse) GN=Mrps31 PE=1 SV=1	Q61733
+Q9CZY3_Ubiquitin-conjugating en.	sp|Q9CZY3|UB2V1_MOUSE	Ubiquitin-conjugating enzyme E2 variant 1  OS=Mus musculus (Mouse) GN=Ube2v1 PE=1 SV=1	Q9CZY3
+Q62422_Osteoclast-stimulating f.	sp|Q62422|OSTF1_MOUSE	Osteoclast-stimulating factor 1  OS=Mus musculus (Mouse) GN=Ostf1 PE=1 SV=2	Q62422
+Q9D1R9_60S ribosomal protein L34	sp|Q9D1R9|RL34_MOUSE	60S ribosomal protein L34  OS=Mus musculus (Mouse) GN=Rpl34 PE=1 SV=2	Q9D1R9
+Q921S7_39S ribosomal protein L3.	sp|Q921S7|RM37_MOUSE	39S ribosomal protein L37, mitochondrial  OS=Mus musculus (Mouse) GN=Mrpl37 PE=1 SV=1	Q921S7
+Q8VCI0_Phospholipase B-like 1	sp|Q8VCI0|PLBL1_MOUSE	Phospholipase B-like 1  OS=Mus musculus (Mouse) GN=Plbd1 PE=1 SV=1	Q8VCI0
+P29351_Tyrosine-protein phospha.	sp|P29351|PTN6_MOUSE	Tyrosine-protein phosphatase non-receptor type 6  OS=Mus musculus (Mouse) GN=Ptpn6 PE=1 SV=2	P29351
+Q7TMR0_Lysosomal Pro-X carboxyp.	sp|Q7TMR0|PCP_MOUSE	Lysosomal Pro-X carboxypeptidase  OS=Mus musculus (Mouse) GN=Prcp PE=1 SV=2	Q7TMR0
+Q99PV0_Pre-mRNA-processing-spli.	sp|Q99PV0|PRP8_MOUSE	Pre-mRNA-processing-splicing factor 8  OS=Mus musculus (Mouse) GN=Prpf8 PE=1 SV=2	Q99PV0
+Q9D6U8_Protein FAM162A	sp|Q9D6U8|F162A_MOUSE	Protein FAM162A  OS=Mus musculus (Mouse) GN=Fam162a PE=1 SV=1	Q9D6U8
+Q8VE95_UPF0598 protein C8orf82 .	sp|Q8VE95|CH082_MOUSE	UPF0598 protein C8orf82 homolog  OS=Mus musculus (Mouse) PE=1 SV=1	Q8VE95
+Q6P542_ATP-binding cassette sub.	sp|Q6P542|ABCF1_MOUSE	ATP-binding cassette sub-family F member 1  OS=Mus musculus (Mouse) GN=Abcf1 PE=1 SV=1	Q6P542
+Q99K23_Ufm1-specific protease 2	sp|Q99K23|UFSP2_MOUSE	Ufm1-specific protease 2  OS=Mus musculus (Mouse) GN=Ufsp2 PE=1 SV=1	Q99K23
+P03930_ATP synthase protein 8	sp|P03930|ATP8_MOUSE	ATP synthase protein 8  OS=Mus musculus (Mouse) GN=Mtatp8 PE=1 SV=1	P03930
+Q8BHC4_Dephospho-CoA kinase dom.	sp|Q8BHC4|DCAKD_MOUSE	Dephospho-CoA kinase domain-containing protein  OS=Mus musculus (Mouse) GN=Dcakd PE=1 SV=1	Q8BHC4
+Q9QZ23_NFU1 iron-sulfur cluster.	sp|Q9QZ23|NFU1_MOUSE	NFU1 iron-sulfur cluster scaffold homolog, mitochondrial  OS=Mus musculus (Mouse) GN=Nfu1 PE=1 SV=2	Q9QZ23
+Q3TEA8_Heterochromatin protein .	sp|Q3TEA8|HP1B3_MOUSE	Heterochromatin protein 1-binding protein 3  OS=Mus musculus (Mouse) GN=Hp1bp3 PE=1 SV=1	Q3TEA8
+O35683_NADH dehydrogenase [ubiq.	sp|O35683|NDUA1_MOUSE	NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 1  OS=Mus musculus (Mouse) GN=Ndufa1 PE=1 SV=1	O35683
+Q8R311_Endoplasmic reticulum ex.	sp|Q8R311|CTGE5_MOUSE	Endoplasmic reticulum export factor CTAGE5  OS=Mus musculus (Mouse) GN=Ctage5 PE=2 SV=1	Q8R311
+P49312_Heterogeneous nuclear ri.	sp|P49312|ROA1_MOUSE	Heterogeneous nuclear ribonucleoprotein A1  OS=Mus musculus (Mouse) GN=Hnrnpa1 PE=1 SV=2	P49312
+Q9DBA6_Peroxisomal leader pepti.	sp|Q9DBA6|TYSD1_MOUSE	Peroxisomal leader peptide-processing protease  OS=Mus musculus (Mouse) GN=Tysnd1 PE=1 SV=1	Q9DBA6
+P00416_Cytochrome c oxidase sub.	sp|P00416|COX3_MOUSE	Cytochrome c oxidase subunit 3  OS=Mus musculus (Mouse) GN=mt-Co3 PE=1 SV=2	P00416
+P28660_Nck-associated protein 1	sp|P28660|NCKP1_MOUSE	Nck-associated protein 1  OS=Mus musculus (Mouse) GN=Nckap1 PE=1 SV=2	P28660
+Q3U7R1_Extended synaptotagmin-1	sp|Q3U7R1|ESYT1_MOUSE	Extended synaptotagmin-1  OS=Mus musculus (Mouse) GN=Esyt1 PE=1 SV=2	Q3U7R1
+Q61009_Scavenger receptor class.	sp|Q61009|SCRB1_MOUSE	Scavenger receptor class B member 1  OS=Mus musculus (Mouse) GN=Scarb1 PE=1 SV=1	Q61009
+Q99JB8_Protein kinase C and cas.	sp|Q99JB8|PACN3_MOUSE	Protein kinase C and casein kinase II substrate protein 3  OS=Mus musculus (Mouse) GN=Pacsin3 PE=1 SV=1	Q99JB8
+P50637_Translocator protein	sp|P50637|TSPO_MOUSE	Translocator protein  OS=Mus musculus (Mouse) GN=Tspo PE=1 SV=1	P50637
+P31649_Sodium- and chloride-dep.	sp|P31649|S6A13_MOUSE	Sodium- and chloride-dependent GABA transporter 2  OS=Mus musculus (Mouse) GN=Slc6a13 PE=1 SV=1	P31649
+Q9DCU6_39S ribosomal protein L4.	sp|Q9DCU6|RM04_MOUSE	39S ribosomal protein L4, mitochondrial  OS=Mus musculus (Mouse) GN=Mrpl4 PE=1 SV=1	Q9DCU6
+Q8BM72_Heat shock 70 kDa protei.	sp|Q8BM72|HSP13_MOUSE	Heat shock 70 kDa protein 13  OS=Mus musculus (Mouse) GN=Hspa13 PE=1 SV=1	Q8BM72
+A2AKQ0_UDP-glucuronic acid/UDP-.	sp|A2AKQ0|S35D1_MOUSE	UDP-glucuronic acid/UDP-N-acetylgalactosamine transporter  OS=Mus musculus (Mouse) GN=Slc35d1 PE=2 SV=2	A2AKQ0
+Q91YJ2_Sorting nexin-4	sp|Q91YJ2|SNX4_MOUSE	Sorting nexin-4  OS=Mus musculus (Mouse) GN=Snx4 PE=1 SV=1	Q91YJ2
+Q8K4K6_Pantothenate kinase 1	sp|Q8K4K6|PANK1_MOUSE	Pantothenate kinase 1  OS=Mus musculus (Mouse) GN=Pank1 PE=1 SV=1	Q8K4K6
+Q8CII2_Cell division cycle prot.	sp|Q8CII2|CD123_MOUSE	Cell division cycle protein 123 homolog  OS=Mus musculus (Mouse) GN=Cdc123 PE=1 SV=2	Q8CII2
+Q61553_Fascin	sp|Q61553|FSCN1_MOUSE	Fascin  OS=Mus musculus (Mouse) GN=Fscn1 PE=1 SV=4	Q61553

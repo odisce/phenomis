@@ -2,7 +2,7 @@ testthat::context("Testing 'correcting'")
 
 testthat::test_that("correcting-se", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
   sacurine.se <- correcting(sacurine.se, method.vc = "loess")
   
   testthat::expect_equal(assay(sacurine.se)["Testosterone glucuronide", "HU_neg_020"],
@@ -13,7 +13,7 @@ testthat::test_that("correcting-se", {
 
 testthat::test_that("correcting-mae", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
   sac_map.df <- data.frame(primary = colnames(sacurine.se),
                            colname = colnames(sacurine.se))
   map.ls <- list(sac1 = sac_map.df,

@@ -112,7 +112,7 @@ The sample metadata of each datasets (e.g. colData Data Frames) must contain 3 c
 order of injection in the instrument and 3) 'batch' (character): batch name.
 }
 \examples{
-sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 sacurine.se <- correcting(sacurine.se)
 
 # MultiDataSet (to be done)

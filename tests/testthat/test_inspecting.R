@@ -2,7 +2,7 @@ testthat::context("Testing 'inspecting'")
 
 testthat::test_that("inspecting-se", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
   
   sacurine.se <- inspecting(sacurine.se,
                             figure.c = "none",
@@ -12,14 +12,14 @@ testthat::test_that("inspecting-se", {
                               0.3160307,
                               tolerance = 1e-6)
   
-  proteo.eset <- reading(system.file("extdata/prometis/proteomics", package = "phenomis"))
+  proteo.se <- reading(system.file("extdata/prometis/proteo", package = "phenomis"))
   
-  proteo.eset <- inspecting(proteo.eset,
-                            figure.c = "none",
-                            report.c = "none")
+  proteo.se <- inspecting(proteo.se,
+                          figure.c = "none",
+                          report.c = "none")
   
-  testthat::expect_equivalent(colData(proteo.eset)["s1", "deci_pval"],
-                              0.106289011,
+  testthat::expect_equivalent(colData(proteo.se)["L818f", "deci_pval"],
+                              0.0525734,
                               tolerance = 1e-6)
   
 })
@@ -32,15 +32,15 @@ testthat::test_that("inspecting-mae", {
                               figure.c = "none",
                               report.c = "none")
   
-  testthat::expect_equivalent(colData(prometis.mae[["metabolomics"]])["s1", "hotel_pval"],
-                              0.3350008,
+  testthat::expect_equivalent(colData(prometis.mae[["metabo"]])["W634m", "hotel_pval"],
+                              0.818558,
                               tolerance = 1e-6)
   
 })
 
 testthat::test_that("inspecting-eset", {
   
-  sacurine.eset <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"),
+  sacurine.eset <- reading(system.file("extdata/sacurine", package = "phenomis"),
                            output.c = "set")
   
   sacurine.eset <- inspecting(sacurine.eset,
@@ -51,15 +51,15 @@ testthat::test_that("inspecting-eset", {
                               0.3160307,
                               tolerance = 1e-6)
   
-  proteo.eset <- reading(system.file("extdata/prometis/proteomics", package = "phenomis"),
+  proteo.eset <- reading(system.file("extdata/prometis/proteo", package = "phenomis"),
                          output.c = "set")
   
   proteo.eset <- inspecting(proteo.eset,
                             figure.c = "none",
                             report.c = "none")
   
-  testthat::expect_equivalent(Biobase::pData(proteo.eset)["s1", "deci_pval"],
-                              0.106289011,
+  testthat::expect_equivalent(Biobase::pData(proteo.eset)["L819f", "deci_pval"],
+                              0.2270958112,
                               tolerance = 1e-6)
   
 })
@@ -72,8 +72,8 @@ testthat::test_that("inspecting-mset", {
                               figure.c = "none",
                               report.c = "none")
   
-  testthat::expect_equivalent(Biobase::pData(prometis.mset)[["metabolomics"]]["s1", "hotel_pval"],
-                              0.3350008,
+  testthat::expect_equivalent(Biobase::pData(prometis.mset)[["metabo"]]["L824m", "hotel_pval"],
+                              0.34770846,
                               tolerance = 1e-6)
   
 })

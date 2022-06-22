@@ -339,7 +339,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     warning("The following feature(s) have NA only",
             ifelse(!is.na(set.c) && set.c != "", paste0(" in the '", set.c, "' dataset"), ""),
             ":\n",
-            paste(Biobase::featureNames(x)[feat_allna.vl], collapse = ", "))
+            paste(colnames(data.mn)[feat_allna.vl], collapse = ", "))
     check.l <- FALSE
   }
   
@@ -349,7 +349,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     warning("The following sample(s) have NA only",
             ifelse(!is.na(set.c) && set.c != "", paste0(" in the '", set.c, "' dataset"), ""),
             ":\n",
-            paste(Biobase::sampleNames(x)[samp_allna.vl], collapse = ", "))
+            paste(rownames(data.mn)[samp_allna.vl], collapse = ", "))
     check.l <- FALSE
   }
   
@@ -359,7 +359,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     warning("The following feature(s) have zero variance",
             ifelse(!is.na(set.c) && set.c != "", paste0(" in the '", set.c, "' dataset"), ""),
             ":\n",
-            paste(Biobase::featureNames(x)[feat_zerovar.vl], collapse = ", "))
+            paste(colnames(data.mn)[feat_zerovar.vl], collapse = ", "))
     check.l <- FALSE
   }
   
@@ -369,7 +369,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     warning("The following sample(s) have zero variance",
             ifelse(!is.na(set.c) && set.c != "", paste0(" in the '", set.c, "' dataset"), ""),
             ":\n",
-            paste(Biobase::sampleNames(x)[samp_zerovar.vl], collapse = ", "))
+            paste(rownames(data.mn)[samp_zerovar.vl], collapse = ", "))
     check.l <- FALSE
   }
   
@@ -807,7 +807,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   graphics::par(mar = mar.vn)
   
-  image.mn <- data.mn[rev(1:nrow(data.mn)), , drop = FALSE]
+  image.mn <- t(data.mn[rev(1:nrow(data.mn)), , drop = FALSE])
   
   graphics::image(x = 1:nrow(image.mn),
                   y = 1:ncol(image.mn),

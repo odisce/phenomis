@@ -10,38 +10,38 @@
 \usage{
 transforming(
   x,
-  method.vc = c("log2", "log10", "sqrt")[1],
+  method.vc = c("log2", "log10", "sqrt", "none")[1],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
 \S4method{transforming}{MultiAssayExperiment}(
   x,
-  method.vc = c("log2", "log10", "sqrt")[1],
+  method.vc = c("log2", "log10", "sqrt", "none")[1],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
 \S4method{transforming}{SummarizedExperiment}(
   x,
-  method.vc = c("log2", "log10", "sqrt")[1],
+  method.vc = c("log2", "log10", "sqrt", "none")[1],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
 \S4method{transforming}{MultiDataSet}(
   x,
-  method.vc = c("log2", "log10", "sqrt")[1],
+  method.vc = c("log2", "log10", "sqrt", "none")[1],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
 \S4method{transforming}{ExpressionSet}(
   x,
-  method.vc = c("log2", "log10", "sqrt")[1],
+  method.vc = c("log2", "log10", "sqrt", "none")[1],
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 }
 \arguments{
 \item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet} are deprecated)}
 
-\item{method.vc}{character(): type of transformation (either 'log2', 'log10', or 'sqrt'); in case of a MultiAssayExperiment, distinct methods may be provided for each dataset}
+\item{method.vc}{character(): type of transformation (either 'log2', 'log10', 'sqrt', or 'none'); in case of a MultiAssayExperiment, distinct methods may be provided for each dataset}
 
 \item{report.c}{Character: File name with '.txt' extension for the printed
 results (call to sink()'); if 'interactive' (default), messages will be
@@ -56,11 +56,13 @@ A logarithmic or square root transformation may be applied to the data matrix
 intensities in (each of) the data set (e.g. to stabilize the variance)
 }
 \examples{
-sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 sacurine.se <- correcting(sacurine.se)
 sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 sacurine.se <- transforming(sacurine.se)
 # MultiAssayExperiment
 prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
-prometis.mae <- transforming(prometis.mae)
+prometis.mae <- transforming(prometis.mae, method.vc = c("log2", "none"))
+# Note: in the 'prometis' example data set from the package, the data are
+# already log2 transformed
 }

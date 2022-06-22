@@ -46,7 +46,7 @@ invisible grid object
 Venn diagram with VennDiagram
 }
 \examples{
-sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 sacurine.se <- correcting(sacurine.se, figure.c = 'none')
 sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 sacurine.se <- transforming(sacurine.se)
@@ -57,5 +57,6 @@ sacurine.se <- hypotesting(sacurine.se, "ttest", "gender")
 sacurine.se <- hypotesting(sacurine.se, "wilcoxon", "gender")
 signif.ls <- list(ttest = which(rowData(sacurine.se)[, "ttest_gender_Female.Male_signif"] > 0),
 wilcoxon =  which(rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_signif"] > 0))
-vennplot(signif.ls, label_col.c = "black", title.c = "Signif. features\nwith Student or Wilcoxon tests")
+vennplot(signif.ls, label_col.c = "black",
+title.c = "Signif. features\nwith Student or Wilcoxon tests")
 }

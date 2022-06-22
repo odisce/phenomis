@@ -2,7 +2,7 @@ testthat::context("Testing 'read-write'")
 
 testthat::test_that(".reading", {
   
-  sacdir.c <- system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis")
+  sacdir.c <- system.file("extdata/sacurine", package = "phenomis")
   
   sacurine.se1 <- .reading(sacdir.c)
   
@@ -33,7 +33,7 @@ testthat::test_that(".reading", {
 
 testthat::test_that("reading_SummarizedExperiment", {
   
-  sacdir.c <- system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis")
+  sacdir.c <- system.file("extdata/sacurine", package = "phenomis")
   
   sacurine.se2 <- reading(sacdir.c)
   
@@ -70,21 +70,21 @@ testthat::test_that("reading_MultiAssayExperiment", {
   
   testthat::expect_true(class(prometis.mae) == "MultiAssayExperiment")
   
-  testthat::expect_identical(names(prometis.mae), c("metabolomics", "proteomics"))
+  testthat::expect_identical(names(prometis.mae), c("metabo", "proteo"))
   
-  testthat::expect_equal(MultiAssayExperiment::assays(prometis.mae)[["metabolomics"]][1, 1],
-                         5.576,
+  testthat::expect_equal(MultiAssayExperiment::assays(prometis.mae)[["metabo"]]["isobutyric acid", "L818f"],
+                         24.64327,
                          tolerance = 1e-3)
   
   
-  met.mae <- reading(prometis_dir.c, subsets.vc = "metabolomics")
+  met.mae <- reading(prometis_dir.c, subsets.vc = "metabo")
   
   testthat::expect_true(class(met.mae) == "MultiAssayExperiment")
   
-  testthat::expect_identical(names(met.mae), "metabolomics")
+  testthat::expect_identical(names(met.mae), "metabo")
   
-  testthat::expect_equal(MultiAssayExperiment::assays(met.mae)[["metabolomics"]][1, 1],
-                         5.576,
+  testthat::expect_equal(MultiAssayExperiment::assays(met.mae)[["metabo"]]["isobutyric acid", "L818f"],
+                         24.64327,
                          tolerance = 1e-3)
   
 })
@@ -98,82 +98,84 @@ testthat::test_that("reading_MultiDataSet", {
   
   testthat::expect_true(class(prometis.mset1) == "MultiDataSet")
   
-  testthat::expect_identical(names(prometis.mset1), c("metabolomics", "proteomics"))
+  testthat::expect_identical(names(prometis.mset1), c("metabo", "proteo"))
   
-  testthat::expect_equal(Biobase::exprs(prometis.mset1[["metabolomics"]])[1, 1],
-                         5.576,
+  testthat::expect_equal(Biobase::exprs(prometis.mset1[["metabo"]])["isobutyric acid", "L818f"],
+                         24.64327,
                          tolerance = 1e-3)
   
   
   prometis.mset2 <- reading(NA,
-                            files.ls = list(metabolomics = list(dataMatrix = file.path(prometis_dir.c, "metabolomics", "dataMatrix.tsv"),
-                                                                sampleMetadata = file.path(prometis_dir.c, "metabolomics", "sampleMetadata.tsv"),
-                                                                variableMetadata = file.path(prometis_dir.c, "metabolomics", "variableMetadata.tsv")),
-                                            proteomics = list(dataMatrix = file.path(prometis_dir.c, "proteomics", "dataMatrix.tsv"),
-                                                              sampleMetadata = file.path(prometis_dir.c, "proteomics", "sampleMetadata.tsv"),
-                                                              variableMetadata = file.path(prometis_dir.c, "proteomics", "variableMetadata.tsv"))),
+                            files.ls = list(metabo = list(dataMatrix = file.path(prometis_dir.c, "metabo", "dataMatrix.tsv"),
+                                                          sampleMetadata = file.path(prometis_dir.c, "metabo", "sampleMetadata.tsv"),
+                                                          variableMetadata = file.path(prometis_dir.c, "metabo", "variableMetadata.tsv")),
+                                            proteo = list(dataMatrix = file.path(prometis_dir.c, "proteo", "dataMatrix.tsv"),
+                                                          sampleMetadata = file.path(prometis_dir.c, "proteo", "sampleMetadata.tsv"),
+                                                          variableMetadata = file.path(prometis_dir.c, "proteo", "variableMetadata.tsv"))),
                             output.c = "set")
   
   testthat::expect_true(class(prometis.mset2) == "MultiDataSet")
   
-  testthat::expect_identical(names(prometis.mset2), c("metabolomics", "proteomics"))
+  testthat::expect_identical(names(prometis.mset2), c("metabo", "proteo"))
   
-  testthat::expect_equal(Biobase::exprs(prometis.mset2[["metabolomics"]])[1, 1],
-                         5.576,
+  testthat::expect_equal(Biobase::exprs(prometis.mset2[["metabo"]])["isobutyric acid", "L818f"],
+                         24.64327,
                          tolerance = 1e-3)
   
-  # testthat::expect_identical(colnames(Biobase::pData(prometis.mset2[["metabolomics"]])), c("gene", "id"))
+  testthat::expect_identical(colnames(Biobase::pData(prometis.mset2[["metabo"]])),
+                             c("gene", "mouse_id", "sex", "id"))
   
   
   
-  metMset1 <- reading(prometis_dir.c, subsets.vc = "metabolomics", output.c = "set")
+  metMset1 <- reading(prometis_dir.c, subsets.vc = "metabo", output.c = "set")
   
   testthat::expect_true(class(metMset1) == "MultiDataSet")
   
-  testthat::expect_identical(names(metMset1), "metabolomics")
+  testthat::expect_identical(names(metMset1), "metabo")
   
-  testthat::expect_equal(Biobase::exprs(metMset1[["metabolomics"]])[1, 1],
-                         5.576,
+  testthat::expect_equal(Biobase::exprs(metMset1[["metabo"]])["isobutyric acid", "L818f"],
+                         24.64327,
                          tolerance = 1e-3)
   
   
   metMset2 <- reading(NA,
-                      files.ls = list(metabolomics = list(dataMatrix = file.path(prometis_dir.c, "metabolomics", "dataMatrix.tsv"),
-                                                          sampleMetadata = file.path(prometis_dir.c, "metabolomics", "sampleMetadata.tsv"),
-                                                          variableMetadata = file.path(prometis_dir.c, "metabolomics", "variableMetadata.tsv")),
-                                      proteomics = list(dataMatrix = file.path(prometis_dir.c, "proteomics", "dataMatrix.tsv"),
-                                                        sampleMetadata = file.path(prometis_dir.c, "proteomics", "sampleMetadata.tsv"),
-                                                        variableMetadata = file.path(prometis_dir.c, "proteomics", "variableMetadata.tsv"))),
-                      subsets.vc = "metabolomics", output.c = "set")
+                      files.ls = list(metabo = list(dataMatrix = file.path(prometis_dir.c, "metabo", "dataMatrix.tsv"),
+                                                          sampleMetadata = file.path(prometis_dir.c, "metabo", "sampleMetadata.tsv"),
+                                                          variableMetadata = file.path(prometis_dir.c, "metabo", "variableMetadata.tsv")),
+                                      proteo = list(dataMatrix = file.path(prometis_dir.c, "proteo", "dataMatrix.tsv"),
+                                                        sampleMetadata = file.path(prometis_dir.c, "proteo", "sampleMetadata.tsv"),
+                                                        variableMetadata = file.path(prometis_dir.c, "proteo", "variableMetadata.tsv"))),
+                      subsets.vc = "metabo", output.c = "set")
   
   testthat::expect_true(class(metMset2) == "MultiDataSet")
   
-  testthat::expect_identical(names(metMset2), "metabolomics")
+  testthat::expect_identical(names(metMset2), "metabo")
   
-  testthat::expect_equal(Biobase::exprs(metMset2[["metabolomics"]])[1, 1],
-                         5.576,
+  testthat::expect_equal(Biobase::exprs(metMset2[["metabo"]])["isobutyric acid", "L818f"],
+                         24.64327,
                          tolerance = 1e-3)
   
   
   testthat::expect_error(reading(NA,
-                                 list(metabolomics = list(dataMatrix = file.path(prometis_dir.c, "metabolomics", "dataMatrix.tsv_XXX"),
-                                                          sampleMetadata = file.path(prometis_dir.c, "metabolomics", "sampleMetadata.tsv"),
-                                                          variableMetadata = file.path(prometis_dir.c, "metabolomics", "variableMetadata.tsv")),
-                                      proteomics = list(dataMatrix = file.path(prometis_dir.c, "proteomics", "dataMatrix.tsv_XXX"),
-                                                        sampleMetadata = file.path(prometis_dir.c, "proteomics", "sampleMetadata.tsv"),
-                                                        variableMetadata = file.path(prometis_dir.c, "proteomics", "variableMetadata.tsv"))),
+                                 list(metabo = list(dataMatrix = file.path(prometis_dir.c, "metabo", "dataMatrix.tsv_XXX"),
+                                                          sampleMetadata = file.path(prometis_dir.c, "metabo", "sampleMetadata.tsv"),
+                                                          variableMetadata = file.path(prometis_dir.c, "metabo", "variableMetadata.tsv")),
+                                      proteo = list(dataMatrix = file.path(prometis_dir.c, "proteo", "dataMatrix.tsv_XXX"),
+                                                        sampleMetadata = file.path(prometis_dir.c, "proteo", "sampleMetadata.tsv"),
+                                                        variableMetadata = file.path(prometis_dir.c, "proteo", "variableMetadata.tsv"))),
                                  output.c = "set"))
   
   testthat::expect_warning(reading(NA,
-                                   list(metabolomics = list(dataMatrix = file.path(prometis_dir.c, "metabolomics", "dataMatrix.tsv"),
-                                                            sampleMetadata = file.path(prometis_dir.c, "metabolomics", "sampleMetadata.tsv_XXX"),
-                                                            variableMetadata = file.path(prometis_dir.c, "metabolomics", "variableMetadata.tsv")),
-                                        proteomics = list(dataMatrix = file.path(prometis_dir.c, "proteomics", "dataMatrix.tsv"),
-                                                          sampleMetadata = file.path(prometis_dir.c, "proteomics", "sampleMetadata.tsv"),
-                                                          variableMetadata = file.path(prometis_dir.c, "proteomics", "variableMetadata.tsv"))),
+                                   list(metabo = list(dataMatrix = file.path(prometis_dir.c, "metabo", "dataMatrix.tsv"),
+                                                            sampleMetadata = file.path(prometis_dir.c, "metabo", "sampleMetadata.tsv_XXX"),
+                                                            variableMetadata = file.path(prometis_dir.c, "metabo", "variableMetadata.tsv")),
+                                        proteo = list(dataMatrix = file.path(prometis_dir.c, "proteo", "dataMatrix.tsv"),
+                                                          sampleMetadata = file.path(prometis_dir.c, "proteo", "sampleMetadata.tsv"),
+                                                          variableMetadata = file.path(prometis_dir.c, "proteo", "variableMetadata.tsv"))),
                                    output.c = "set"))
   
-  # testthat::expect_true(colnames(Biobase::pData(prometis.mset3[["metabolomics"]])) == "id")
+  testthat::expect_true(identical(colnames(Biobase::pData(prometis.mset2[["metabo"]])),
+                                  c("gene", "mouse_id", "sex", "id")))
   
   
 })
@@ -186,11 +188,11 @@ testthat::test_that("writing_MultiDataSet", {
   
   testthat::expect_error(writing(prometis.mset4,
                                  dir.c = NA,
-                                 files.ls = list(metabolomics = list(dataMatrix = NA,
-                                                                     sampleMetadata = file.path(getwd(), "metabolomics_sampleMetadata.tsv"),
-                                                                     variableMetadata = file.path(getwd(), "metabolomics_variableMetadata.tsv")),
-                                                 proteomics = list(dataMatrix = file.path(getwd(), "proteomics_dataMatrix.tsv"),
-                                                                   sampleMetadata = file.path(getwd(), "proteomics_sampleMetadata.tsv"),
-                                                                   variableMetadata = file.path(getwd(), "proteomics_variableMetadata.tsv")))))
+                                 files.ls = list(metabo = list(dataMatrix = NA,
+                                                                     sampleMetadata = file.path(getwd(), "metabo_sampleMetadata.tsv"),
+                                                                     variableMetadata = file.path(getwd(), "metabo_variableMetadata.tsv")),
+                                                 proteo = list(dataMatrix = file.path(getwd(), "proteo_dataMatrix.tsv"),
+                                                                   sampleMetadata = file.path(getwd(), "proteo_sampleMetadata.tsv"),
+                                                                   variableMetadata = file.path(getwd(), "proteo_variableMetadata.tsv")))))
   
 })

@@ -1,8 +1,10 @@
 testthat::context("Testing 'hypotesting'")
 
+#### ttest ####
+
 testthat::test_that("ttest", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
   sacurine.se <- correcting(sacurine.se, figure.c = "none")
   sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
   sacurine.se <- transforming(sacurine.se)
@@ -108,15 +110,17 @@ testthat::test_that("ttest", {
   
   testthat::expect_identical(sapply(Biobase::fData(prometis.mset),
                                     function(fdaDF) {
-                                      sum(fdaDF[, "ttest_gene_KO.WT_signif"])
+                                      sum(fdaDF[, "ttest_gene_LAT.WT_signif"])
                                     }),
-                             c(metabolomics = 2, proteomics = 7))
+                             c(metabo = 33, proteo = 3))
   
 })
 
+#### anova ####
+
 testthat::test_that("anova", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics",
+  sacurine.se <- reading(system.file("extdata/sacurine",
                                      package = "phenomis"))
   sacurine.se <- correcting(sacurine.se, figure.c = "none")
   sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
@@ -175,9 +179,11 @@ testthat::test_that("anova", {
                               tolerance = 1e-6)
 })
 
+#### kruskal ####
+
 testthat::test_that("kruskal", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics",
+  sacurine.se <- reading(system.file("extdata/sacurine",
                                      package = "phenomis"))
   
   sacurine.se <- correcting(sacurine.se, figure.c = "none")
@@ -210,11 +216,11 @@ testthat::test_that("kruskal", {
   
 })
 
-
+#### anova2ways
 
 testthat::test_that("anova2ways", {
   
-  metabo.se <- reading(system.file("extdata/prometis/metabolomics",
+  metabo.se <- reading(system.file("extdata/prometis/metabo",
                                    package = "phenomis"))
   
   ## .anova2ways
@@ -223,19 +229,19 @@ testthat::test_that("anova2ways", {
                                 feat.df = rowData(metabo.se),
                                 test.c = "anova2ways",
                                 factor_names.vc = c("gene", "sex"),
-                                factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                                factor_levels.ls = list(factor1Vc = c("WT", "LAT"),
                                                         factor2Vc = c("M", "F")),
                                 adjust.c = "BH",
                                 adjust_thresh.n = 0.05,
                                 prefix.c = "prefix_",
                                 figure.c = "none")
   
-  testthat::expect_equivalent(anova2ways.ls[["metric.mn"]]["v11", "prefix_anova2ways_sex_M.F_diff"],
-                              -0.03642992,
+  testthat::expect_equivalent(anova2ways.ls[["metric.mn"]]["guanosine", "prefix_anova2ways_sex_M.F_diff"],
+                              -0.8415528,
                               tolerance = 1e-6)
   
-  testthat::expect_equivalent(anova2ways.ls[["feat.df"]]["v6", "prefix_anova2ways_gene_WT.KO_BH"],
-                              0.800139,
+  testthat::expect_equivalent(anova2ways.ls[["feat.df"]]["isobutyric acid", "prefix_anova2ways_gene_WT.LAT_BH"],
+                              0.5926903,
                               tolerance = 1e-6)
   
   anova2ways.ls <- .anovas2ways(data.mn = t(assay(metabo.se)),
@@ -250,8 +256,8 @@ testthat::test_that("anova2ways", {
                                 prefix.c = "",
                                 figure.c = "none")
   
-  testthat::expect_equivalent(anova2ways.ls[["metric.mn"]]["v11", "anova2ways_sex_F.M_diff"],
-                              0.03642992,
+  testthat::expect_equivalent(anova2ways.ls[["metric.mn"]]["L-methionine", "anova2ways_sex_F.M_diff"],
+                              -0.2421317773,
                               tolerance = 1e-6)
   
   testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
@@ -259,7 +265,7 @@ testthat::test_that("anova2ways", {
                                       feat.df = rowData(metabo.se),
                                       test.c = "anova2ways",
                                       factor_names.vc = c("gene", "sex"),
-                                      factor_levels.ls = list(factor1 = c("WT", "OK"),
+                                      factor_levels.ls = list(factor1 = c("WT", "LAT2"),
                                                               factor2 = c("M", "F")),
                                       adjust.c = "BH",
                                       adjust_thresh.n = 0.05,
@@ -272,15 +278,17 @@ testthat::test_that("anova2ways", {
                            figure.c = "interactive",
                            report.c = "none")
   
-  testthat::expect_equivalent(rowData(metabo.se)["v11", "anova2ways_sex_F.M_diff"],
-                              0.03642992,
+  testthat::expect_equivalent(rowData(metabo.se)["citric acid", "anova2ways_sex_F.M_diff"],
+                              0.630733,
                               tolerance = 1e-6)
   
 })
 
+#### anova2waysInter ####
+
 testthat::test_that("anova2waysInter", {
   
-  metabo.se <- reading(system.file("extdata/prometis/metabolomics",
+  metabo.se <- reading(system.file("extdata/prometis/metabo",
                                    package = "phenomis"))
   
   ## .anova2waysInter
@@ -289,23 +297,23 @@ testthat::test_that("anova2waysInter", {
                                     feat.df = rowData(metabo.se),
                                     test.c = "anova2waysInter",
                                     factor_names.vc = c("gene", "sex"),
-                                    factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                                    factor_levels.ls = list(factor1Vc = c("WT", "LAT"),
                                                             factor2Vc = c("M", "F")),
                                     adjust.c = "BH",
                                     adjust_thresh.n = 0.05,
                                     prefix.c = "",
                                     figure.c = "none")
   
-  testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["v11", "anova2waysInter_sex_M.F_diff"],
-                              -0.03642992,
+  testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["adenosine 5'-monophosphate", "anova2waysInter_sex_M.F_diff"],
+                              -1.1272963726,
                               tolerance = 1e-6)
   
-  testthat::expect_equivalent(anova2waysInterLs[["feat.df"]]["v6", "anova2waysInter_gene_WT.KO_BH"],
-                              0.8032291,
+  testthat::expect_equivalent(anova2waysInterLs[["feat.df"]]["L-serine", "anova2waysInter_gene_WT.LAT_BH"],
+                              5.17659e-05,
                               tolerance = 1e-6)
   
-  testthat::expect_equivalent(anova2waysInterLs[["feat.df"]]["v6", "anova2waysInter_gene:sex_BH"],
-                              0.9967691,
+  testthat::expect_equivalent(anova2waysInterLs[["feat.df"]]["isovaleric acid", "anova2waysInter_gene:sex_BH"],
+                              0.763541,
                               tolerance = 1e-6)
   
   anova2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
@@ -320,8 +328,8 @@ testthat::test_that("anova2waysInter", {
                                     prefix.c = "",
                                     figure.c = "none")
   
-  testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["v11", "anova2waysInter_sex_F.M_diff"],
-                              0.03642992,
+  testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["ADP", "anova2waysInter_sex_F.M_diff"],
+                              0.5175954271,
                               tolerance = 1e-6)
   
   testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
@@ -329,7 +337,7 @@ testthat::test_that("anova2waysInter", {
                                       feat.df = rowData(metabo.se),
                                       test.c = "anova2waysInter",
                                       factor_names.vc = c("gene", "sex"),
-                                      factor_levels.ls = list(factor1 = c("WT", "OK"),
+                                      factor_levels.ls = list(factor1 = c("WT", "LAT2"),
                                                               factor2 = c("M", "F")),
                                       adjust.c = "BH",
                                       adjust_thresh.n = 0.05,
@@ -342,89 +350,20 @@ testthat::test_that("anova2waysInter", {
                            figure.c = "interactive",
                            report.c = "none")
   
-  testthat::expect_equivalent(rowData(metabo.se)["v11", "anova2waysInter_sex_F.M_diff"],
-                              0.03642992,
+  testthat::expect_equivalent(rowData(metabo.se)["UDP-alpha-D-galactose", "anova2waysInter_sex_F.M_diff"],
+                              0.892837,
+                              tolerance = 1e-6)
+  testthat::expect_equivalent(rowData(metabo.se)["glycocholate", "anova2waysInter_sex_F.M_BH"],
+                              0.0120354,
                               tolerance = 1e-6)
   
 })
 
-testthat::test_that("anova2waysInter", {
-  
-  metabo.se <- reading(system.file("extdata/prometis/metabolomics",
-                                   package = "phenomis"))
-  
-  ## .anova2waysInter
-  anova2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
-                                    samp.df = colData(metabo.se),
-                                    feat.df = rowData(metabo.se),
-                                    test.c = "anova2waysInter",
-                                    factor_names.vc = c("gene", "sex"),
-                                    factor_levels.ls = list(factor1Vc = c("WT", "KO"),
-                                                            factor2Vc = c("M", "F")),
-                                    adjust.c = "BH",
-                                    adjust_thresh.n = 0.05,
-                                    prefix.c = "",
-                                    figure.c = "none")
-  
-  testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["v11", "anova2waysInter_sex_M.F_diff"],
-                              -0.03642992,
-                              tolerance = 1e-6)
-  
-  testthat::expect_equivalent(anova2waysInterLs[["feat.df"]]["v6", "anova2waysInter_gene_WT.KO_BH"],
-                              0.8032291,
-                              tolerance = 1e-6)
-  
-  testthat::expect_equivalent(anova2waysInterLs[["feat.df"]]["v6", "anova2waysInter_gene:sex_BH"],
-                              0.9967691,
-                              tolerance = 1e-6)
-  
-  anova2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
-                                    samp.df = colData(metabo.se),
-                                    feat.df = rowData(metabo.se),
-                                    test.c = "anova2waysInter",
-                                    factor_names.vc = c("gene", "sex"),
-                                    factor_levels.ls = list(factor1 = "default",
-                                                            factor2 = "default"),
-                                    adjust.c = "BH",
-                                    adjust_thresh.n = 0.05,
-                                    prefix.c = "",
-                                    figure.c = "none")
-  
-  testthat::expect_equivalent(anova2waysInterLs[["metric.mn"]]["v11", "anova2waysInter_sex_F.M_diff"],
-                              0.03642992,
-                              tolerance = 1e-6)
-  
-  testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
-                                      samp.df = colData(metabo.se),
-                                      feat.df = rowData(metabo.se),
-                                      test.c = "anova2waysInter",
-                                      factor_names.vc = c("gene", "sex"),
-                                      factor_levels.ls = list(factor1 = c("WT", "OK"),
-                                                              factor2 = c("M", "F")),
-                                      adjust.c = "BH",
-                                      adjust_thresh.n = 0.05,
-                                      prefix.c = "",
-                                      figure.c = "none"))
-  
-  metabo.se <- hypotesting(metabo.se,
-                           test.c = "anova2waysInter",
-                           factor_names.vc = c("gene", "sex"),
-                           figure.c = "interactive",
-                           report.c = "none")
-  
-  testthat::expect_equivalent(rowData(metabo.se)["v11", "anova2waysInter_sex_F.M_diff"],
-                              0.03642992,
-                              tolerance = 1e-6)
-  testthat::expect_equivalent(rowData(metabo.se)["v11", "anova2waysInter_sex_F.M_BH"],
-                              0.9069173,
-                              tolerance = 1e-6)
-  
-})
-
+#### limma2ways ####
 
 testthat::test_that("limma2ways", {
   
-  metabo.se <- reading(system.file("extdata/prometis/metabolomics",
+  metabo.se <- reading(system.file("extdata/prometis/metabo",
                                    package = "phenomis"))
   
   ## .limma2ways
@@ -433,22 +372,22 @@ testthat::test_that("limma2ways", {
                                feat.df = rowData(metabo.se),
                                test.c = "limma2ways",
                                factor_names.vc = c("gene", "sex"),
-                               factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                               factor_levels.ls = list(factor1Vc = c("WT", "LAT"),
                                                        factor2Vc = c("M", "F")),
                                adjust.c = "BH",
                                adjust_thresh.n = 0.05,
                                prefix.c = "",
                                figure.c = "none")
   
-  testthat::expect_equivalent(limma2waysLs[["metric.mn"]]["v11", "limma2ways_sex_M.F_diff"],
-                              -0.03642992,
+  testthat::expect_equivalent(limma2waysLs[["metric.mn"]]["L-threonine", "limma2ways_sex_M.F_diff"],
+                              0.1144511178,
                               tolerance = 1e-6)
   
-  testthat::expect_equivalent(limma2waysLs[["feat.df"]]["v6", "limma2ways_gene_WT.KO_BH"],
-                              0.9296763,
+  testthat::expect_equivalent(limma2waysLs[["feat.df"]]["ADP-D-ribose", "limma2ways_gene_WT.LAT_BH"],
+                              5.50691e-02,
                               tolerance = 1e-6)
   
-  limma2waysLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
+    limma2waysLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
                                samp.df = colData(metabo.se),
                                feat.df = rowData(metabo.se),
                                test.c = "limma2ways",
@@ -460,8 +399,8 @@ testthat::test_that("limma2ways", {
                                prefix.c = "testing_",
                                figure.c = "none")
   
-  testthat::expect_equivalent(limma2waysLs[["metric.mn"]]["v11", "testing_limma2ways_sex_F.M_diff"],
-                              0.03642992,
+  testthat::expect_equivalent(limma2waysLs[["metric.mn"]]["Tyr-Phe-Met", "testing_limma2ways_sex_F.M_diff"],
+                              0.6177232690,
                               tolerance = 1e-6)
   
   testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
@@ -469,7 +408,7 @@ testthat::test_that("limma2ways", {
                                       feat.df = rowData(metabo.se),
                                       test.c = "limma2ways",
                                       factor_names.vc = c("gene", "sex"),
-                                      factor_levels.ls = list(factor1 = c("WT", "OK"),
+                                      factor_levels.ls = list(factor1 = c("WT", "LAT2"),
                                                               factor2 = c("M", "F")),
                                       adjust.c = "BH",
                                       adjust_thresh.n = 0.05,
@@ -482,19 +421,20 @@ testthat::test_that("limma2ways", {
                            figure.c = "interactive",
                            report.c = "none")
   
-  testthat::expect_equivalent(rowData(metabo.se)["v11", "limma2ways_sex_F.M_diff"],
-                              0.03642992,
+  testthat::expect_equivalent(rowData(metabo.se)["GDP-L-fucose", "limma2ways_sex_F.M_diff"],
+                              0.176800,
                               tolerance = 1e-6)
-  testthat::expect_equivalent(rowData(metabo.se)["v11", "limma2ways_sex_F.M_BH"],
-                              0.9077522,
+  testthat::expect_equivalent(rowData(metabo.se)["ADP-D-ribose", "limma2ways_sex_F.M_BH"],
+                              0.1906116,
                               tolerance = 1e-6)
   
 })
 
+#### limma2waysInter ####
 
 testthat::test_that("limma2waysInter", {
   
-  metabo.se <- reading(system.file("extdata/prometis/metabolomics",
+  metabo.se <- reading(system.file("extdata/prometis/metabo",
                                    package = "phenomis"))
   
   ## .limma2waysInter
@@ -503,23 +443,23 @@ testthat::test_that("limma2waysInter", {
                                     feat.df = rowData(metabo.se),
                                     test.c = "limma2waysInter",
                                     factor_names.vc = c("gene", "sex"),
-                                    factor_levels.ls = list(factor1Vc = c("WT", "KO"),
+                                    factor_levels.ls = list(factor1Vc = c("WT", "LAT"),
                                                             factor2Vc = c("M", "F")),
                                     adjust.c = "BH",
                                     adjust_thresh.n = 0.05,
                                     prefix.c = "",
                                     figure.c = "none")
   
-  testthat::expect_equivalent(limma2waysInterLs[["metric.mn"]]["v11", "limma2waysInter_gene_WT.KO_diff"],
-                              0.3291035,
+  testthat::expect_equivalent(limma2waysInterLs[["metric.mn"]]["pantothenic acid", "limma2waysInter_gene_WT.LAT_diff"],
+                              -0.93364925,
                               tolerance = 1e-6)
   
-  testthat::expect_equivalent(limma2waysInterLs[["feat.df"]]["v11", "limma2waysInter_gene_WT.KO_BH"],
-                              0.009124355,
+  testthat::expect_equivalent(limma2waysInterLs[["feat.df"]]["GDP", "limma2waysInter_gene_WT.LAT_BH"],
+                              8.53441e-04,
                               tolerance = 1e-6)
   
-  testthat::expect_equivalent(limma2waysInterLs[["feat.df"]]["v6", "limma2waysInter_gene:sex_BH"],
-                              0.996654,
+  testthat::expect_equivalent(limma2waysInterLs[["feat.df"]]["GDP-L-fucose", "limma2waysInter_gene:sex_BH"],
+                              0.764520,
                               tolerance = 1e-6)
   
   limma2waysInterLs <- .anovas2ways(data.mn = t(assay(metabo.se)),
@@ -534,16 +474,16 @@ testthat::test_that("limma2waysInter", {
                                     prefix.c = "",
                                     figure.c = "none")
   
-  testthat::expect_equivalent(limma2waysInterLs[["metric.mn"]]["v11", "limma2waysInter_gene_KO.WT_diff"],
-                              -0.3291035,
+  testthat::expect_equivalent(limma2waysInterLs[["metric.mn"]]["9H-xanthine", "limma2waysInter_gene_LAT.WT_diff"],
+                              0.47207710,
                               tolerance = 1e-6)
   
-  testthat::expect_error(phenomis:.anovas2ways(data.mn = t(assay(metabo.se)),
+  testthat::expect_error(.anovas2ways(data.mn = t(assay(metabo.se)),
                                                samp.df = colData(metabo.se),
                                                feat.df = rowData(metabo.se),
                                                test.c = "limma2waysInter",
                                                factor_names.vc = c("gene", "sex"),
-                                               factor_levels.ls = list(factor1 = c("WT", "OK"),
+                                               factor_levels.ls = list(factor1 = c("WT", "LAT2"),
                                                                        factor2 = c("M", "F")),
                                                adjust.c = "BH",
                                                adjust_thresh.n = 0.05,
@@ -556,11 +496,11 @@ testthat::test_that("limma2waysInter", {
                            figure.c = "interactive",
                            report.c = "none")
   
-  testthat::expect_equivalent(rowData(metabo.se)["v11", "limma2waysInter_gene_KO.WT_diff"],
-                              -0.3291035,
-                              tolerance = 1e-6)
-  testthat::expect_equivalent(rowData(metabo.se)["v11", "limma2waysInter_gene_KO.WT_BH"],
-                              0.009124355,
+  testthat::expect_equivalent(rowData(metabo.se)["ADP-D-ribose", "limma2waysInter_gene_LAT.WT_diff"],
+                              -1.25982,
+                              tolerance = 1e-5)
+  testthat::expect_equivalent(rowData(metabo.se)["isobutyric acid", "limma2waysInter_gene_LAT.WT_BH"],
+                              0.577243199,
                               tolerance = 1e-6)
   
 })

@@ -16,7 +16,7 @@
 #' @rdname annotating
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' # see the (default) parameters (e.g. for ChEBI query)
 #' annotating_parameters("chebi")
 #' # mz annotation with ChEBI
@@ -86,7 +86,7 @@ setGeneric("annotating",
 #' @rdname clustering
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine.se <- correcting(sacurine.se)
 #' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 #' sacurine.se <- transforming(sacurine.se)
@@ -96,8 +96,8 @@ setGeneric("annotating",
 #' 
 #' # MultiAssayExperiment
 #' 
-#' prometis.mae <- reading(system.file("extdata/prometis/", package="phenomis"))
-#' prometis.mae <- clustering(prometis.mae, clusters.vi = c(3, 3))
+#' prometis.mae <- reading(system.file("extdata/prometis", package="phenomis"))
+#' prometis.mae <- clustering(prometis.mae)
 setGeneric("clustering",
            function(x,
                     dissym.c = c("euclidean",
@@ -167,7 +167,7 @@ setGeneric("clustering",
 #' @rdname correcting
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine.se <- correcting(sacurine.se)
 #' 
 #' # MultiDataSet (to be done)
@@ -208,7 +208,7 @@ setGeneric("correcting",
 #' @rdname filtering
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' assay.mn <- assay(sacurine.se)
 #' ropls::view(assay.mn)
 #' filtering(sacurine.se)
@@ -300,7 +300,7 @@ setGeneric("filtering",
 #' @rdname hypotesting
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine.se <- correcting(sacurine.se, figure.c = 'none')
 #' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 #' sacurine.se <- transforming(sacurine.se)
@@ -383,7 +383,7 @@ setGeneric("hypotesting",
 #' sample and variable metrics in the rowData and colData metadata.
 #' @rdname inspecting
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine.se <- inspecting(sacurine.se)
 #' sacurine.se <- correcting(sacurine.se)
 #' sacurine.se <- inspecting(sacurine.se)
@@ -392,9 +392,7 @@ setGeneric("hypotesting",
 #' 
 #' # MultiAssayExperiment
 #' prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
-#'\dontrun{
 #' prometis.mae <- inspecting(prometis.mae)
-#'}
 setGeneric("inspecting",
            function(x,
                     pool_as_pool1.l = FALSE,
@@ -426,7 +424,7 @@ setGeneric("inspecting",
 #' @export
 #' @examples
 #' sacurine.se <- reading(file.path(system.file(package = "phenomis"),
-#'                                  "extdata/W4M00001_Sacurine-statistics"))
+#'                                  "extdata/sacurine"))
 #' sacurine.se <- sacurine.se[, colnames(sacurine.se) != 'HU_neg_096_b2']
 #' sacurine.se <- transforming(sacurine.se, method.vc = "log10")
 #' norm.se <- normalizing(sacurine.se, method.vc = "pqn")
@@ -485,12 +483,13 @@ setGeneric("normalizing",
 #' the annotations relative to this representative ion within each group
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00002_Sacurine-comprehensive",
-#'                                           package = "phenomis"),
+#' metabo.se <- reading(system.file("extdata/prometis/metabo",
+#'                                     package = "phenomis"),
 #'                       report.c = "none")
-#' sacurine.se <- reducing(sacurine.se,
-#'                         rt_tol.n = 6)
-#' table(rowData(sacurine.se)[, "redund_group"])
+#' metabo.se <- reducing(metabo.se,
+#'                         rt_tol.n = 15)
+#' # Note: in the 'prometis' example data set from this package, the chemical
+#' # redundancy has already been filtered out
 setGeneric("reducing",
            function(x,
                     cor_method.c = "pearson",
@@ -512,7 +511,7 @@ setGeneric("reducing",
 #' intensities in (each of) the data set (e.g. to stabilize the variance)
 #'
 #' @param x An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet} are deprecated)
-#' @param method.vc character(): type of transformation (either 'log2', 'log10', or 'sqrt'); in case of a MultiAssayExperiment, distinct methods may be provided for each dataset
+#' @param method.vc character(): type of transformation (either 'log2', 'log10', 'sqrt', or 'none'); in case of a MultiAssayExperiment, distinct methods may be provided for each dataset
 #' @param report.c Character: File name with '.txt' extension for the printed
 #' results (call to sink()'); if 'interactive' (default), messages will be
 #' printed on the screen; if 'none', no verbose will be generated
@@ -521,16 +520,18 @@ setGeneric("reducing",
 #' @rdname transforming
 #' @export
 #' @examples
-#' sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+#' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 #' sacurine.se <- correcting(sacurine.se)
 #' sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 #' sacurine.se <- transforming(sacurine.se)
 #' # MultiAssayExperiment
 #' prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
-#' prometis.mae <- transforming(prometis.mae)
+#' prometis.mae <- transforming(prometis.mae, method.vc = c("log2", "none"))
+#' # Note: in the 'prometis' example data set from the package, the data are
+#' # already log2 transformed
 setGeneric("transforming",
            function(x,
-                    method.vc = c("log2", "log10", "sqrt")[1],
+                    method.vc = c("log2", "log10", "sqrt", "none")[1],
                     report.c = c("none", "interactive", "myfile.txt")[2])
              standardGeneric("transforming"))
 
@@ -556,9 +557,9 @@ setGeneric("transforming",
 #' @rdname writing
 #' @export
 #' @examples
-#' metabo.se <- reading(system.file("extdata/prometis/metabolomics", package="phenomis"))
+#' metabo.se <- reading(system.file("extdata/prometis/metabo", package="phenomis"))
 #'\dontrun{
-#' writing(metabo.se, dir.c = file.path(getwd(), "metabolomics"))
+#' writing(metabo.se, dir.c = file.path(getwd(), "metabo"))
 #'}
 #'# MultiAssayExperiment
 #' prometis.mae <- reading(system.file("extdata/prometis",package="phenomis"))
@@ -567,17 +568,17 @@ setGeneric("transforming",
 #' # alternatively
 #' writing(prometis.mae,
 #'          dir.c = NA,
-#'          files.ls = list(metabolomics = list(dataMatrix.tsvC = file.path(getwd(),
+#'          files.ls = list(metabo = list(dataMatrix = file.path(getwd(),
 #'                                              "met_dataMatrix.tsv"),
-#'                                       sampleMetadata.tsvC = file.path(getwd(),
+#'                                       sampleMetadata = file.path(getwd(),
 #'                                       "met_sampleMetadata.tsv"),
-#'                                       variableMetadata.tsvC = file.path(getwd(),
+#'                                       variableMetadata = file.path(getwd(),
 #'                                       "met_variableMetadata.tsv")),
-#'                         proteomics = list(dataMatrix.tsvC = file.path(getwd(),
+#'                         proteo = list(dataMatrix = file.path(getwd(),
 #'                                       "pro_dataMatrix.tsv"),
-#'                                       sampleMetadata.tsvC = file.path(getwd(),
+#'                                       sampleMetadata = file.path(getwd(),
 #'                                       "pro_sampleMetadata.tsv"),
-#'                                       variableMetadata.tsvC = file.path(getwd(),
+#'                                       variableMetadata = file.path(getwd(),
 #'                                       "pro_variableMetadata.tsv"))))
 #'}
 setGeneric("writing",

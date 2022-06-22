@@ -2,7 +2,7 @@ testthat::context("Testing 'filtering'")
 
 testthat::test_that("filtering-se", {
 
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
   
   assay.mn <- assay(sacurine.se)
   assay.mn[assay.mn < 1e5] <- NA
@@ -19,7 +19,7 @@ testthat::test_that("filtering-se", {
 
 testthat::test_that("filtering-se-gender", {
   
-  sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
   
   assay.mn <- assay(sacurine.se)
   assay.mn[assay.mn < 1e5] <- NA
@@ -48,9 +48,9 @@ testthat::test_that("filtering-mae", {
   
   prometis.mae <- filtering(prometis.mae)
   
-  expect_dims.mn <- matrix(c(74, 24, 77, 28),
+  expect_dims.mn <- matrix(c(71, 28, 75, 28),
                            nrow = 2,
-                           dimnames = list(NULL, c("metabolomics", "proteomics")))
+                           dimnames = list(NULL, c("metabo", "proteo")))
   
   testthat::expect_equal(sapply(names(prometis.mae), function(set.c) dim(prometis.mae[[set.c]])),
                          expect_dims.mn)
@@ -72,8 +72,8 @@ testthat::test_that("filtering-mset", {
    
    prometis.mset <- filtering(prometis.mset)
    
-   expect_dims.ls <- list(metabolomics = c(Features = 74, Samples = 24),
-                          proteomics = c(Features = 77, Samples = 28))
+   expect_dims.ls <- list(metabo = c(Features = 71, Samples = 28),
+                          proteo = c(Features = 75, Samples = 28))
    
    testthat::expect_equal(Biobase::dims(prometis.mset),
                           expect_dims.ls)
@@ -95,8 +95,8 @@ testthat::test_that("filtering-mset-gene", {
   
   prometis.mset <- filtering(prometis.mset, class.c = "gene")
   
-  expect_dims.ls <- list(metabolomics = c(Features = 83, Samples = 23),
-                         proteomics = c(Features = 79, Samples = 28))
+  expect_dims.ls <- list(metabo = c(Features = 79, Samples = 28),
+                         proteo = c(Features = 76, Samples = 28))
   
   testthat::expect_equal(Biobase::dims(prometis.mset),
                          expect_dims.ls)

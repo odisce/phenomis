@@ -556,7 +556,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
       
       factorLevelsSelectedN <- length(factorLevelsSelectedVc)
       if (factorLevelsDefaultN != factorLevelsSelectedN)
-        stop("'nlevels(factorFc) = ", factorLevelsDefaultN, "'and 'length(factorLevelsVc) = ", factorLevelN,
+        stop("'nlevels(factorFc) = ", factorLevelsDefaultN, "'and 'length(factorLevelsVc) = ", factorLevelsSelectedN,
              "': 'factorLevelsVc' must have the same number of levels as the factor")
       
       if (!identical(sort(factorLevelsVc), sort(factorLevelsDefaultVc)))

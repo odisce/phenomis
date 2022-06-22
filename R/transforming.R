@@ -4,7 +4,7 @@
 #' @export
 setMethod("transforming", signature(x = "MultiAssayExperiment"),
           function(x,
-                   method.vc = c("log2", "log10", "sqrt")[1],
+                   method.vc = c("log2", "log10", "sqrt", "none")[1],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (!(length(method.vc) %in% c(1, length(x)))) {
@@ -48,7 +48,7 @@ setMethod("transforming", signature(x = "MultiAssayExperiment"),
 #' @export
 setMethod("transforming", signature(x = "SummarizedExperiment"),
           function(x,
-                   method.vc = c("log2", "log10", "sqrt")[1],
+                   method.vc = c("log2", "log10", "sqrt", "none")[1],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (length(method.vc) > 1) {
@@ -81,7 +81,7 @@ setMethod("transforming", signature(x = "SummarizedExperiment"),
 #' @export
 setMethod("transforming", signature(x = "MultiDataSet"),
           function(x,
-                   method.vc = c("log2", "log10", "sqrt")[1],
+                   method.vc = c("log2", "log10", "sqrt", "none")[1],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (!(length(method.vc) %in% c(1, length(x)))) {
@@ -132,7 +132,7 @@ setMethod("transforming", signature(x = "MultiDataSet"),
 #' @export
 setMethod("transforming", signature(x = "ExpressionSet"),
           function(x,
-                   method.vc = c("log2", "log10", "sqrt")[1],
+                   method.vc = c("log2", "log10", "sqrt", "none")[1],
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (length(method.vc) > 1) {
@@ -168,8 +168,8 @@ setMethod("transforming", signature(x = "ExpressionSet"),
   if (length(which(data.mn < 0)))
     stop("The 'dataMatrix' contains negative values")
   
-  if (!(method.c %in% c("log2", "log10", "sqrt")))
-    stop("The transforming method should be either 'log2', 'log10', or 'sqrt'")
+  if (!(method.c %in% c("log2", "log10", "sqrt", "none")))
+    stop("The transforming method should be either 'log2', 'log10', 'sqrt', or 'none'")
   
   ## Number of missing values
   data_na.ml <- is.na(data.mn)
@@ -213,6 +213,12 @@ setMethod("transforming", signature(x = "ExpressionSet"),
              message("'Square root' transformation")
            
            data.mn <- sqrt(data.mn)
+           
+         },
+         none = {
+           
+           if (verbose.l)
+             message("No transformation")
            
          })
   

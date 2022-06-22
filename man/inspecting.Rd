@@ -108,7 +108,7 @@ or a variance of 0 will be filtered out at the beginning of the method and
 therefore in the output SummarizedExperiments(s)
 }
 \examples{
-sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 sacurine.se <- inspecting(sacurine.se)
 sacurine.se <- correcting(sacurine.se)
 sacurine.se <- inspecting(sacurine.se)
@@ -117,7 +117,5 @@ sacurine.se <- inspecting(sacurine.se)
 
 # MultiAssayExperiment
 prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
-\dontrun{
 prometis.mae <- inspecting(prometis.mae)
-}
 }

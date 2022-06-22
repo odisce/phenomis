@@ -21,8 +21,8 @@ editor_options:
 ---
 
 ```{r global_options, include=FALSE}
-knitr::opts_chunk$set(fig.width = 6,
-                      fig.height = 6,
+knitr::opts_chunk$set(fig.width = 5,
+                      fig.height = 5,
                       fig.path = 'figures/temp/')
 ```
 
@@ -50,7 +50,14 @@ selection and annotation, such as the
 [**`ropls`**](https://doi.org/10.18129/B9.bioc.ropls) and
 [**`biosigner`**](https://doi.org/10.18129/B9.bioc.biosigner) and
 [**`biodb`**](https://www.bioconductor.org/packages/biodb/) Bioconductor
-packages, as described below.
+packages. As an example, the tutorial below reproduces the whole
+workflow described in the `sacurine` study [@thevenot_analysis_2015].
+The `phenomis` package has also been used to post-processed the
+preclinical, proteomics and metabolomics data from the ProMetIS study
+[@Imbert_PrometisDeepPhenotyping_2021]. Proteomics and metabolomics data
+from this study are provided as a second dataset, named `prometis`.
+Examples of statistical analyses of this dataset are provided in the
+"Working with multi-omics datasets" section.
 
 ## Methods
 
@@ -135,12 +142,11 @@ the two arguments:
 As an example, we will use the **`phenomis`** package to study the
 **sacurine** human cohort. The study is aimed at characterizing the
 physiological variations of the human urine metabolome with age, body
-mass index (BMI), and gender
-[[\@thevenot_analysis_2015](https://doi.org/10.1021/acs.jproteome.5b00354)].
-Urine samples from 184 volunteers were analyzed by reversed-phase (C18)
-ultrahigh performance liquid chromatography (UPLC) coupled to
-high-resolution mass spectrometry (LTQ-Orbitrap). Raw data are publicly
-available on the MetaboLights repository
+mass index (BMI), and gender [@thevenot_analysis_2015]. Urine samples
+from 184 volunteers were analyzed by reversed-phase (C18) ultrahigh
+performance liquid chromatography (UPLC) coupled to high-resolution mass
+spectrometry (LTQ-Orbitrap). Raw data are publicly available on the
+MetaboLights repository
 ([MTBLS404](https://www.ebi.ac.uk/metabolights/MTBLS404)).
 
 This vignette describes the statistical analysis of the data set from
@@ -149,10 +155,9 @@ or 2):
 
 -   **`correcting`**: Correction of the signal drift by local regression
     (loess) modeling of the intensity trend in pool samples
-    [[\@dunn_procedures_2011](https://doi.org/10.1038/nprot.2011.335)];
-    Adjustment of oﬀset diﬀerences between the two analytical batches by
-    using the average of the pool intensities in each batch
-    [[\@van_der_kloet_analytical_2009](https://doi.org/10.1021/pr900499r)]
+    [@dunn_procedures_2011]; Adjustment of oﬀset diﬀerences between the
+    two analytical batches by using the average of the pool intensities
+    in each batch [@van_der_kloet_analytical_2009]
 
 -   Variable quality control by discarding features with a coefficient
     of variation above 30% in *pool* samples
@@ -163,13 +168,10 @@ or 2):
 
 -   **`inspecting`**: Computing metrics to filter out outlier samples
     according to the Weighted Hotellings'T2 distance
-    [[\@tenenhaus_approche_1999](http://www.numdam.org/item/?id=RSA_1999__47_2_5_0)],
-    the Z-score of one of the intensity distribution deciles
-    [[\@alonso_astream:\_2011](https://doi.org/10.1093/bioinformatics/btr138)],
-    and the Z-score of the number of missing values
-    [[\@alonso_astream:\_2011](https://doi.org/10.1093/bioinformatics/btr138)].
-    A 0.001 threshold for all p-values results in the HU_096 sample
-    being discarded
+    [@tenenhaus_approche_1999], the Z-score of one of the intensity
+    distribution deciles [@alonso_astream_2011], and the Z-score of the
+    number of missing values [@alonso_astream_2011]. A 0.001 threshold
+    for all p-values results in the HU_096 sample being discarded
 
 -   **`hypotesting`**: Univariate hypothesis testing of significant
     variations with age, BMI, or between genders (Student's T test with
@@ -177,29 +179,25 @@ or 2):
 
 -   PCA exploration of the data set;
     [**`ropls`**](https://doi.org/10.18129/B9.bioc.ropls) Bioconductor
-    package
-    [[\@thevenot_analysis_2015](https://doi.org/10.1021/acs.jproteome.5b00354)]
+    package [@thevenot_analysis_2015]
 
 -   **`clustering`**: Hierarchical clustering
 
 -   OPLS(-DA) modeling of age, BMI and gender;
     [**`ropls`**](https://doi.org/10.18129/B9.bioc.ropls) Bioconductor
-    package
-    [[\@thevenot_analysis_2015](https://doi.org/10.1021/acs.jproteome.5b00354)]
+    package [@thevenot_analysis_2015]
 
 -   Selection of the features which significantly contributes to the
     discrimination between gender with PLS-DA, Random Forest, or Support
     Vector Machines classifiers;
     [**`biosigner`**](https://doi.org/10.18129/B9.bioc.biosigner)
-    Bioconductor package
-    [[\@rinaudo_biosigner:\_2016](https://doi.org/10.3389/fmolb.2016.00026)]
+    Bioconductor package [@rinaudo_biosigner_2016]
 
 A Galaxy version of this analysis is available [W4M00001
 'Sacurine-statistics'](https://doi.org/10.15454/1.4811121736910142E12)
 on the
-[workflow4metabolomics.usegalaxy.fr/](https://workflow4metabolomics.usegalaxy.fr/)
-online infrastructure
-[[\@guitton_create_2017](https://doi.org/10.1016/j.biocel.2017.07.002)]
+[workflow4metabolomics.usegalaxy.fr](https://workflow4metabolomics.usegalaxy.fr/)
+online infrastructure [@guitton_create_2017].
 
 ## **`reading`**: reading the data
 
@@ -211,7 +209,7 @@ provided in the **Appendix**.
 
 ```{r reading, message = FALSE}
 library(phenomis)
-sacurine.se <- reading(system.file("extdata/W4M00001_Sacurine-statistics", package = "phenomis"))
+sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 ```
 
 ## **`inspecting`**: looking at the data
@@ -268,7 +266,7 @@ subsequently be used to filter out some samples or variables.
             dilution factor is computed for each variable
 
 ```{r inspecting}
-sacurine.se <- inspecting(sacurine.se)
+sacurine.se <- inspecting(sacurine.se, report.c = "none")
 ```
 
 The `filtering` method may be used to discard samples and/or features
@@ -303,7 +301,8 @@ columns:
 
 ```{r correcting}
 sacurine.se <- correcting(sacurine.se,
-                          reference.vc = "pool")
+                          reference.vc = "pool",
+                          report.c = "none")
 ```
 
 ### Variable filtering
@@ -311,7 +310,8 @@ sacurine.se <- correcting(sacurine.se,
 -   using **`inspecting`** to compute the 'pool_CV' metric
 
 ```{r inspecting_variable_filtering}
-sacurine.se <- inspecting(sacurine.se)
+sacurine.se <- inspecting(sacurine.se,
+                          figure.c = "none", report.c = "none")
 ```
 
 -   discarding features with 'pool_CV' \> 0.3
@@ -354,7 +354,7 @@ sacurine.se <- transforming(sacurine.se, method.vc = "log10")
 ### Sample filtering
 
 ```{r sample_filtering}
-sacurine.se <- inspecting(sacurine.se)
+sacurine.se <- inspecting(sacurine.se, figure.c = "none", report.c = "none")
 sacurine.se <- sacurine.se[, colData(sacurine.se)[, "hotel_pval"] >= 0.001 &
                              colData(sacurine.se)[, "miss_pval"] >= 0.001 &
                              colData(sacurine.se)[, "deci_pval"] >= 0.001]
@@ -363,7 +363,7 @@ sacurine.se <- sacurine.se[, colData(sacurine.se)[, "hotel_pval"] >= 0.001 &
 Final visual check of the data before performing the statistics:
 
 ```{r final_check}
-inspecting(sacurine.se)
+inspecting(sacurine.se, report.c = "none")
 ```
 
 ## **`hypotesting`**: univariate hypothesis testing
@@ -375,12 +375,13 @@ but also the limma test), analysis of variance (for one and two factors)
 and Kruskal-Wallis rank test, and correlation tests (by using either the
 pearson or the spearman correlation).
 
-```{r hypotesting}
+```{r hypotesting, warning=FALSE}
 sacurine.se <- hypotesting(sacurine.se,
                            test.c = "ttest",
                            factor_names.vc = "gender",
                            adjust.c = "BH",
-                           adjust_thresh.n = 0.05)
+                           adjust_thresh.n = 0.05,
+                           report.c = "none")
 ```
 
 The `phenomis` package can be conveniently complemented with other
@@ -390,9 +391,7 @@ rest of this tutorial, we illustrate how the
 [**`biosigner`**](https://doi.org/10.18129/B9.bioc.biosigner) and
 [**`biodb`**](https://www.bioconductor.org/packages/biodb/) Bioconductor
 packages can be included to perform multivariate modeling
-[[\@thevenot_analysis_2015](https://doi.org/10.1021/acs.jproteome.5b00354)],
-feature selection
-[[\@rinaudo_biosigner:\_2016](https://doi.org/10.3389/fmolb.2016.00026)],
+[@thevenot_analysis_2015], feature selection [@rinaudo_biosigner_2016],
 and feature annotation [@roger2022]. All these packages support the
 `SummarizedExperiment` and `MultiAssayExperiment` (but also
 `ExpressionSet` and `MultiDataSet`), to provide interoperability.
@@ -466,9 +465,8 @@ ropls::plot(sacurine_gender.plsda,
 The `biosigner` approach is a wrapper method to select the features that
 significantly contribute to the performance of a binary classifier,
 namely PLS-DA, random forest, or Support Vector Machine
-[[\@rinaudo_biosigner:\_2016](https://doi.org/10.3389/fmolb.2016.00026)].
-We refer the interested reader to the vignette from the `biosigner`
-package.
+[@rinaudo_biosigner_2016]. We refer the interested reader to the
+vignette from the `biosigner` package.
 
 ```{r biosigner}
 sacurine.biosign <- biosigner::biosign(sacurine.se, "gender", bootI = 5)
@@ -561,11 +559,7 @@ Finally, the `writing` method can be used to export the
 created for each dataset.
 
 ```{r writing, eval = FALSE}
-writing(sacurine.se, dir.c = getwd())
-```
-
-```{r writing_in_figures_repos, include=FALSE}
-writing(sacurine.se, dir.c = 'figures/temp', overwrite.l = TRUE)
+writing(sacurine.se, dir.c = getwd(), prefix.c = "sacurine")
 ```
 
 ## Graphical User Interface
@@ -592,30 +586,154 @@ the `method.vc = c("log2", "none")` parameter can be used with the
 `transforming` method (in contrast, if only one value is provided, it
 will be used for all datasets).
 
+Here we apply `phenomis` statistical methods to the ProMetIS study ,
+which addresses the molecular phenotyping of knock-out mouse models by
+combined proteomics and metabolomics analysis
+[@Imbert_PrometisDeepPhenotyping_2021]. The `phenomis` dataset has been
+selected from the original data (publicly available on GitHub:
+[IFB-ElixirFr/ProMetIS](https://github.com/IFB-ElixirFr/ProMetIS)) as
+follows:
+
+-   **liver** data
+
+-   **WT** and KO mice for the **LAT** gene (Linker for Activation of T
+    cells) only
+
+-   the **proteomics** dataset and the **metabolomics** dataset obtained
+    with the ZIC-pHILIC chromatographic column
+
+-   **post-processed** data only
+
+-   **100 features** only
+
+The multi-omics dataset is saved as text files and can be loaded with
+the `reading` function as a `MultiAssayExperiment` (or as a
+`MultiDataSet` with the `output.c = "set"` argument)
+
+```{r pms_read}
+prometis.mae <- reading(system.file("extdata/prometis",
+                                    package = "phenomis"))
+```
+
+Let us have a look at the (common) sample metadata:
+
+```{r}
+head(colData(prometis.mae))
+```
+
+We first explore the datasets:
+
+```{r pms_inspect}
+prometis.mae <- inspecting(prometis.mae, report.c = "none")
+```
+
+We then perform univariate hypothesis testing with the `limma` approach
+[@Ritchie_LimmaPowersDifferential_2015]:
+
+```{r pms_limma}
+prometis.mae <- hypotesting(prometis.mae, "limma", "gene",
+                            report.c = "none")
+```
+
+As with single omics studies, the `ropls` and `biosigner` can be
+directly applied to `MultiAssayExperiment` for multivariate analysis:
+
+```{r pms_plsda}
+prometis.mae <- ropls::opls(prometis.mae, "gene")
+```
+
+and feature selection:
+
+```{r pms_biosign}
+prometis.mae <- biosigner::biosign(prometis.mae, "gene", bootI = 5)
+```
+
+The final `MultiAssayExperiment` can be exported as text files with:
+
+```{r pms_writing, eval = FALSE}
+writing(prometis.mae, dir.c = getwd(), prefix.c = "prometis")
+```
+
+# Appendix
+
+## Additional examples of application to single and multiple omics data sets
+
+### CLL data set
+
+The `CLL` package contains the chronic lymphocytic leukemia (CLL) gene
+expression data from 24 samples, that were either classified as
+progressive or stable in regards to disease progression.
+
+We first load the data (which are stored as an `ExpressionSet` object),
+and restrict to the first 1,000 features (to speed up computations):
+
+```{r cll_load}
+data(sCLLex, package = "CLL")
+cll.eset <- sCLLex[1:1000, ]
+```
+
+We explore the data:
+
+```{r cll_inspect}
+cll.eset <- inspecting(cll.eset, report.c = "none")
+```
+
+Investigate whether clusters can be observed (we first add the letter
+'p' or 's' in the sample names to indicate the phenotype: p =
+progressive, s = stable):
+
+```{r}
+Biobase::sampleNames(cll.eset) <- paste0(Biobase::sampleNames(cll.eset),
+                                         "_",
+                                         substr(Biobase::pData(cll.eset)[, "Disease"], 1, 1))
+
+cll.eset <- clustering(cll.eset)
+```
+
+and perform hypothesis testing with the limma test (the dots must be
+removed from the 'progress.' phenotype):
+
+```{r}
+Biobase::pData(cll.eset)[, "Disease"] <- gsub(".", "",
+                                              Biobase::pData(cll.eset)[, "Disease"],
+                                              fixed = TRUE)
+cll.eset <- hypotesting(cll.eset, "limma", "Disease")
+```
+
+All the subsequent multivariate analysis and feature selection steps
+described with the `sacurine` data set can be performed with the
+`cll.eset` accordingly.
+
+### NCI60_4arrays data set
+
 We provide an example based on the `NCI60_4arrays` cancer data set from
-the `omicade4` package (which has been made available in the
-`MultiAssayExperiment` format in the `ropls` package).
+the `omicade4` package [@mengMultivariateApproachIntegration2014], which
+has been made available in the `MultiAssayExperiment` format in the
+`ropls` package. The data consist of gene transcript expression analysis
+from NCI-60 cell lines by using 4 microarray platforms
+[@Reinhold_CellMinerWebBasedSuite_2012].
 
 Getting the `NCI60` data set as a `MultiAssayExperiment`:
 
 ```{r mae}
 data(NCI60, package = "ropls")
-
 nci.mae <- NCI60[["mae"]]
 ```
 
-Let's focus on the "LE" and "ME" cancer types, and the "agilent" and
-"hgu95" arrays:
+Let's focus on the **LE**ukemia and **ME**lanoma cancer types, and the
+**agilent** and **hgu95** arrays:
 
-```{r mae_focus, message = FALSE}
+```{r mae_focus, message=FALSE, warning=FALSE}
 library(MultiAssayExperiment)
 table(nci.mae$cancer)
-nci.mae <- nci.mae[, nci.mae$cancer %in% c("LE", "ME"), c("agilent", "hgu95")]
+nci.mae <- nci.mae[,
+                   nci.mae$cancer %in% c("LE", "ME"),
+                   c("agilent", "hgu95")]
 ```
 
 We can now e.g. perform clustering on each data set independently:
 
-```{r mae_clustering}
+```{r mae_clustering, message=TRUE, warning=TRUE}
 nci.mae <- clustering(nci.mae)
 ```
 
@@ -625,27 +743,7 @@ and/or perform hypothesis testing on each data set:
 nci.mae <- hypotesting(nci.mae, "limma", "cancer", report.c = "none")
 ```
 
-and/or build predictive models:
-
-```{r mae_opls}
-nci.mae <- ropls::opls(nci.mae, "cancer")
-```
-
-and/or select the significant features for PLS-DA, Random Forest or SVM
-classifiers (here we set the `bootI` parameter to 5 to speed up the
-computations)
-
-```{r mae_biosign}
-nci.mae <- biosigner::biosign(nci.mae, "cancer", bootI = 5)
-```
-
-The resulting `MultiAssayExperiment` can be exported as text files with:
-
-```{r writing_mae, eval = FALSE}
-writing(nci.mae, dir.c = getwd())
-```
-
-# Appendix
+as well as all the analyses described above for the `prometis` data set.
 
 ## Cheat sheets for Bioconductor (multi)omics containers
 

@@ -121,10 +121,11 @@ Note: the algorithm relies on the 'mzdiff_db.tsv' file referencing the known add
 isotopes, and fragments.
 }
 \examples{
-sacurine.se <- reading(system.file("extdata/W4M00002_Sacurine-comprehensive",
-                                          package = "phenomis"),
+metabo.se <- reading(system.file("extdata/prometis/metabo",
+                                    package = "phenomis"),
                       report.c = "none")
-sacurine.se <- reducing(sacurine.se,
-                        rt_tol.n = 6)
-table(rowData(sacurine.se)[, "redund_group"])
+metabo.se <- reducing(metabo.se,
+                        rt_tol.n = 15)
+# Note: in the 'prometis' example data set from this package, the chemical
+# redundancy has already been filtered out
 }
