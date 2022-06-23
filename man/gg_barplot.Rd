@@ -55,7 +55,9 @@ Barplot with ggplot2
 }
 \examples{
 prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
-dims.mn <- sapply(names(prometis.mae), function(set.c) { dim(prometis.mae[[set.c]])})
+dims.mn <- vapply(names(prometis.mae),
+                  function(set.c) { dim(prometis.mae[[set.c]])},
+                  FUN.VALUE = integer(2))
 dims.mn <- t(dims.mn)
 colnames(dims.mn) <- c("Features", "Samples")
 gg_barplot(dims.mn, title.c = "ProMetIS data")

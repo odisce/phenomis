@@ -77,14 +77,15 @@ fdr.vn <- rowData(sacurine.se)[, "wilcoxon_gender_Female.Male_BH"]
 feat.vc <- rownames(sacurine.se)
 gg_volcanoplot(fold.vn,
                fdr.vn,
-               label.vc = feat.vc,
+               label.vc = make.names(feat.vc),
                adjust_method.c = "BH")
-feat_signif.vc <-  sapply(seq_along(feat.vc),
+feat_signif.vc <-  vapply(seq_along(feat.vc),
                           function(feat.i)
-                           ifelse(fdr.vn[feat.i] <= 0.05, feat.vc[feat.i], ""))
+                           ifelse(fdr.vn[feat.i] <= 0.05, feat.vc[feat.i], ""),
+                           FUN.VALUE = character(1))
 gg_volcanoplot(fold.vn,
                fdr.vn,
-               label.vc = feat_signif.vc,
+               label.vc = make.names(feat_signif.vc),
                adjust_method.c = "BH",
                figure.c = "interactive")
 }

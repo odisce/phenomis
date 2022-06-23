@@ -102,13 +102,13 @@ reading <- function(dir.c,
       
       names(subdir.vc) <- basename(subdir.vc)
       
-      subdir.vl <- sapply(subdir.vc,
+      subdir.vl <- vapply(subdir.vc,
                           function(sub_dir.c) {
                             fileC <- list.files(sub_dir.c,
                                                 pattern = "(dataMatrix|DM)",
                                                 full.names = TRUE)
                             length(fileC) == 1 && file.exists(fileC)
-                          })
+                          }, FUN.VALUE = logical(1))
       
       if (sum(subdir.vl) == 0) {
         
@@ -151,7 +151,7 @@ reading <- function(dir.c,
     
     subNamVc <- names(files.ls)
     
-    if (sum(sapply(files.ls, is.list)) == 0) { ## ExpressionSet
+    if (sum(vapply(files.ls, is.list, FUN.VALUE = logical(1))) == 0) { ## ExpressionSet
       
       if (length(subNamVc) == 3 &&
           identical(subNamVc, c("dataMatrix",
@@ -355,7 +355,7 @@ reading <- function(dir.c,
   
   if (report.c != "none") {
     
-    if ((class(x) %in% c("MultiAssayExperiment", "MultiDataSet")) && length(x) > 1 && any(is.na(disagree.mc))) {
+    if ((is(x, "MultiAssayExperiment") || is(x, "MultiDataSet")) && length(x) > 1 && any(is.na(disagree.mc))) {
       warning("Discrepancies between the sampleMetadata from the datasets:")
       print(disagree.mc)
     }
@@ -634,7 +634,7 @@ setMethod("writing", "MultiAssayExperiment",
                 stop("All names of the sublists must be provided (they should match the names of the MultiDataSet datasets)",
                      call. = FALSE)
               
-              filLisVl <- sapply(files.ls, is.list)
+              filLisVl <- vapply(files.ls, is.list, FUN.VALUE = logical(1))
               
               if (!all(filLisVl))
                 stop("The following element(s) of 'files.ls' is/are not sublist(s):\n",
@@ -908,7 +908,7 @@ setMethod("writing", "MultiDataSet",
                 stop("All names of the sublists must be provided (they should match the names of the MultiDataSet datasets)",
                      call. = FALSE)
               
-              filLisVl <- sapply(files.ls, is.list)
+              filLisVl <- vapply(files.ls, is.list, FUN.VALUE = logical(1))
               
               if (!all(filLisVl))
                 stop("The following element(s) of 'files.ls' is/are not sublist(s):\n",
@@ -1145,8 +1145,9 @@ setMethod("writing", "ExpressionSet",
     if (length(datSamDifVc)) {
       if (infCw != "none") {
         message("The following samples were found in the dataMatrix column names but not in the sampleMetadata row names:\n")
-        print(cbind.data.frame(col = as.numeric(sapply(datSamDifVc,
-                                                       function(samC) which(rownames(dat.mnw) == samC))),
+        print(cbind.data.frame(col = as.numeric(vapply(datSamDifVc,
+                                                       function(samC) which(rownames(dat.mnw) == samC),
+                                                       integer(1))),
                                name = datSamDifVc))
       }
       chkL <- FALSE
@@ -1157,7 +1158,8 @@ setMethod("writing", "ExpressionSet",
     if (length(samDatDifVc)) {
       if (infCw != "none") {
         message("The following samples were found in the sampleMetadata row names but not in the dataMatrix column names:\n")
-        print(cbind.data.frame(row = as.numeric(sapply(samDatDifVc, function(samC) which(rownames(sam.dfw) == samC))),
+        print(cbind.data.frame(row = as.numeric(vapply(samDatDifVc, function(samC)
+          which(rownames(sam.dfw) == samC), FUN.VALUE = integer(1))),
                                name = samDatDifVc))
       }
       chkL <- FALSE
@@ -1184,7 +1186,7 @@ setMethod("writing", "ExpressionSet",
     } else {
       if (infCw != "none") {
         message("The dataMatrix column names and the sampleMetadata row names are not identical:\n")
-        print(cbind.data.frame(indice = 1:nrow(dat.mnw),
+        print(cbind.data.frame(indice = seq_len(nrow(dat.mnw)),
                                dataMatrix_columnnames = rownames(dat.mnw),
                                sampleMetadata_rownames = rownames(sam.dfw))[rownames(dat.mnw) != rownames(sam.dfw), , drop = FALSE])
       }
@@ -1201,7 +1203,9 @@ setMethod("writing", "ExpressionSet",
     if (length(datVarDifVc)) {
       if (infCw != "none") {
         message("The following variables were found in the dataMatrix row names but not in the variableMetadata row names:\n")
-        print(cbind.data.frame(row = as.numeric(sapply(datVarDifVc, function(varC) which(colnames(dat.mnw) == varC))),
+        print(cbind.data.frame(row = as.numeric(vapply(datVarDifVc,
+                                                       function(varC) which(colnames(dat.mnw) == varC),
+                                                       FUN.VALUE = integer(1))),
                                name = datVarDifVc))
       }
       chkL <- FALSE
@@ -1212,7 +1216,8 @@ setMethod("writing", "ExpressionSet",
     if (length(varDatDifVc)) {
       if (infCw != "none") {
         message("The following variables were found in the variableMetadata row names but not in the dataMatrix row names:\n")
-        print(cbind.data.frame(row = as.numeric(sapply(varDatDifVc, function(varC) which(rownames(var.dfw) == varC))),
+        print(cbind.data.frame(row = as.numeric(vapply(varDatDifVc, function(varC)
+          which(rownames(var.dfw) == varC), FUN.VALUE = integer(1))),
                                name = varDatDifVc))
       }
       chkL <- FALSE
@@ -1235,7 +1240,7 @@ setMethod("writing", "ExpressionSet",
     } else {
       if (infCw != "none") {
         message("The dataMatrix row names and the variableMetadata row names are not identical:\n")
-        print(cbind.data.frame(row = 1:ncol(dat.mnw),
+        print(cbind.data.frame(row = seq_len(ncol(dat.mnw)),
                                dataMatrix_rownames = colnames(dat.mnw),
                                variableMetadata_rownames = rownames(var.dfw))[colnames(dat.mnw) != rownames(var.dfw), , drop = FALSE])
       }

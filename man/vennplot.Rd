@@ -6,7 +6,7 @@
 \usage{
 vennplot(
   input.ls,
-  palette.vc = RColorBrewer::brewer.pal(9, "Set1")[1:5],
+  palette.vc = RColorBrewer::brewer.pal(9, "Set1")[seq_len(5)],
   title.c = NA,
   sub.c = "",
   cat_pos.vi = NA,

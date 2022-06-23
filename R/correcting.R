@@ -314,8 +314,10 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   
   ref_nazeros.vl <- apply(ref_data.mn, 2,
                           function(ref.vn)
-                            all(sapply(ref.vn,
-                                       function(ref.n) {is.na(ref.n) || ref.n == 0})))
+                            all(vapply(ref.vn,
+                                       function(ref.n)
+                                         {is.na(ref.n) || ref.n == 0},
+                                       FUN.VALUE = logical(1))))
   
   if (sum(ref_nazeros.vl)) {
     message(sum(ref_nazeros.vl), " features with 'NA' or 0 values in all reference samples removed from the data.")
@@ -326,7 +328,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   
   ## ordering (batch and injection order)
   
-  samp.df[, "initial_order"] <- 1:nrow(samp.df)
+  samp.df[, "initial_order"] <- seq_len(nrow(samp.df))
   order_batch_inj.vi <- order(samp.df[, "batch"],
                               samp.df[, "injectionOrder"])
   data.mn <- data.mn[order_batch_inj.vi, ]
@@ -427,7 +429,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   if (!all(c(pool_extra.ml))) {
     warnings("Reference samples are missing at the first and/or last position of the following batches:\n")
     pool_extra_batch.vi <- which(!apply(pool_extra.ml, 2, all))
-    for (i in 1:length(pool_extra_batch.vi))
+    for (i in seq_along(pool_extra_batch.vi))
       message(names(pool_extra_batch.vi)[i], ": ",
               paste(rownames(pool_extra.ml)[!pool_extra.ml[, pool_extra_batch.vi[i]]], collapse = ", "))
     message("Extrapolating loess fits for these batches may result in inaccurate modeling!")
@@ -446,7 +448,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
     batch_data.mn <- batch_data.ls[[batch.c]]
     batch_samp.df <- batch_samp.ls[[batch.c]]
     
-    batch_all.vi <- 1:nrow(batch_data.mn)
+    batch_all.vi <- seq_len(nrow(batch_data.mn))
     batch_ref.vi <- which(batch_samp.df[, "sampleType"] == reference.c)
     
     
@@ -576,7 +578,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   serrf.mn <- data.mn
   
   # normalizing each j variable successively
-  for (j in 1:ncol(data.mn)) {
+  for (j in seq_len(ncol(data.mn))) {
     
     # computing the corvar.i closest features to j
     ref_cor_ord.vi <- order(abs(ref_cor.mn[, j]), decreasing = TRUE)
@@ -585,9 +587,9 @@ setMethod("correcting", signature(x = "ExpressionSet"),
     corvar_j.vi <- integer()
     length.i <- corvar.i
     while (length(corvar_j.vi) < corvar.i) {
-      corvar_j.vi = intersect(ref_cor_ord.vi[1:length.i], pred_cor_ord.vi[1:length.i])
-      corvar_j.vi = corvar_j.vi[corvar_j.vi != j]
-      length.i = length.i + 1
+      corvar_j.vi <- intersect(ref_cor_ord.vi[seq_len(length.i)], pred_cor_ord.vi[seq_len(length.i)])
+      corvar_j.vi <- corvar_j.vi[corvar_j.vi != j]
+      length.i <- length.i + 1
     }
     
     # restricting to these features
@@ -604,15 +606,15 @@ setMethod("correcting", signature(x = "ExpressionSet"),
     test_x.mn <- test_x.mn[, nomissing.vl, drop = FALSE]
     
     # random forest prediction
-    train.df = data.frame(y = train_y.vn, train_x.mn)
-    colnames(train.df) = c("y", paste0("V",1:(ncol(train.df)-1)))
+    train.df <- data.frame(y = train_y.vn, train_x.mn)
+    colnames(train.df) <- c("y", paste0("V",seq_len(ncol(train.df)-1)))
     
-    model.rf = ranger::ranger(y~., data = train.df,
+    model.rf <- ranger::ranger(y~., data = train.df,
                               seed = 123)
     
     # predictions
-    test.df = data.frame(test_x.mn)
-    colnames(test.df) = colnames(train.df)[-1]
+    test.df <- data.frame(test_x.mn)
+    colnames(test.df) <- colnames(train.df)[-1]
     
     serrf_refj.vn <- data.mn[ref.vi, j] / (predict(model.rf, data = train.df)[["predictions"]] + attributes(ref_scale.mn)[["scaled:center"]][j]) * ref_mean.vn[j]
     serrf_prej.vn <- data.mn[pred.vi, j] / (predict(model.rf, data = test.df)[["predictions"]] + attributes(pred_scale.mn)[["scaled:center"]][j]) * pred_median.vn[j]
@@ -629,7 +631,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
       serrf.mn[!isfinite.vl, j] <- rnorm(sum(!isfinite.vl, na.rm = TRUE), sd = sd(serrf.mn[isfinite.vl, j], na.rm = TRUE) * 0.01)
     }
     
-    out = boxplot.stats(serrf.mn[, j], coef = 3)$out
+    out <- boxplot.stats(serrf.mn[, j], coef = 3)$out
     
     serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] %in% out] <- (data.mn[pred.vi, j] - ((predict(model.rf, data = test.df)[["predictions"]] + attributes(pred_scale.mn)[["scaled:center"]][j]) - pred_median.vn[j]))[serrf.mn[pred.vi, j] %in% out]
     serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0] <- data.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0]

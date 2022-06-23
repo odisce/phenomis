@@ -6,7 +6,7 @@ package: "`r pkg_ver('phenomis')`"
 vignette: >
   %\VignetteIndexEntry{phenomis-vignette}
   %\VignetteEncoding{UTF-8}
-  %\VignetteKeywords{MassSpectrometry, Metabolomics, Normalization, Proteomics, QualityControl, StatisticalMethod, Transcriptomics, Clustering}  
+  %\VignetteKeywords{BatchEffect, Clustering, MassSpectrometry, Metabolomics, Normalization, Proteomics, QualityControl, StatisticalMethod, Transcriptomics}  
   %\VignetteEngine{knitr::rmarkdown}
 bibliography: "phenomis-vignette.bib"
 output:
@@ -22,8 +22,7 @@ editor_options:
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width = 5,
-                      fig.height = 5,
-                      fig.path = 'figures/temp/')
+                      fig.height = 5)
 ```
 
 # Introduction
@@ -64,7 +63,7 @@ Examples of statistical analyses of this dataset are provided in the
 ![Methods from the **phenomis**, **ropls**, and **biosigner** packages
 for the analysis of omics datasets; specific parameter values used for
 the **sacurine** metabolomics dataset described in the 'Hands-on' part
-below are provided as examples.](figures/permanent/phenomis_methods.png)
+below are provided as examples.](figures/phenomis_methods.png)
 
 ## Formats
 
@@ -92,7 +91,7 @@ sample and variable metadata (**sampleMetadata** and
 imported to/exported from R as tabular files:
 
 ![3 table format used as input/output from the data analysis
-workflow.](figures/permanent/phenomis_3table_format.png)
+workflow.](figures/phenomis_3table_format.png)
 
 Note that 3 sample metadata columns should be specified when working
 with the `correcting` method, namely:
@@ -299,7 +298,7 @@ columns:
 
 3.  **batch** (character): batch name
 
-```{r correcting}
+```{r correcting, fig.dim = c(6, 5)}
 sacurine.se <- correcting(sacurine.se,
                           reference.vc = "pool",
                           report.c = "none")
@@ -468,7 +467,7 @@ namely PLS-DA, random forest, or Support Vector Machine
 [@rinaudo_biosigner_2016]. We refer the interested reader to the
 vignette from the `biosigner` package.
 
-```{r biosigner}
+```{r biosigner, fig.width = 5, fig.height = 5}
 sacurine.biosign <- biosigner::biosign(sacurine.se, "gender", bootI = 5)
 ```
 
@@ -644,7 +643,7 @@ prometis.mae <- ropls::opls(prometis.mae, "gene")
 
 and feature selection:
 
-```{r pms_biosign}
+```{r pms_biosign, fig.width = 5, fig.height = 5}
 prometis.mae <- biosigner::biosign(prometis.mae, "gene", bootI = 5)
 ```
 
@@ -669,7 +668,7 @@ and restrict to the first 1,000 features (to speed up computations):
 
 ```{r cll_load}
 data(sCLLex, package = "CLL")
-cll.eset <- sCLLex[1:1000, ]
+cll.eset <- sCLLex[seq_len(1000), ]
 ```
 
 We explore the data:
@@ -682,7 +681,7 @@ Investigate whether clusters can be observed (we first add the letter
 'p' or 's' in the sample names to indicate the phenotype: p =
 progressive, s = stable):
 
-```{r}
+```{r cll_heatmap}
 Biobase::sampleNames(cll.eset) <- paste0(Biobase::sampleNames(cll.eset),
                                          "_",
                                          substr(Biobase::pData(cll.eset)[, "Disease"], 1, 1))
@@ -693,7 +692,7 @@ cll.eset <- clustering(cll.eset)
 and perform hypothesis testing with the limma test (the dots must be
 removed from the 'progress.' phenotype):
 
-```{r}
+```{r cll_limma}
 Biobase::pData(cll.eset)[, "Disease"] <- gsub(".", "",
                                               Biobase::pData(cll.eset)[, "Disease"],
                                               fixed = TRUE)

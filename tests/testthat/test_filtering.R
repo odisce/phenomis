@@ -52,7 +52,8 @@ testthat::test_that("filtering-mae", {
                            nrow = 2,
                            dimnames = list(NULL, c("metabo", "proteo")))
   
-  testthat::expect_equal(sapply(names(prometis.mae), function(set.c) dim(prometis.mae[[set.c]])),
+  testthat::expect_equal(vapply(names(prometis.mae), function(set.c) dim(prometis.mae[[set.c]]),
+                                FUN.VALUE = integer(2)),
                          expect_dims.mn)
   
 })

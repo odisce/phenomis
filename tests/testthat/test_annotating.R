@@ -13,7 +13,7 @@ testthat::context("Testing 'annotating'")
 #   testthat::expect_identical(rowData(sacurine.se)["Threonic acid/Erythronic acid", "chebi.id"],
 #                              "15908")
 #   
-#   matchVl <- sapply(1:nrow(sacurine.se),
+#   matchVl <- vapply(seq_len(nrow(sacurine.se)),
 #                     function(featI) {
 #                       dbidC <- rowData(sacurine.se)[featI, "database_identifier"]
 #                       if (dbidC == "") {
@@ -23,11 +23,11 @@ testthat::context("Testing 'annotating'")
 #                                        unlist(strsplit(dbidC, split = "|", fixed = TRUE)))
 #                         chebidC <- rowData(sacurine.se)[featI, "chebi.id"]
 #                         chebidVc <-  unlist(strsplit(chebidC, split = "|", fixed = TRUE))
-#                         return(any(sapply(dbidVc, function(dbidC) {
+#                         return(any(vapply(dbidVc, function(dbidC) {
 #                           dbidC %in% chebidVc
-#                         })))
+#                         }, FUN.VALUE = logical(1))))
 #                       }
-#                     })
+#                     }, FUN.VALUE = logical(1))
 #   # table(matchVl)
 #   # FALSE
 #   #     3

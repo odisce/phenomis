@@ -20,7 +20,7 @@
 #' # see the (default) parameters (e.g. for ChEBI query)
 #' annotating_parameters("chebi")
 #' # mz annotation with ChEBI
-#' \dontrun{
+#' \donttest{
 #' sacurine.se <- annotating(sacurine.se, database.c = "chebi",
 #' param.ls = list(query.type = "mz", query.col = "mass_to_charge",
 #' ms.mode = "neg", prefix = "chebiMZ."))
@@ -33,7 +33,7 @@
 #' mz.tol = 5, mz.tol.unit = "ppm", local.ms.db = msdbDF, prefix = "localMS."))
 #' rowData(sacurine.se)[!is.na(rowData(sacurine.se)[, "localMS.accession"]), ]
 #' # annotation from ChEBI identifiers
-#' \dontrun{
+#' \donttest{
 #' sacurine.se <- annotating(sacurine.se, database.c = "chebi",
 #' param.ls = list(query.type = "chebi.id", query.col = "database_identifier",
 #' prefix = "chebiID."))
@@ -558,12 +558,12 @@ setGeneric("transforming",
 #' @export
 #' @examples
 #' metabo.se <- reading(system.file("extdata/prometis/metabo", package="phenomis"))
-#'\dontrun{
+#'\donttest{
 #' writing(metabo.se, dir.c = file.path(getwd(), "metabo"))
 #'}
 #'# MultiAssayExperiment
 #' prometis.mae <- reading(system.file("extdata/prometis",package="phenomis"))
-#'\dontrun{
+#'\donttest{
 #' writing(prometis.mae, dir.c = file.path(getwd(), "prometis"))
 #' # alternatively
 #' writing(prometis.mae,

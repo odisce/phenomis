@@ -92,7 +92,7 @@ sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
 # see the (default) parameters (e.g. for ChEBI query)
 annotating_parameters("chebi")
 # mz annotation with ChEBI
-\dontrun{
+\donttest{
 sacurine.se <- annotating(sacurine.se, database.c = "chebi",
 param.ls = list(query.type = "mz", query.col = "mass_to_charge",
 ms.mode = "neg", prefix = "chebiMZ."))
@@ -105,7 +105,7 @@ param.ls = list(query.type = "mz", query.col = "mass_to_charge", ms.mode = "neg"
 mz.tol = 5, mz.tol.unit = "ppm", local.ms.db = msdbDF, prefix = "localMS."))
 rowData(sacurine.se)[!is.na(rowData(sacurine.se)[, "localMS.accession"]), ]
 # annotation from ChEBI identifiers
-\dontrun{
+\donttest{
 sacurine.se <- annotating(sacurine.se, database.c = "chebi",
 param.ls = list(query.type = "chebi.id", query.col = "database_identifier",
 prefix = "chebiID."))

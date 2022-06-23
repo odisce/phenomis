@@ -1,5 +1,7 @@
 testthat::context("Testing 'read-write'")
 
+#### .reading ####
+
 testthat::test_that(".reading", {
   
   sacdir.c <- system.file("extdata/sacurine", package = "phenomis")
@@ -30,6 +32,8 @@ testthat::test_that(".reading", {
                                   file.path(sacdir.c, "Galaxy3_variableMetadata.tabular")))
   
 })
+
+#### reading_se ####
 
 testthat::test_that("reading_SummarizedExperiment", {
   
@@ -62,6 +66,8 @@ testthat::test_that("reading_SummarizedExperiment", {
   
 })
 
+#### reading_mae ####
+
 testthat::test_that("reading_MultiAssayExperiment", {
   
   prometis_dir.c <- system.file("extdata/prometis", package = "phenomis")
@@ -89,6 +95,7 @@ testthat::test_that("reading_MultiAssayExperiment", {
   
 })
 
+#### reading_mds ####
 
 testthat::test_that("reading_MultiDataSet", {
   
@@ -179,6 +186,8 @@ testthat::test_that("reading_MultiDataSet", {
   
   
 })
+
+#### writing ####
 
 testthat::test_that("writing_MultiDataSet", {
   

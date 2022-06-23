@@ -79,12 +79,12 @@ are written column wise in the 'dataMatrix.tsv' exported file).
 }
 \examples{
 metabo.se <- reading(system.file("extdata/prometis/metabo", package="phenomis"))
-\dontrun{
+\donttest{
 writing(metabo.se, dir.c = file.path(getwd(), "metabo"))
 }
 # MultiAssayExperiment
 prometis.mae <- reading(system.file("extdata/prometis",package="phenomis"))
-\dontrun{
+\donttest{
 writing(prometis.mae, dir.c = file.path(getwd(), "prometis"))
 # alternatively
 writing(prometis.mae,

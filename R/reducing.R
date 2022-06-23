@@ -662,12 +662,12 @@ setMethod("reducing", signature(x = "ExpressionSet"),
   
   add_and_frag.vi <- integer(nrow(mzdiff_db.df))
   
-  loss_or_gain.vc <- sapply(mzdiff_db.df[ , "losses_or_gains"],
+  loss_or_gain.vc <- vapply(mzdiff_db.df[ , "losses_or_gains"],
                             function(loss_or_gain.c) {
                               if (substr(loss_or_gain.c, 1, 1) %in% c("+", "-"))
                                 loss_or_gain.c <- substr(loss_or_gain.c, 2, nchar(loss_or_gain.c))
                               loss_or_gain.c
-                            })
+                            }, FUN.VALUE = character(1))
   
   for (add_and_frag.c in c("(CH3OH)",
                            "(H2O)",

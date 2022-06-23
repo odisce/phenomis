@@ -707,7 +707,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   if (!is.null(factorFc)) {
     group.vc <- levels(factorFc)
   } else
-    group.vc = ""
+    group.vc <- ""
   
   label.vc <- rownames(metric.mn)
   label.vc[!signiVl] <- ""
@@ -841,7 +841,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   
   metric.mn <- cbind(pvalAdjustVn,
                     pvalSigniVi)
-  for (pairI in 1:ncol(pairAdjustMN)) {
+  for (pairI in seq_len(ncol(pairAdjustMN))) {
     metric.mn <- cbind(metric.mn,
                       pairDiffMN[, pairI],
                       pairAdjustMN[, pairI],
@@ -898,9 +898,9 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
                        tukeyHsdMN <- stats::TukeyHSD(aovModel)[["factorFc"]]
                        
                        padjVn <- diffVn <- rep(NA_real_, length(pairNamesVc))
-                       names(padjVn) <- names(diffVn) <- sapply(pairNamesVc, function(pairC) {
+                       names(padjVn) <- names(diffVn) <- vapply(pairNamesVc, function(pairC) {
                          paste(rev(unlist(strsplit(pairC, ".", fixed = TRUE))), collapse = "-")
-                       })
+                       }, FUN.VALUE = character(1))
                        
                        diffVn[rownames(tukeyHsdMN)] <- tukeyHsdMN[, "diff"]
                        padjVn[rownames(tukeyHsdMN)] <- tukeyHsdMN[, "p adj"]
@@ -915,7 +915,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     
     # pairwise differences
     pairI <- as.integer(nlevels(factorFc) * (nlevels(factorFc) - 1) / 2)
-    pairDiffMN <- aovMN[, 1 + 1:pairI, drop = FALSE]
+    pairDiffMN <- aovMN[, 1 + seq_len(pairI), drop = FALSE]
     
     # pairwise test
     pairPvalMN <- aovMN[, (2 + pairI):ncol(aovMN), drop = FALSE]
@@ -929,11 +929,11 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
       
       nemenyiPvalVn <- c(nemenyiPvalMN[lower.tri(nemenyiPvalMN, diag = TRUE)])
       names(nemenyiPvalVn) <- paste0(rep(rownames(nemenyiPvalMN), ncol(nemenyiPvalMN)),
-                                     "-", rep(colnames(nemenyiPvalMN), each = nrow(nemenyiPvalMN)))[c(lower.tri(nemenyiPvalMN, diag = T))]
+                                     "-", rep(colnames(nemenyiPvalMN), each = nrow(nemenyiPvalMN)))[c(lower.tri(nemenyiPvalMN, diag = TRUE))]
       padjVn <- rep(NA_real_, length(pairNamesVc))
-      names(padjVn) <- sapply(pairNamesVc, function(pairC) {
+      names(padjVn) <- vapply(pairNamesVc, function(pairC) {
         paste(rev(unlist(strsplit(pairC, ".", fixed = TRUE))), collapse = "-")
-      })
+      }, FUN.VALUE = character(1))
       
       padjVn[names(nemenyiPvalVn)] <- nemenyiPvalVn
       
@@ -980,7 +980,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   # getting the names of the pairwise comparisons
   factLevVc <- levels(factorFc)
   pairMC <- matrix("", nrow = length(factLevVc), ncol = length(factLevVc))
-  for (i in 1:length(factLevVc)) {
+  for (i in seq_along(factLevVc)) {
     for (j in i:length(factLevVc))
       pairMC[i, j] <- paste0(factLevVc[i], ".", factLevVc[j])
   }
@@ -1030,7 +1030,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     if (!is.null(pairFactorFc)) {
       group.vc <- levels(pairFactorFc)
     } else
-      group.vc = ""
+      group.vc <- ""
     
     label.vc <- rownames(pairmetric.mn)
     label.vc[!pairSigniVl] <- ""
@@ -1112,7 +1112,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   
   metric.mn <- NULL
   
-  for (factorI in 1:2) {
+  for (factorI in seq_len(2)) {
     metric.mn <- cbind(metric.mn,
                       diffMN[, factorI],
                       pvalAdjustMN[, factorI],
@@ -1169,7 +1169,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   
   factorLs <- vector(mode = "list", length = 2)
   
-  for (i in 1:length(factor_names.vc)) {
+  for (i in seq_along(factor_names.vc)) {
     
     factorLs[[i]] <- .oneFactorCheck(samp.df = samp.df,
                                      test.c = test.c,
@@ -1257,7 +1257,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
                        paste(factInterVc[c(1, 3)], collapse = "-"),
                        sep = "-")
     fact2AllC <- paste(paste(factInterVc[3:4], collapse = "+"),
-                       paste(factInterVc[1:2], collapse = "-"),
+                       paste(factInterVc[seq_len(2)], collapse = "-"),
                        sep = "-")
     factInterC <- paste(paste(factInterVc[c(1, 4)], collapse = "+"),
                         paste(factInterVc[c(2, 3)], collapse = "-"),
@@ -1380,7 +1380,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
                  " (sorted by increasing corrected p-values)",
                  ""),
           ":\n")
-  print(metricSigniMN[1:min(signif_maxprint.i, nrow(metricSigniMN)), , drop = FALSE])
+  print(metricSigniMN[seq_len(min(signif_maxprint.i, nrow(metricSigniMN))), , drop = FALSE])
   
 }
 

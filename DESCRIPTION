@@ -1,8 +1,8 @@
 Package: phenomis
 Type: Package
 Title: Postprocessing and univariate analysis of omics data
-Version: 0.4.12
-Date: 2022-06-21
+Version: 0.5.0
+Date: 2022-06-23
 Authors@R: c(
 	   person(given = "Etienne A.", family = "Thevenot",
 	   email = "etienne.thevenot@cea.fr",
@@ -34,11 +34,12 @@ Description: The 'phenomis' package provides methods to perform post-processing 
     the same formats. Data can be conveniently imported from and exported to text files. Although
     the methods were initially targeted to metabolomics data, most of the methods can be
     applied to other types of omics data (e.g., transcriptomics, proteomics).
-BiocViews:
-    MassSpectrometry, Metabolomics, Normalization, Proteomics, QualityControl, StatisticalMethod, Transcriptomics, Clustering
+biocViews:
+    BatchEffect, Clustering, MassSpectrometry, Metabolomics, Normalization, Proteomics, QualityControl, StatisticalMethod, Transcriptomics
 Depends:
     SummarizedExperiment
 Imports:
+    Biobase,
     biodb,
     biodbChebi,
     data.table,
@@ -53,6 +54,7 @@ Imports:
     limma,
     methods,
     MultiAssayExperiment,
+    MultiDataSet,
     PMCMRplus,
     plotly,
     ranger,
@@ -64,13 +66,11 @@ Imports:
     utils,
     VennDiagram
 Suggests:
-    Biobase,
     BiocGenerics,
     BiocStyle,
     biosigner,
     CLL,
     knitr,
-    MultiDataSet,
     omicade4,
     rmarkdown,
     testthat

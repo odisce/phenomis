@@ -183,9 +183,10 @@ setMethod("inspecting", signature(x = "MultiDataSet"),
   
   set.i <- length(data_mn.ls)
 
-  dims.mn <- sapply(names(data_mn.ls),
+  dims.mn <- vapply(names(data_mn.ls),
                     function(set.c)
-                      dim(data_mn.ls[[set.c]]))
+                      dim(data_mn.ls[[set.c]]),
+                    FUN.VALUE = integer(2))
 
   dims.mn <- t(dims.mn)
   colnames(dims.mn) <- c("Features", "Samples")
@@ -407,9 +408,9 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   hotelling_df.i <- 2 * (nsamp.i - 1) * (nsamp.i^2 - 1) / (nsamp.i^2 * (nsamp.i - 2))
   
-  inverse_covariance.mn <- solve(stats::cov(score_pca.mn[, 1:2]))
+  inverse_covariance.mn <- solve(stats::cov(score_pca.mn[, seq_len(2)]))
   
-  hotelling_pval.vn <- apply(score_pca.mn[, 1:2],
+  hotelling_pval.vn <- apply(score_pca.mn[, seq_len(2)],
                       1,
                       function(x)
                         1 - stats::pf(1 / hotelling_df.i * t(as.matrix(x)) %*% inverse_covariance.mn %*% as.matrix(x), 2, nsamp.i - 2))
@@ -444,19 +445,23 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                                 sum(is.na(samp.vn))
                               }))
   
-  samp.df[, "miss_pval"] <- sapply(missing_zscore.vn, function(zsco.n) 2 * (1 - stats::pnorm(abs(zsco.n))))
+  samp.df[, "miss_pval"] <- vapply(missing_zscore.vn,
+                                   function(zsco.n) 2 * (1 - stats::pnorm(abs(zsco.n))),
+                                   FUN.VALUE = numeric(1))
   
   ## p-value associated to the deciles of the profiles
   
   decile.mn <- t(as.matrix(apply(data.mn,
                               1,
-                              function(x) stats::quantile(x, 0.1 * 1:9, na.rm = TRUE))))
+                              function(x) stats::quantile(x, 0.1 * seq_len(9), na.rm = TRUE))))
   
   decile_zscore.mn <- apply(decile.mn, 2, .zscore)
   
   decile_zscore_max.vn <- apply(decile_zscore.mn, 1, function(samp.vn) samp.vn[which.max(abs(samp.vn))])
   
-  samp.df[, "deci_pval"] <- sapply(decile_zscore_max.vn, function(zsco.n) 2 * (1 - stats::pnorm(abs(zsco.n))))
+  samp.df[, "deci_pval"] <- vapply(decile_zscore_max.vn,
+                                   function(zsco.n) 2 * (1 - stats::pnorm(abs(zsco.n))),
+                                   FUN.VALUE = numeric(1))
   
   return(list(samp.df = samp.df,
               pca_metrics.ls = pca_metrics.ls))
@@ -580,7 +585,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     
     pool_dil.vc <- gsub("pool", "", pool_name.vc)
     
-    pool_dil.vl <- sapply(pool_dil.vc, .allDigits)
+    pool_dil.vl <- vapply(pool_dil.vc, .allDigits, FUN.VALUE = logical(1))
     
     if (sum(pool_dil.vl)) {
       
@@ -711,7 +716,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
 
 .palette <- function(palette.c = "heat") {
   if (palette.c == "heat") {
-    return(rev(grDevices::rainbow(ceiling(256 * 1.5))[1:256]))
+    return(rev(grDevices::rainbow(ceiling(256 * 1.5))[seq_len(256)]))
   }
 }
 
@@ -734,7 +739,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   preLabVn <- preAtVn <- c()
   
-  for (n in 1:length(preValVn))
+  for (n in seq_along(preValVn))
     if (min(valVn) < preValVn[n] && preValVn[n] < max(valVn)) {
       preLabVn <- c(preLabVn, preValVn[n])
       preAtVn <- c(preAtVn, which(abs(valVn - preValVn[n]) == min(abs(valVn - preValVn[n])))[1])
@@ -754,7 +759,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   ylimVn <- c(0, 256)
   ybottomVn <- 0:255
-  ytopVn <- 1:256
+  ytopVn <- seq_len(256)
   
   graphics::plot(x = 0,
                  y = 0,
@@ -807,10 +812,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   graphics::par(mar = mar.vn)
   
-  image.mn <- t(data.mn[rev(1:nrow(data.mn)), , drop = FALSE])
+  image.mn <- t(data.mn[rev(seq_len(nrow(data.mn))), , drop = FALSE])
   
-  graphics::image(x = 1:nrow(image.mn),
-                  y = 1:ncol(image.mn),
+  graphics::image(x = seq_len(nrow(image.mn)),
+                  y = seq_len(ncol(image.mn)),
                   z = image.mn,
                   col = palette.vc,
                   font.axis = 2,
@@ -838,7 +843,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                  c(colNamVc[1], utils::tail(colNamVc, 1)),
                  sep = "")
   
-  for (k in 1:2)
+  for (k in seq_len(2))
     graphics::axis(side = 3,
                    hadj = c(0, 1)[k],
                    at = c(1, nrow(image.mn))[k],
@@ -857,7 +862,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                  c(utils::tail(rowNamVc, 1), rowNamVc[1]),
                  sep = "")
   
-  for (k in 1:2)
+  for (k in seq_len(2))
     graphics::axis(side = 2,
                    at = c(1, ncol(image.mn))[k],
                    cex = 0.8,
@@ -886,7 +891,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   ## ordering
 
-  samp.df[, "ordIniVi"] <- 1:nrow(data.mn)
+  samp.df[, "ordIniVi"] <- seq_len(nrow(data.mn))
   
   if ("injectionOrder" %in% colnames(samp.df)) {
     ordNamC <- "Injection Order"
@@ -897,7 +902,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
       ordVi <- order(samp.df[, "injectionOrder"])
   } else {
     ordNamC <- "Samples"
-    ordVi <- 1:nrow(data.mn)
+    ordVi <- seq_len(nrow(data.mn))
   }
   
   data.mn <- data.mn[ordVi, , drop = FALSE]
@@ -919,7 +924,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                  xlab = "",
                  ylab = "")
   
-  # for (samI in 1:nrow(data.mn))
+  # for (samI in seq_len(nrow(data.mn)))
   #   graphics::boxplot(data.mn[samI, ],
   #                     at = samI,
   #                     add = TRUE)
@@ -977,7 +982,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     
   } else {
     
-    batch_seq.vi <- 1:nrow(samp.df)
+    batch_seq.vi <- seq_len(nrow(samp.df))
     
     if ("sampleType" %in% colnames(samp.df)) {
       batch_sample.vi <- intersect(batch_seq.vi,
@@ -1012,7 +1017,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     obsColVuc <- obsColVuc[legOrdVc[legOrdVc %in% names(obsColVuc)]]
     
     graphics::text(rep(graphics::par("usr")[2], times = length(obsColVuc)),
-                   graphics::par("usr")[3] + (0.03 + 1:length(obsColVuc) * 0.03) * diff(graphics::par("usr")[3:4]),
+                   graphics::par("usr")[3] + (0.03 + seq_along(obsColVuc) * 0.03) * diff(graphics::par("usr")[3:4]),
                    adj = 1,
                    col = obsColVuc,
                    font = 2,
@@ -1112,10 +1117,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                      cex = 0.7,
                      col = sample_color.vc[obsHotVi],
                      labels = rownames(data.mn)[obsHotVi])
-    graphics::text(score_pca.mn[setdiff(1:nrow(score_pca.mn), obsHotVi), show_pred.vi[1]],
-                     score_pca.mn[setdiff(1:nrow(score_pca.mn), obsHotVi), show_pred.vi[2]],
-                     col = sample_color.vc[setdiff(1:nrow(score_pca.mn), obsHotVi)],
-                     labels = sample_label.vc[setdiff(1:nrow(score_pca.mn), obsHotVi)])
+    graphics::text(score_pca.mn[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi), show_pred.vi[1]],
+                     score_pca.mn[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi), show_pred.vi[2]],
+                     col = sample_color.vc[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi)],
+                     labels = sample_label.vc[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi)])
   } else
     graphics::text(score_pca.mn[, show_pred.vi[1]],
                      score_pca.mn[, show_pred.vi[2]],
@@ -1162,10 +1167,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
 .allDigits <- function(string) { ## from the Hmisc package (all.digits)
   k <- length(string)
   result <- logical(k)
-  for (i in 1:k) {
+  for (i in seq_len(4)) {
     st <- string[i]
     ls <- nchar(st)
-    ex <- substring(st, 1:ls, 1:ls)
+    ex <- substring(st, seq_len(ls), seq_len(ls))
     result[i] <- all(match(ex, c("0", "1", "2", "3", "4",
                                  "5", "6", "7", "8", "9"), nomatch = 0) > 0)
   }

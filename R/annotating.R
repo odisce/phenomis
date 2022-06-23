@@ -318,7 +318,7 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
     
     if (paramC == "local.ms.db") {
       
-      if (class(param.ls[[paramC]]) != "data.frame")
+      if (!is.data.frame(param.ls[[paramC]]))
         stop("Parameter '", paramC, "' is expected to be of 'data.frame' class.",
              call. = FALSE)
       
@@ -345,7 +345,7 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   
   # building the list of default parameters
   
-  paramDefaultLs <- lapply(1:nrow(paramDefaultDF),
+  paramDefaultLs <- lapply(seq_len(nrow(paramDefaultDF)),
                            function(parI) {
                              param <- paramDefaultDF[parI, "default"]
                              mode(param) <- paramDefaultDF[parI, "mode"]
@@ -385,9 +385,9 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   
   optionWarnN <- options()$warn
   options(warn = -1)
-  queriableVl <- sapply(queryVcn, function(query) {
+  queriableVl <- vapply(queryVcn, function(query) {
     !is.na(query) && query != "" && !is.na(as.numeric(query))
-  })
+  }, FUN.VALUE = logical(1))
   options(warn = optionWarnN)
   
   if (sum(queriableVl) < 1)
@@ -402,7 +402,7 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   
   fdataTempDF[queriableVl, param.ls[["query.col"]]] <- queryVn
   if (sum(!queriableVl))
-    fdataTempDF[!queriableVl, param.ls[["query.col"]]] <- -c(1:sum(!queriableVl))
+    fdataTempDF[!queriableVl, param.ls[["query.col"]]] <- -c(seq_len(sum(!queriableVl)))
   
   mybiodb <- biodb::newInst()
   
@@ -463,9 +463,9 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   
   queryVn <- feat.df[, param.ls[["query.col"]]]
   
-  missingVl <- sapply(queryVn, function(mzN) {
+  missingVl <- vapply(queryVn, function(mzN) {
     is.na(mzN) || mzN == ""
-  })
+  }, FUN.VALUE = logical(1))
   
   queryVn <- queryVn[!missingVl]
   
@@ -487,7 +487,7 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   fdataTempDF <- cbind.data.frame(.fdatarownames = rownames(feat.df),
                                   feat.df,
                                   stringsAsFactors = FALSE)
-  fdataTempDF[missingVl, param.ls[["query.col"]]] <- -c(1:sum(missingVl))
+  fdataTempDF[missingVl, param.ls[["query.col"]]] <- -c(seq_len(sum(missingVl)))
   
   fdataMergeDF <- merge(fdataTempDF, resultDF, by.x = param.ls[["query.col"]],
                         by.y = "mz", all.x = TRUE)

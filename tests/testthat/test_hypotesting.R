@@ -108,10 +108,10 @@ testthat::test_that("ttest", {
                                figure.c = "none",
                                report.c = "none")
   
-  testthat::expect_identical(sapply(Biobase::fData(prometis.mset),
+  testthat::expect_identical(vapply(Biobase::fData(prometis.mset),
                                     function(fdaDF) {
                                       sum(fdaDF[, "ttest_gene_LAT.WT_signif"])
-                                    }),
+                                    }, FUN.VALUE = double(1)),
                              c(metabo = 33, proteo = 3))
   
 })

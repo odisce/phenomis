@@ -346,16 +346,16 @@ setMethod("clustering", signature(x = "ExpressionSet"),
   if (scale_plot.l)
     heaMN <- scale(heaMN)
   
-  heaMN <- heaMN[, rev(1:ncol(heaMN)), drop = FALSE]
+  heaMN <- heaMN[, rev(seq_len(ncol(heaMN))), drop = FALSE]
   
   switch(palette.c,
          blueOrangeRed = {
            imaPalVn <- grDevices::colorRampPalette(c("blue", "orange", "red"),
-                                                   space = "rgb")(5)[1:5]
+                                                   space = "rgb")(5)[seq_len(5)]
          },
          redBlackGreen = {
            imaPalVn <- grDevices::colorRampPalette(c("red", "black", "green"),
-                                                   space = "rgb")(5)[1:5]
+                                                   space = "rgb")(5)[seq_len(5)]
          })
   
   ## figure
@@ -365,7 +365,7 @@ setMethod("clustering", signature(x = "ExpressionSet"),
     if (figure.c != "interactive")
       grDevices::pdf(figure.c)
     
-    graphics::layout(matrix(1:4, nrow = 2),
+    graphics::layout(matrix(seq_len(4), nrow = 2),
                      widths = c(1, 4), heights = c(1, 4))
     
     ## Color scale
@@ -376,7 +376,7 @@ setMethod("clustering", signature(x = "ExpressionSet"),
     
     ylimVn <- c(0, scaN)
     ybottomVn <- 0:(scaN - 1)
-    ytopVn <- 1:scaN
+    ytopVn <- seq_len(scaN)
     
     graphics::plot(x = 0,
                    y = 0,
@@ -439,7 +439,7 @@ setMethod("clustering", signature(x = "ExpressionSet"),
       cutFeaVn <- which(abs(diff(cluFeaVn)) > 0)
       cutFeaTxtVn <- c(cutFeaVn[1] / 2, cutFeaVn + diff(c(cutFeaVn, length(cluFeaVn))) / 2) + 0.5
       cutFeaLinVn <- cutFeaVn + 0.5
-      graphics::text(graphics::par("usr")[1] + 0.2 * diff(graphics::par("usr")[1:2]),
+      graphics::text(graphics::par("usr")[1] + 0.2 * diff(graphics::par("usr")[seq_len(2)]),
                      cutFeaTxtVn,
                      labels = unique(cluFeaVn),
                      cex = 2,
@@ -472,8 +472,8 @@ setMethod("clustering", signature(x = "ExpressionSet"),
     
     graphics::par(mar = c(4.1, 0, 0, 4.1))
     
-    graphics::image(x = 1:nrow(heaMN),
-                    y = 1:ncol(heaMN),
+    graphics::image(x = seq_len(nrow(heaMN)),
+                    y = seq_len(ncol(heaMN)),
                     z = round(heaMN),
                     col = imaPalVn,
                     font.axis = 2,
@@ -484,18 +484,18 @@ setMethod("clustering", signature(x = "ExpressionSet"),
                     ylab = "")
     
     obsOrdVc <- obsHcl[["labels"]][obsHcl[["order"]]]
-    obsOrdLenVn <- sapply(obsOrdVc, nchar)
+    obsOrdLenVn <- vapply(obsOrdVc, nchar, FUN.VALUE = integer(1))
     obsOrdVc <- substr(obsOrdVc, 1, ncaN)
     obsOrdVc <- paste0(obsOrdVc, ifelse(obsOrdLenVn > ncaN, ".", ""), " ")
     
     graphics::mtext(obsOrdVc,
-                    at = 1:nrow(heaMN),
+                    at = seq_len(nrow(heaMN)),
                     cex = cex.vn[1],
                     las = 2,
                     side = 1)
     
     feaOrdVc <- feaHcl[["labels"]][feaHcl[["order"]]]
-    feaOrdLenVn <- sapply(feaOrdVc, nchar)
+    feaOrdLenVn <- vapply(feaOrdVc, nchar, FUN.VALUE = integer(1))
     feaOrdVc <- substr(feaOrdVc, 1, ncaN)
     feaOrdVc <- paste0(" ", feaOrdVc, ifelse(feaOrdLenVn > ncaN, ".", ""))
     

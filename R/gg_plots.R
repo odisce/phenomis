@@ -21,7 +21,9 @@
 #' @export
 #' @examples
 #' prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
-#' dims.mn <- sapply(names(prometis.mae), function(set.c) { dim(prometis.mae[[set.c]])})
+#' dims.mn <- vapply(names(prometis.mae),
+#'                   function(set.c) { dim(prometis.mae[[set.c]])},
+#'                   FUN.VALUE = integer(2))
 #' dims.mn <- t(dims.mn)
 #' colnames(dims.mn) <- c("Features", "Samples")
 #' gg_barplot(dims.mn, title.c = "ProMetIS data")
@@ -279,7 +281,7 @@ gg_boxplot <- function(data.tb,
   }
 
   if (x.c == "") {
-    outlier.vi <- is_outlier(data.tb[[y.c]], as.character(1:nrow(data.tb)))
+    outlier.vi <- is_outlier(data.tb[[y.c]], as.character(seq_len(nrow(data.tb))))
   } else {
     outlier.vi <- integer()
     x.vc <- as.character(data.tb[[x.c]])
@@ -510,14 +512,15 @@ gg_pie <- function(data.tb,
 #' feat.vc <- rownames(sacurine.se)
 #' gg_volcanoplot(fold.vn,
 #'                fdr.vn,
-#'                label.vc = feat.vc,
+#'                label.vc = make.names(feat.vc),
 #'                adjust_method.c = "BH")
-#' feat_signif.vc <-  sapply(seq_along(feat.vc),
+#' feat_signif.vc <-  vapply(seq_along(feat.vc),
 #'                           function(feat.i)
-#'                            ifelse(fdr.vn[feat.i] <= 0.05, feat.vc[feat.i], ""))
+#'                            ifelse(fdr.vn[feat.i] <= 0.05, feat.vc[feat.i], ""),
+#'                            FUN.VALUE = character(1))
 #' gg_volcanoplot(fold.vn,
 #'                fdr.vn,
-#'                label.vc = feat_signif.vc,
+#'                label.vc = make.names(feat_signif.vc),
 #'                adjust_method.c = "BH",
 #'                figure.c = "interactive")
 gg_volcanoplot <- function(fold_change.vn,
@@ -573,18 +576,26 @@ gg_volcanoplot <- function(fold_change.vn,
   
   volcano.df[, "shape"] <- volcano.df[, "color"] <- ifelse(adjusted_pvalue.vn <= adjust_thresh.n,
                                                            "yes", "no")
+
   
-  p <- ggplot2::ggplot(volcano.df,
-                       ggplot2::aes(x = fold_change,
-                                    y = log_pval,
-                                    color = color,
-                                    shape = shape,
-                                    text = label.vc))
+  aes.c <- "ggplot2::ggplot(volcano.df, ggplot2::aes(x = fold_change, y = log_pval, color = color, shape = shape, text = label.vc))"
   
-  if (figure.c == "interactive" || filename_ext.c == "pdf")
-    p <- p + ggrepel::geom_text_repel(ggplot2::aes(x = fold_change,
-                                                   y = log_pval,
-                                                   label = label.vc))
+  p <- eval(parse(text = aes.c))
+  
+  # p <- ggplot2::ggplot(volcano.df,
+  #                      ggplot2::aes(x = fold_change,
+  #                                   y = log_pval,
+  #                                   color = color,
+  #                                   shape = shape,
+  #                                   text = label.vc))
+  
+  if (figure.c == "interactive" || filename_ext.c == "pdf") {
+    aes_rep.c <- "ggrepel::geom_text_repel(ggplot2::aes(x = fold_change, y = log_pval, label = label.vc))"
+    p <- p + eval(parse(text = aes_rep.c))
+    # p <- p + ggrepel::geom_text_repel(ggplot2::aes(x = fold_change,
+    #                                                y = log_pval,
+    #                                                label = label.vc))
+  }
   
   p <- p + ggplot2::scale_color_manual(values = signif_palette.vc)
   
@@ -698,7 +709,7 @@ gg_volcanoplot <- function(fold_change.vn,
 #' vennplot(signif.ls, label_col.c = "black",
 #' title.c = "Signif. features\nwith Student or Wilcoxon tests")
 vennplot <- function(input.ls,
-                     palette.vc = RColorBrewer::brewer.pal(9, "Set1")[1:5],
+                     palette.vc = RColorBrewer::brewer.pal(9, "Set1")[seq_len(5)],
                      title.c = NA,
                      sub.c = "",
                      cat_pos.vi = NA,
@@ -712,7 +723,7 @@ vennplot <- function(input.ls,
                     gsub("Ls", "",
                          deparse(substitute(input.ls))))
   
-  if (class(input.ls) != "list")
+  if (!is.list(input.ls))
     stop("'input.ls' must be a list for Venn plot", call. = FALSE)
   
   if (length(input.ls) > 5)
@@ -758,22 +769,22 @@ vennplot <- function(input.ls,
                                      
                                      alpha = 0.8,
                                      
-                                     col = palette.vc[1:cat.i],
+                                     col = palette.vc[seq_len(cat.i)],
                                      
                                      cat.cex = 1.7, ## 2.5
-                                     cat.col = palette.vc[1:cat.i],
+                                     cat.col = palette.vc[seq_len(cat.i)],
                                      
                                      ## additional argument for cat.i <= 3
                                      cat.dist = c(rep(ifelse(cat.i == 2,
                                                              0.03, 0.05), 2),
                                                   ifelse(cat.i == 3, 0.04, 0.05),
-                                                  rep(0.04, 2))[1:cat.i],
+                                                  rep(0.04, 2))[seq_len(cat.i)],
                                      
                                      cat.pos = cat_pos.vi,
                                      
                                      cex = 1.7, ## 3
                                      
-                                     fill = palette.vc[1:cat.i],
+                                     fill = palette.vc[seq_len(cat.i)],
                                      
                                      label.col = label_col.c,
                                      lwd = lwd.i, ## 4
@@ -801,14 +812,14 @@ vennplot <- function(input.ls,
                                      
                                      alpha = 0.8,
                                      
-                                     col = palette.vc[1:cat.i],
+                                     col = palette.vc[seq_len(cat.i)],
                                      
                                      cat.cex = 1.7, ## 2.5
-                                     cat.col = palette.vc[1:cat.i],
+                                     cat.col = palette.vc[seq_len(cat.i)],
                                      
                                      cex = 1.7, ## 3
                                      
-                                     fill = palette.vc[1:cat.i],
+                                     fill = palette.vc[seq_len(cat.i)],
                                      
                                      label.col = label_col.c,
                                      lwd = lwd.i, ## 4
