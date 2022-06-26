@@ -2,7 +2,7 @@ Package: phenomis
 Type: Package
 Title: Postprocessing and univariate analysis of omics data
 Version: 0.5.0
-Date: 2022-06-23
+Date: 2022-06-26
 Authors@R: c(
 	   person(given = "Etienne A.", family = "Thevenot",
 	   email = "etienne.thevenot@cea.fr",
@@ -16,6 +16,9 @@ Authors@R: c(
 	   role = "ctb"),
 	   person(given = "Pierrick", family = "Roger",
 	   email = "pierrick.roger@cea.fr",
+	   role = "ctb"),
+	   person(given = "Eric", family = "Venot",
+	   email = "eric.venot@cea.fr",
 	   role = "ctb"),
 	   person(given = "Sylvain", family = "Dechaumet",
 	   email = "sylvain.dechaumet@cea.fr",
