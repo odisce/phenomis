@@ -78,9 +78,8 @@ setMethod("inspecting", signature(x = "SummarizedExperiment"),
               sink(report.c, append = TRUE)
             
             if (is.na(title.c))
-              title.c <- x@metadata$experimentData@title
-            
-            
+              title.c <- ""
+           
             inspected.ls <- .inspecting(data.mn = t(SummarizedExperiment::assay(x)),
                                         samp.df = SummarizedExperiment::colData(x),
                                         feat.df = SummarizedExperiment::rowData(x),

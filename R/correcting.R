@@ -118,7 +118,7 @@ setMethod("correcting", signature(x = "SummarizedExperiment"),
               sink(report.c, append = TRUE)
             
             if (is.na(title.c))
-              title.c <- x@metadata$experimentData@title
+              title.c <- ""
             
             norm.mn <- .correcting(data.mn = t(SummarizedExperiment::assay(x)),
                                    samp.df = SummarizedExperiment::colData(x),
