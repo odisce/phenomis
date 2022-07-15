@@ -84,14 +84,11 @@ Note that the `phenomis` package also supports the `ExpressionSet`
 
 ### Importing from/exporting to tabular files
 
-Input (i.e. preprocessed) data consists of a 'samples times variables'
+Input (i.e. preprocessed) data consists of a 'variable times sample'
 matrix of intensities (**dataMatrix** numeric matrix), in addition to
 sample and variable metadata (**sampleMetadata** and
-**variableMetadata** data frames). Theses 3 tables can be conveniently
-imported to/exported from R as tabular files:
-
-![3 table format used as input/output from the data analysis
-workflow.](figures/phenomis_3table_format.png)
+**variableMetadata** data frames). Importantly, the row names from the dataMatrix must be identical to the row names from the vaiableMetadata (feature names), and the column names from
+the dataMatrix must be identical to the row names from sampleMetadata (sample names).
 
 Note that 3 sample metadata columns should be specified when working
 with the `correcting` method, namely:
@@ -417,9 +414,6 @@ ropls::plot(sacurine.pca,
 ropls::plot(sacurine.pca,
             parAsColFcVn = colData(sacurine.se)[, "age"],
             typeVc = "x-score")
-ropls::plot(sacurine.pca,
-            parAsColFcVn = colData(sacurine.se)[, "bmi"],
-            typeVc = "x-score")
 ```
 
 ### **`clustering`**: hierarchical clustering
@@ -452,12 +446,17 @@ as the second argument:
 
 ```{r plsda}
 sacurine.se <- ropls::opls(sacurine.se, "gender")
+```
 
+The (O)PLS(-DA) can be obtained from the metadata, e.g. to perform specific plots:
+
+```{r plsda_scoreplot, eval = FALSE}
 sacurine_gender.plsda <- ropls::getOpls(sacurine.se)[["gender_PLSDA"]]
 ropls::plot(sacurine_gender.plsda,
             parAsColFcVn = colData(sacurine.se)[, "gender"],
             typeVc = "x-score")
 ```
+
 
 ### Feature selection
 
@@ -732,7 +731,7 @@ nci.mae <- nci.mae[,
 
 We can now e.g. perform clustering on each data set independently:
 
-```{r mae_clustering, message=TRUE, warning=TRUE}
+```{r mae_clustering, message=TRUE, warning=TRUE, eval = FALSE}
 nci.mae <- clustering(nci.mae)
 ```
 
