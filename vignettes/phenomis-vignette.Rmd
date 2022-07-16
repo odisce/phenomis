@@ -13,8 +13,6 @@ output:
   BiocStyle::html_document:
     toc: yes
     toc_depth: 4
-    toc_float:
-      collapsed: false
 editor_options: 
   markdown: 
     wrap: 72
