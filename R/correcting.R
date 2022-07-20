@@ -300,7 +300,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                         title.c,
                         figure.c,
                         sample_intensity.c) {
- 
+  
   ## checking
   
   if (method.c == "serrf" && reference.c != "pool")
@@ -316,7 +316,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                           function(ref.vn)
                             all(vapply(ref.vn,
                                        function(ref.n)
-                                         {is.na(ref.n) || ref.n == 0},
+                                       {is.na(ref.n) || ref.n == 0},
                                        FUN.VALUE = logical(1))))
   
   if (sum(ref_nazeros.vl)) {
@@ -342,6 +342,27 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                                   reference.c = reference.c,
                                   loess_span.n = loess_span.n,
                                   serrf_corvar.i = serrf_corvar.i)
+  
+  if (method.c == "serrf") {
+    
+    .fill_naneg <- function(feat.vn) {
+      isna.vl <- is.na(feat.vn)
+      feat.vn[isna.vl] <- rnorm(sum(isna.vl),
+                                mean = min(feat.vn[!isna.vl]),
+                                sd = sd(feat.vn[!isna.vl]) * 0.1)
+      isneg.vl <- feat.vn < 0
+      feat.vn[isneg.vl] <- runif(1) * min(feat.vn[feat.vn > 0])
+      return(feat.vn)
+    }
+    
+    stopifnot(identical(dim(data.mn), dim(normalized.mn)))
+    stopifnot(identical(nrow(data.mn), nrow(samp.df)))
+    ref.vi <- which(samp.df[, "sampleType"] == "pool")
+    pred.vi <- which(samp.df[, "sampleType"] != "pool")
+    normalized.mn[ref.vi, ] <- apply(normalized.mn[ref.vi, ], 2, .fill_naneg)
+    normalized.mn[pred.vi, ] <- apply(normalized.mn[pred.vi, ], 2, .fill_naneg)
+    
+  }
   
   ## figure
   
@@ -371,9 +392,9 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   ## returning to initial order
   
   initial_order.vi <- order(samp.df[, "initial_order"])
-  normalized.mn <- normalized.mn[samp.df[, "initial_order"], ]
-  samp.df <- samp.df[samp.df[, "initial_order"], ] # not used
-
+  normalized.mn <- normalized.mn[initial_order.vi, ]
+  # samp.df <- samp.df[initial_order.vi, ]
+  
   ## returning
   
   normalized.mn
@@ -398,9 +419,9 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                          mean(feat.vn, na.rm = TRUE)
                        })
   ref_median.vn <- apply(data.mn[samp.df[, "sampleType"] == reference.c, ], 2,
-                       function(feat.vn) {
-                         median(feat.vn, na.rm = TRUE)
-                       })
+                         function(feat.vn) {
+                           median(feat.vn, na.rm = TRUE)
+                         })
   pred_median.vn <- apply(data.mn[samp.df[, "sampleType"] != reference.c, ], 2,
                           function(feat.vn) {
                             median(feat.vn, na.rm = TRUE)
@@ -549,18 +570,89 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                         pred_median.vn) {
   # Fan et al. (2019). Systematic Error Removal Using Random Forest for Normalizing Large-Scale Untargeted Lipidomics Data, Anal. Chem., vol. 91, nᵒ 5, p. 3590‑3596, doi: 10.1021/acs.analchem.8b05592.
   
+  if (FALSE) {
+    
+    se <- phenomis::reading("//fouet/spi/scidospace/studies/fan2019_serrf/input")
+    # class: SummarizedExperiment 
+    # dim: 268 1299 
+    # metadata(3): experimentData annotation protocolData
+    # assays(1): exprs
+    # rownames(268): 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267 CSH_negESI
+    # #512_268
+    # rowData names(1): name
+    # colnames(1299): QC000_1 sample01_2 ... MG007524_1298 QC027_1299
+    # colData names(4): label injectionOrder sampleType batch
+    data.mn <- t(SummarizedExperiment::assay(se))
+    samp.df <- as.data.frame(SummarizedExperiment::colData(se))
+    table(samp.df[, "sampleType"])
+    # qc   sample validate 
+    # 125     1162       12 
+    ref.vi <- which(samp.df[, "sampleType"] == "qc")
+    all.vi <- which(samp.df[, "sampleType"] %in% c("qc", "sample"))
+    pred.vi <- setdiff(all.vi, ref.vi)
+    
+    ref_mean.vn <- apply(data.mn[ref.vi, ], 2,
+                         function(feat.vn) {
+                           mean(feat.vn, na.rm = TRUE)
+                         })
+    ref_median.vn <- apply(data.mn[ref.vi, ], 2,
+                           function(feat.vn) {
+                             median(feat.vn, na.rm = TRUE)
+                           })
+    pred_median.vn <- apply(data.mn[pred.vi, ], 2,
+                            function(feat.vn) {
+                              median(feat.vn, na.rm = TRUE)
+                            })
+    
+    RSD <- function(y.vn) {
+      out.vn <- grDevices::boxplot.stats(y.vn)$out
+      y.vn <- y.vn[!y.vn %in% out.vn]
+      sd(y.vn, na.rm = TRUE) / mean(y.vn, na.rm = TRUE)
+    }
+    rsd_ref.vn <- apply(data.mn[ref.vi, ], 2, RSD)
+    median(rsd_ref.vn, na.rm = TRUE)
+    # 0.2648957
+    sum(rsd_ref.vn < 0.2)
+    # 20
+    
+    val.vi <- which(samp.df[, "sampleType"] == "validate")
+    rsd_val.vn <- apply(data.mn[val.vi, ], 2, RSD)
+    median(rsd_val.vn, na.rm = TRUE)
+    # 0.2712883
+    sum(rsd_val.vn < 0.2)
+    # 48
+    
+    table(samp.df[, "batch"])
+    # A   B   C   D 
+    # 335 336 335 293
+    
+    data.mn <- data.mn[samp.df[, "batch"] == "A" &
+                         samp.df[, "sampleType"] %in% c("qc", "sample"), ]
+    samp.df <- samp.df[samp.df[, "batch"] == "A" &
+                         samp.df[, "sampleType"] %in% c("qc", "sample"), ]
+    ref.vi <- which(samp.df[, "sampleType"] == "qc")
+    all.vi <- which(samp.df[, "sampleType"] %in% c("qc", "sample"))
+    
+  }
+  
   pred.vi <- setdiff(all.vi, ref.vi)
   
   ref.mn <- data.mn[ref.vi, ]
+  # dim  class    mode typeof   size NAs min    mean  median     max
+  # 32 x 268 matrix numeric double 0.1 Mb   0  54 1.5e+04 2.6e+03 5.2e+05
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
+  # QC000_1                                      167879                 75578 ...                4505
+  # QC001_13                                     176061                 80020 ...                4428
+  # ...                                             ...                   ... ...                 ...
   pred.mn <- data.mn[pred.vi, ]
+  # dim  class    mode typeof   size NAs min    mean median     max
+  # 300 x 268 matrix numeric double 0.7 Mb   0  33 1.6e+04  3e+03 1.3e+06
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
+  # GB001617_3                                      158256                 76082 ...                4775
+  # GB001333_4                                      164492                 74334 ...               16860
+  # ...                                                ...                   ... ...                 ...
   
-  ref_scale.mn <- scale(ref.mn)
-  pred_scale.mn <- scale(pred.mn)
-  
-  ref_cor.mn <- cor(ref_scale.mn, method = "spearman")
-  pred_cor.mn <- cor(pred_scale.mn, method = "spearman")
-  
-  ## Replacing 0 and NA values (Fan et al., 2019)
+  ## Replacing 0 and NA values
   
   data.mn <- apply(data.mn, 2,
                    function(feat.vn) {
@@ -568,12 +660,52 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                      na.vl <- is.na(feat.vn)
                      feat.vn[zero.vl] <- rnorm(length(zero.vl),
                                                mean = min(feat.vn[!na.vl]) + 1,
-                                               sd = 0.1 * min(feat.vn[!na.vl]) + 0.1)
+                                               sd = 0.1 * (min(feat.vn[!na.vl]) + 0.1))
                      feat.vn[na.vl] <- rnorm(length(na.vl),
                                              mean = 0.5 * min(feat.vn[!na.vl]) + 1,
-                                             sd = 0.1 * min(feat.vn[!na.vl]) + 0.1)
+                                             sd = 0.1 * (min(feat.vn[!na.vl]) + 0.1))
                      return(feat.vn)
                    })
+  
+  ref_scale.mn <- scale(ref.mn)
+  # dim  class    mode typeof   size NAs  min    mean median max
+  # 32 x 268 matrix numeric double 0.1 Mb   0 -3.5 1.2e-19 -0.046 5.3
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
+  # QC000_1                           -1.90451172338088     0.132135427289209 ...  -0.696518422434394
+  # QC001_13                          -1.42072719055146      1.27662742513196 ...  -0.895800980827142
+  # ...                                             ...                   ... ...                 ...
+  
+  pred_scale.mn <- scale(pred.mn)
+  # dim  class    mode typeof   size NAs min     mean median max
+  # 300 x 268 matrix numeric double 0.7 Mb   0  -6 -1.9e-18  -0.14  14
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
+  # GB001617_3                           -1.77042066525214   -0.0171287004585374 ...  -0.953897043390401
+  # GB001333_4                           -1.53185850924212    -0.417106013566082 ...    2.67059620913055
+  # ...                                                ...                   ... ...                 ...
+ 
+  # https://github.com/slfan2013/Shiny-SERRF/blob/master/app.R (lines 429-434)
+  # if(is.null(dim(target[,batch.[!sampleType.=='qc']%in%current_batch]))){ # !!!
+  #   target_scale = scale(target[,batch.[!sampleType.=='qc']%in%current_batch])#!!!
+  # }else{
+  #   # target_scale = scale(target[,batch.[!sampleType.=='qc']%in%current_batch])#!!!
+  #   target_scale = t(apply(target[,batch.[!sampleType.=='qc']%in%current_batch],1,scale))
+  # }
+  
+   
+  ref_cor.mn <- cor(ref_scale.mn, method = "spearman")
+  # dim  class    mode typeof   size NAs   min mean median max
+  # 268 x 268 matrix numeric double 0.6 Mb   0 -0.83 0.32   0.35   1
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ...
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1                                         1    -0.237536656891496 ...
+  # 1_ISTD CUDA [M-H]- _2                                            -0.237536656891496                     1 ...
+  # ...                                                                             ...                   ... ...
+  pred_cor.mn <- cor(pred_scale.mn, method = "spearman")
+  # dim  class    mode typeof   size NAs   min mean median max
+  # 268 x 268 matrix numeric double 0.6 Mb   0 -0.52 0.24   0.22   1
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ...
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1                                         1     -0.15484466100001 ...
+  # 1_ISTD CUDA [M-H]- _2                                             -0.15484466100001                     1 ...
+  # ...                                                                             ...                   ... ...
   
   serrf.mn <- data.mn
   
@@ -582,7 +714,9 @@ setMethod("correcting", signature(x = "ExpressionSet"),
     
     # computing the corvar.i closest features to j
     ref_cor_ord.vi <- order(abs(ref_cor.mn[, j]), decreasing = TRUE)
+    # 1 223  34 259 197 164 ...
     pred_cor_ord.vi <- order(abs(pred_cor.mn[, j]), decreasing = TRUE)
+    # 1 223 221   8   7   9 ...
     
     corvar_j.vi <- integer()
     length.i <- corvar.i
@@ -591,69 +725,168 @@ setMethod("correcting", signature(x = "ExpressionSet"),
       corvar_j.vi <- corvar_j.vi[corvar_j.vi != j]
       length.i <- length.i + 1
     }
+    # 223 259 197 241 261 198 203 263 262 209
+    stopifnot(length(corvar_j.vi) > 0)
     
     # restricting to these features
-    train_x.mn <- ref_scale.mn[, corvar_j.vi]
-    train_y.vn <- scale(ref.mn[, j], scale = FALSE)
+    train_x.mn <- ref_scale.mn[, corvar_j.vi, drop = FALSE] # train_data_x
+    # dim  class    mode typeof size NAs  min     mean median max
+    # 32 x 10 matrix numeric double 0 Mb   0 -2.5 -2.3e-19 -0.022 3.1
+    # CSH_negESI #310_223 CSH_negESI #253_207 ... CSH_negESI #308_221 CSH_negESI #056_165
+    # QC000_1     -1.81083581640008   -1.71031527622648 ...  -0.396876886946608   -1.19774162024675
+    # QC001_13   -0.994798098720113   -1.26326466164329 ...  -0.174995307501646   0.286638287385274
+    # ...                       ...                 ... ...                 ...                 ...    
     
-    test_x.mn <- pred_scale.mn[, corvar_j.vi]
+    # https://github.com/slfan2013/Shiny-SERRF/blob/master/app.R (lines 508-512)
+    # if(is.null(dim(e_current_batch[sel_var, !train.index_current_batch=='qc']))){
+    #   test_data_x = t(scale(e_current_batch[sel_var, !train.index_current_batch=='qc']))
+    # }else{
+    #   test_data_x = apply(e_current_batch[sel_var, !train.index_current_batch=='qc'],1,scale)
+    # }
+    
+    train_y.vn <- scale(ref.mn[, j], scale = FALSE) # train_data_y
+    # [,1]
+    # QC000_1  -32210.031
+    # QC001_13 -24028.031
+    # QC002_24  -7971.031
+    # ...
+    
+    ## https://github.com/slfan2013/Shiny-SERRF/blob/master/app.R (lines 492-503)
+    # factor = sd(e_current_batch[j, train.index_current_batch=='qc'])/sd(e_current_batch[j, !train.index_current_batch=='qc'])
+    # if(factor==0 | is.nan(factor) | factor<1 | is.na(factor)){#!!!
+    #   train_data_y = scale(e_current_batch[j, train.index_current_batch=='qc'],scale=F) 
+    # }else{
+    #   # print(j)
+    #   # print("!!")
+    #   if(sum(train.index_current_batch=='qc')*2>=sum(!train.index_current_batch=='qc')){
+    #     train_data_y = (e_current_batch[j, train.index_current_batch=='qc'] - mean(e_current_batch[j, train.index_current_batch=='qc']))/factor ### need to be careful with outlier!
+    #   }else{
+    #     train_data_y = scale(e_current_batch[j, train.index_current_batch=='qc'],scale=F)
+    #   }
+    # }
+    
+    test_x.mn <- pred_scale.mn[, corvar_j.vi, drop = FALSE] # test_data_x
+    # dim  class    mode typeof size NAs min    mean median max
+    # 300 x 10 matrix numeric double 0 Mb   0  -6 1.1e-16  0.024 7.9
+    # CSH_negESI #310_223 CSH_negESI #253_207 ... CSH_negESI #308_221
+    # GB001617_3     -1.69911986893783  -0.328240246310566 ...   -1.26045383089589
+    # GB001333_4     -2.05491369499401   0.250014045552577 ...  -0.937513831509041
+    # ...                          ...                 ... ...                 ...    
     
     # discarding the features with NA only
-    nomissing.vl <- apply(rbind(train_x.mn,
-                                test_x.mn), 2, function(feat.vn) sum(is.na(feat.vn)) == 0)
+    missing.vl <- apply(rbind(train_x.mn,
+                              test_x.mn), 2, function(feat.vn) sum(is.na(feat.vn)) > 0)
     
-    train_x.mn <- train_x.mn[, nomissing.vl, drop = FALSE]
-    test_x.mn <- test_x.mn[, nomissing.vl, drop = FALSE]
+    stopifnot(sum(!missing.vl) > 0)
+    
+    train_x.mn <- train_x.mn[, !missing.vl, drop = FALSE]
+    test_x.mn <- test_x.mn[, !missing.vl, drop = FALSE]
+    
+    if(!is.matrix(test_x.mn)){
+      test_x.mn = t(test_x.mn)
+    }
     
     # random forest prediction
     train.df <- data.frame(y = train_y.vn, train_x.mn)
-    colnames(train.df) <- c("y", paste0("V",seq_len(ncol(train.df)-1)))
     
-    model.rf <- ranger::ranger(y~., data = train.df,
-                              seed = 123)
+    if (ncol(train.df) == 1) {
+      
+      serrf.mn[, j] <- data.mn[, j]
+      
+    } else {
+      
+      
+      colnames(train.df) <- c("y", paste0("V",seq_len(ncol(train.df)-1)))
+      # y      V1 ...      V9     V10
+      # numeric numeric ... numeric numeric
+      # nRow nCol size NAs
+      # 32   11 0 Mb   0
+      # y                 V1 ...                 V9               V10
+      # QC000_1   -32210.03125  -1.81083581640008 ... -0.396876886946608 -1.19774162024675
+      # QC001_13  -24028.03125 -0.994798098720113 ... -0.174995307501646 0.286638287385274
+      # ...                ...                ... ...                ...               ...    
+      
+      model.rf <- ranger::ranger(y~., data = train.df,
+                                 seed = 1)
+      # Ranger result
+      # 
+      # Call:
+      #   ranger::ranger(y ~ ., data = train.df, seed = 123) 
+      # 
+      # Type:                             Regression 
+      # Number of trees:                  500 
+      # Sample size:                      32 
+      # Number of independent variables:  10 
+      # Mtry:                             3 
+      # Target node size:                 5 
+      # Variable importance mode:         none 
+      # Splitrule:                        variance 
+      # OOB prediction error (MSE):       32501847 
+      # R squared (OOB):                  0.88637     
+      
+      # predictions
+      test.df <- data.frame(test_x.mn)
+      colnames(test.df) <- colnames(train.df)[-1]
+      # V1      V2 ...      V9     V10
+      # numeric numeric ... numeric numeric
+      # nRow nCol size NAs
+      # 300   10 0 Mb   0
+      # V1                 V2 ...                 V9                  V10
+      # GB001617_3   -1.69911986893783 -0.328240246310566 ...  -1.26045383089589    -1.21241783824721
+      # GB001333_4   -2.05491369499401  0.250014045552577 ... -0.937513831509041 -0.00517607160025233
+      # ...                        ...                ... ...                ...                  ...    
+      
+      serrf_refj.vn <- data.mn[ref.vi, j] / (predict(model.rf, data = train.df)[["predictions"]] + attributes(ref_scale.mn)[["scaled:center"]][j]) * ref_mean.vn[j]
+      # QC000_1 QC001_13 QC002_24 QC003_35 QC004_46 QC005_57  ...
+      # 222577.9 227054.4 235039.4 230702.6 231319.2 232316.5 ...
+      serrf_prej.vn <- data.mn[pred.vi, j] / (predict(model.rf, data = test.df)[["predictions"]] + attributes(pred_scale.mn)[["scaled:center"]][j]) * pred_median.vn[j]
+      # GB001617_3 GB001333_4 GB001191_5 GB001827_6 GB001722_7 GB001468_8 ...
+      # 181208.1   190537.0   176214.0   169492.8   154464.9   207938.8   ...
+      serrf_prej.vn[serrf_prej.vn < 0] <- data.mn[pred.vi, j][serrf_prej.vn < 0]
+      
+      serrf_refj.vn <- serrf_refj.vn / median(serrf_refj.vn, na.rm = TRUE) * ref_median.vn[j]
+      # QC000_1 QC001_13 QC002_24 QC003_35 QC004_46 QC005_57 
+      # 198455.2 202446.6 209566.1 205699.4 206249.2 207138.3 
+      serrf_prej.vn <- serrf_prej.vn / median(serrf_prej.vn, na.rm = TRUE) * pred_median.vn[j]
+      # GB001617_3 GB001333_4 GB001191_5 GB001827_6 GB001722_7 GB001468_8 
+      # 181525.7   190871.0   176522.9   169789.9   154735.6   208303.3 
+      
+      serrf.mn[ref.vi, j] <- serrf_refj.vn
+      serrf.mn[pred.vi, j] <- serrf_prej.vn
+      
+      
+      infinite.vl <- !is.finite(serrf.mn[, j])
+      if (sum(infinite.vl, na.rm = TRUE)) {
+        serrf.mn[infinite.vl, j] <- rnorm(sum(infinite.vl, na.rm = TRUE),
+                                          sd = sd(serrf.mn[!infinite.vl, j], na.rm = TRUE) * 0.01)
+      }
+      
+      out.vn <- grDevices::boxplot.stats(serrf.mn[, j], coef = 3)$out
+      # GB001671_44 GB001071_45 
+      # 125606.8    131423.6       
+      
+      serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] %in% out.vn] <- (data.mn[pred.vi, j] - ((predict(model.rf, data = test.df)[["predictions"]] + attributes(pred_scale.mn)[["scaled:center"]][j]) - pred_median.vn[j]))[serrf.mn[pred.vi, j] %in% out.vn]
+      # GB001671_44 GB001071_45 
+      # 138052.1    144032.6 
+      serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0] <- data.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0]
+      
+    } # else line 730
     
-    # predictions
-    test.df <- data.frame(test_x.mn)
-    colnames(test.df) <- colnames(train.df)[-1]
-    
-    serrf_refj.vn <- data.mn[ref.vi, j] / (predict(model.rf, data = train.df)[["predictions"]] + attributes(ref_scale.mn)[["scaled:center"]][j]) * ref_mean.vn[j]
-    serrf_prej.vn <- data.mn[pred.vi, j] / (predict(model.rf, data = test.df)[["predictions"]] + attributes(pred_scale.mn)[["scaled:center"]][j]) * pred_median.vn[j]
-    serrf_prej.vn[serrf_prej.vn < 0] <- data.mn[pred.vi, j][serrf_prej.vn < 0]
-    
-    
-    serrf_refj.vn <- serrf_refj.vn / median(serrf_refj.vn, na.rm = TRUE) * ref_median.vn[j]
-    serrf_prej.vn <- serrf_prej.vn / median(serrf_prej.vn, na.rm = TRUE) * pred_median.vn[j]
-    
-    serrf.mn[ref.vi, j] <- serrf_refj.vn
-    serrf.mn[pred.vi, j] <- serrf_prej.vn
-    isfinite.vl <- is.finite(serrf.mn[, j])
-    if (sum(!isfinite.vl)) {
-      serrf.mn[!isfinite.vl, j] <- rnorm(sum(!isfinite.vl, na.rm = TRUE), sd = sd(serrf.mn[isfinite.vl, j], na.rm = TRUE) * 0.01)
-    }
-    
-    out <- boxplot.stats(serrf.mn[, j], coef = 3)$out
-    
-    serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] %in% out] <- (data.mn[pred.vi, j] - ((predict(model.rf, data = test.df)[["predictions"]] + attributes(pred_scale.mn)[["scaled:center"]][j]) - pred_median.vn[j]))[serrf.mn[pred.vi, j] %in% out]
-    serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0] <- data.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0]
-    
-  }
+  } # for j line 669
+  # dim  class    mode typeof   size NAs min    mean  median     max
+  # 332 x 268 matrix numeric double 0.7 Mb   0  12 1.5e+04 2.8e+03 1.2e+06
+  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
+  # QC000_1                               198455.191764912      78483.1481600026 ...    3323.61798375818
+  # GB001617_3                            181525.708111505      83018.0677372365 ...    3566.84739188515
+  # ...                                                ...                   ... ...                 ...
+  # GB004332_334                          252818.668012687      83761.1518829466 ...    2895.39117668156
+  # QC031_335                             206936.414154495      77197.8876432423 ...    3289.95247381775
   
-  .fill_naneg <- function(feat.vn) {
-    isna.vl <- is.na(feat.vn)
-    feat.vn[isna.vl] <- rnorm(sum(isna.vl), mean = min(feat.vn[!isna.vl]), sd = sd(feat.vn[!isna.vl]) * 0.1)
-    isneg.vl <- feat.vn < 0
-    feat.vn[isneg.vl] <- runif(1) * min(feat.vn[feat.vn > 0])
-    return(feat.vn)
-  }
-  
-  serrf.mn[ref.vi, ] <- apply(serrf.mn[ref.vi, ], 2, .fill_naneg)
-  serrf.mn[pred.vi, ] <- apply(serrf.mn[pred.vi, ], 2, .fill_naneg)
- 
   return(serrf.mn)
   
 }
-  
-  
+
+
 .plot_drift_pca <- function(data.mn,
                             samp.df,
                             loess_span.n = 1,
@@ -690,7 +923,7 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   pca_metrics.ls <- .pca_metrics(data.mn = data.mn,
                                  samp.df = samp.df,
                                  pred.i = 4)
- 
+  
   .plot_pca_metrics(data.mn = data.mn,
                     samp.df = samp.df,
                     pred.i = 4,

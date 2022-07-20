@@ -30,7 +30,7 @@ testthat::test_that("correcting-mae", {
                          tolerance = 1e-6)
   
   testthat::expect_equal(assays(sac.mae)[["sac2"]]["Testosterone glucuronide", "HU_neg_020"],
-                         64660.22,
+                         64226.78,
                          tolerance = 1e-6)
   
   
