@@ -1,9 +1,16 @@
+CHANGES IN VERSION 0.99.12
+------------------------------
+
+NEW FEATURE
+
+    o gg_barplot: new arguments to improve the graphical display
+    
 CHANGES IN VERSION 0.99.10
 ------------------------------
 
-MINOR MODIFICATION
+NEW FEATURE
 
-    o correcting: minor update in the 'serrf' method to match the latest changes from Fan et al.
+    o correcting: update of the serrf method to exactly reproduce the code from Fan et al., 2019
 
 CHANGES IN VERSION 0.99.8
 ------------------------------

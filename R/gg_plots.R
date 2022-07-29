@@ -3,18 +3,25 @@
 #' Barplot with ggplot2
 #' 
 #' @param data.mn Matrix of numerics: values to be barplotted
-#' @param row_levels.vc Vector of characters: levels of rownames (default: NA: alphabetical order will be used)
-#' @param col_levels.vc Vector of characters: levels of colnames (default: NA: alphabetical order will be used)
+#' @param log10.l logical(1): should the intensities be log10 transformed?
+#' @param ylim.vn numeric(2): minimum and maximum values for the bars
 #' @param title.c Character: plot title
 #' @param xlab.c Character: x label
 #' @param ylab.c Character: y label
+#' @param row_levels.vc Vector of characters: levels of rownames (default: NA: alphabetical order will be used)
+#' @param col_levels.vc Vector of characters: levels of colnames (default: NA: alphabetical order will be used)
 #' @param palette.vc Character: either the name of an RColorBrewer palette
 #' (default: 'Set1'; 'Paired' can be useful for parallel plotting) or a vector
 #' manually defining the colors
+#' @param theme.c character(1): name of the ggplot theme
+#' @param flip.l logical(1): should the barplot be flipped (default: FALSE)
+#' @param legend_position.c character(1): position of the legend: either "none",
+#' "bottom" (default), "left", "top", "right"
 #' @param cex_axis.i Integer: size of axis text (default: 18)
 #' @param cex_bar.i Integer: size of bar value text (default: 10)
 #' @param cex_title.i Integer: size of title text (default: 28)
 #' @param bar_just.n Numeric: adjustment of bar value text (default : 0.9)
+
 #' @param figure.c Character: either 'interactive' for interactive display,
 #' 'my_barplot.pdf' for figure saving (only the extension matters), or 'none' to prevent plotting
 #' @return invisible ggplot2 object
@@ -25,15 +32,34 @@
 #'                   function(set.c) { dim(prometis.mae[[set.c]])},
 #'                   FUN.VALUE = integer(2))
 #' dims.mn <- t(dims.mn)
-#' colnames(dims.mn) <- c("Features", "Samples")
-#' gg_barplot(dims.mn, title.c = "ProMetIS data")
+#' colnames(dims.mn) <- c("features", "samples")
+#' gg_barplot(dims.mn, title.c = "ProMetIS data",
+#'            row_levels = c("proteo", "metabo"),
+#'            col_levels = c("samples", "features"),
+#'            ylim.vn = c(NA, 110),
+#'            bar_just = -0.25,
+#'            cex_bar.i = 6,
+#'            cex_title.i = 15)
 gg_barplot <- function(data.mn,
-                       row_levels.vc = NA,
-                       col_levels.vc = NA,
+                       log10.l = FALSE,
+                       ylim.vn = c(NA, NA),
                        title.c = "",
                        xlab.c = "",
                        ylab.c = "",
+                       row_levels.vc = NA,
+                       col_levels.vc = NA,
                        palette.vc = "Set1",
+                       theme.c = c("default",
+                                   "bw",
+                                   "classic",
+                                   "dark",
+                                   "gray",
+                                   "linedraw",
+                                   "light",
+                                   "minimal",
+                                   "void")[3],
+                       flip.l = FALSE,
+                       legend_position.c = c("none", "bottom", "left", "top", "right")[2],
                        cex_axis.i = 18,
                        cex_bar.i = 10,
                        cex_title.i = 28,
@@ -47,20 +73,29 @@ gg_barplot <- function(data.mn,
   
   longer.tib <- tidyr::pivot_longer(data.df, colnames(data.df)[colnames(data.df) != "rownames"])
   
-  if (length(row_levels.vc) > 1)
+  if (length(row_levels.vc) > 1) {
+    stopifnot(all(row_levels.vc %in% rownames(data.mn)))
     longer.tib$rownames <- factor(longer.tib$rownames, levels = row_levels.vc)
+  }
   
-  if (length(col_levels.vc) > 1)
+  if (length(col_levels.vc) > 1) {
+    stopifnot(all(col_levels.vc %in% colnames(data.mn)))
     longer.tib$name <- factor(longer.tib$name, levels = col_levels.vc)
+  }
   
   p <- .gg_barplot(longer.tib,
                    x.c = "rownames",
                    y.c = "value",
                    color.c = "name",
+                   log10.l = log10.l,
+                   ylim.vn = ylim.vn,
                    title.c = title.c,
                    xlab.c = xlab.c,
                    ylab.c = ylab.c,
                    palette.vc = palette.vc,
+                   theme.c = theme.c,
+                   flip.l = flip.l,
+                   legend_position.c = legend_position.c,
                    geom_text.ls = list(axis.i = cex_axis.i, bar.i = cex_bar.i,
                                        bar_just.n = bar_just.n, title.i = cex_title.i),
                    figure.c = figure.c)
@@ -71,26 +106,29 @@ gg_barplot <- function(data.mn,
 
 
 .gg_barplot <- function(data.tb,
-                       x.c = "",
-                       y.c = "",
-                       color.c = "",
-                       title.c = "",
-                       xlab.c = "",
-                       ylab.c = "",
-                       palette.vc = "Set1",
-                       legend_position.c = c("none", "top")[2],
-                       geom_text.ls = list(axis.i = 18, bar.i = 10,
-                                           bar_just.n = 1.5, title.i = 28),
-                       flip.l = TRUE,
-                       position_dodge.l = TRUE,
-                       figure.c = c("interactive",
-                                    "my_barplot.pdf",
-                                    "none")[1]) {
+                        x.c = "",
+                        y.c = "",
+                        color.c = "",
+                        log10.l = FALSE,
+                        ylim.vn = c(NA, NA),
+                        title.c = "",
+                        xlab.c = "",
+                        ylab.c = "",
+                        palette.vc = "Set1",
+                        theme.c = "default",
+                        flip.l = FALSE,
+                        legend_position.c = c("none", "bottom", "left", "top", "right")[2],
+                        geom_text.ls = list(axis.i = 18, bar.i = 10,
+                                            bar_just.n = 1.5, title.i = 28),
+                        figure.c = c("interactive",
+                                     "my_barplot.pdf",
+                                     "none")[1],
+                        position_dodge.l = TRUE) {
   # http://www.sthda.com/french/wiki/ggplot2-barplots-guide-de-demarrage-rapide-logiciel-r-et-visualisation-de-donnees
   
   if (!tibble::is_tibble(data.tb))
     data.tb <- tibble::as_tibble(data.tb)
- 
+  
   geom_text_default.vn <- c(axis.i = 18, bar.i = 10,
                             bar_just.n = 1.5, title.i = 28)
   for (geom_text.c in names(geom_text_default.vn)) {
@@ -109,20 +147,33 @@ gg_barplot <- function(data.mn,
                                  levels = unique(data.tb[[color.c]]))
   
   if (flip.l) {
-
+    
     data.tb[[x.c]] <- factor(data.tb[[x.c]],
                              levels = rev(levels(data.tb[[x.c]])))
     
     if (color.c != "")
       data.tb[[color.c]] <- factor(data.tb[[color.c]],
                                    levels = rev(levels(data.tb[[color.c]])))
-
+    
   }
   
   aes.c <- paste0("ggplot2::ggplot(data.tb, ggplot2::aes(x = ",
                   x.c, ", y = ", y.c, ", fill = ", color.c, "))")
   
   p <- eval(parse(text = aes.c))
+  
+  # log10 scale
+  
+  if(log10.l) {
+    p <- p + ggplot2::scale_y_log10(limits = ylim.vn)
+  } else if (any(!is.na(ylim.vn))) {
+    p <- p + eval(parse(text = paste0("ggplot2::ylim(", ylim.vn[1], ", ", ylim.vn[2], ")")))
+  }
+  
+  # theme
+  
+  if (theme.c != "default")
+    p <- p + eval(parse(text = paste0("ggplot2::theme_", theme.c, "()")))
   
   # color palette
   if (length(palette.vc) == 1 &&
@@ -180,6 +231,7 @@ gg_barplot <- function(data.mn,
   return(invisible(p))
   
 }
+
 
 #' Boxplot with ggplot2
 #' 

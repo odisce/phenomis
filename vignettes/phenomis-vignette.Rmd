@@ -670,7 +670,7 @@ cll.eset <- sCLLex[seq_len(1000), ]
 
 We explore the data:
 
-```{r cll_inspect}
+```{r cll_inspect, eval = FALSE}
 cll.eset <- inspecting(cll.eset, report.c = "none")
 ```
 
@@ -678,7 +678,7 @@ Investigate whether clusters can be observed (we first add the letter
 'p' or 's' in the sample names to indicate the phenotype: p =
 progressive, s = stable):
 
-```{r cll_heatmap}
+```{r cll_heatmap, eval = FALSE}
 Biobase::sampleNames(cll.eset) <- paste0(Biobase::sampleNames(cll.eset),
                                          "_",
                                          substr(Biobase::pData(cll.eset)[, "Disease"], 1, 1))
@@ -689,7 +689,7 @@ cll.eset <- clustering(cll.eset)
 and perform hypothesis testing with the limma test (the dots must be
 removed from the 'progress.' phenotype):
 
-```{r cll_limma}
+```{r cll_limma, eval = FALSE}
 Biobase::pData(cll.eset)[, "Disease"] <- gsub(".", "",
                                               Biobase::pData(cll.eset)[, "Disease"],
                                               fixed = TRUE)
@@ -735,7 +735,7 @@ nci.mae <- clustering(nci.mae)
 
 and/or perform hypothesis testing on each data set:
 
-```{r mae_hypotesting}
+```{r mae_hypotesting, eval = FALSE}
 nci.mae <- hypotesting(nci.mae, "limma", "cancer", report.c = "none")
 ```
 
