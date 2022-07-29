@@ -6,12 +6,18 @@
 \usage{
 gg_barplot(
   data.mn,
-  row_levels.vc = NA,
-  col_levels.vc = NA,
+  log10.l = FALSE,
+  ylim.vn = c(NA, NA),
   title.c = "",
   xlab.c = "",
   ylab.c = "",
+  row_levels.vc = NA,
+  col_levels.vc = NA,
   palette.vc = "Set1",
+  theme.c = c("default", "bw", "classic", "dark", "gray", "linedraw", "light",
+    "minimal", "void")[3],
+  flip.l = FALSE,
+  legend_position.c = c("none", "bottom", "left", "top", "right")[2],
   cex_axis.i = 18,
   cex_bar.i = 10,
   cex_title.i = 28,
@@ -22,9 +28,9 @@ gg_barplot(
 \arguments{
 \item{data.mn}{Matrix of numerics: values to be barplotted}
 
-\item{row_levels.vc}{Vector of characters: levels of rownames (default: NA: alphabetical order will be used)}
+\item{log10.l}{logical(1): should the intensities be log10 transformed?}
 
-\item{col_levels.vc}{Vector of characters: levels of colnames (default: NA: alphabetical order will be used)}
+\item{ylim.vn}{numeric(2): minimum and maximum values for the bars}
 
 \item{title.c}{Character: plot title}
 
@@ -32,9 +38,20 @@ gg_barplot(
 
 \item{ylab.c}{Character: y label}
 
+\item{row_levels.vc}{Vector of characters: levels of rownames (default: NA: alphabetical order will be used)}
+
+\item{col_levels.vc}{Vector of characters: levels of colnames (default: NA: alphabetical order will be used)}
+
 \item{palette.vc}{Character: either the name of an RColorBrewer palette
 (default: 'Set1'; 'Paired' can be useful for parallel plotting) or a vector
 manually defining the colors}
+
+\item{theme.c}{character(1): name of the ggplot theme}
+
+\item{flip.l}{logical(1): should the barplot be flipped (default: FALSE)}
+
+\item{legend_position.c}{character(1): position of the legend: either "none",
+"bottom" (default), "left", "top", "right"}
 
 \item{cex_axis.i}{Integer: size of axis text (default: 18)}
 
@@ -59,6 +76,12 @@ dims.mn <- vapply(names(prometis.mae),
                   function(set.c) { dim(prometis.mae[[set.c]])},
                   FUN.VALUE = integer(2))
 dims.mn <- t(dims.mn)
-colnames(dims.mn) <- c("Features", "Samples")
-gg_barplot(dims.mn, title.c = "ProMetIS data")
+colnames(dims.mn) <- c("features", "samples")
+gg_barplot(dims.mn, title.c = "ProMetIS data",
+           row_levels = c("proteo", "metabo"),
+           col_levels = c("samples", "features"),
+           ylim.vn = c(NA, 110),
+           bar_just = -0.25,
+           cex_bar.i = 6,
+           cex_title.i = 15)
 }
