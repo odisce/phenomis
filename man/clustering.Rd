@@ -89,37 +89,45 @@ clustering(
 )
 }
 \arguments{
-\item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}}
+\item{x}{An S4 object of class \code{SummarizedExperiment}
+or \code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet}
+are still supported)}
 
-\item{dissym.c}{character: [hclust]}
+\item{dissym.c}{character(1): dissymilarity to be used in the hierarchical
+clustering (as provided by the hclust package)}
 
-\item{correl.c}{character: correlation coefficient (in case
+\item{correl.c}{character(1): correlation coefficient (in case
 '1-cor' or '1-abs(cor)' are selected as dissymilarity)}
 
-\item{agglo.c}{character: agglomeration method}
+\item{agglo.c}{character(1): agglomeration method}
 
-\item{clusters.vi}{tupple of integers: number of sample and variable clusters, respectively}
+\item{clusters.vi}{integer(2): number of sample and variable
+clusters, respectively; the default values (2) are only provided as starting
+guess (e.g. in case of two groups of samples)}
 
-\item{cex.vn}{tupple of numerics [Plot parameter]; size of the sample and variable labels}
+\item{cex.vn}{numeric(2) [Plot parameter]; size of the sample and
+variable labels}
 
-\item{palette.c}{character [Plot parameter]: color palette}
+\item{palette.c}{character(1) [Plot parameter]: color palette}
 
-\item{scale_plot.l}{logical [Plot parameter]: scaling (mean-centering and unit
-variance scaling) to enhance contrast (for plotting only)}
+\item{scale_plot.l}{logical(1) [Plot parameter]: scaling (mean-centering and
+unit variance scaling) to enhance contrast (for plotting only)}
 
-\item{title.c}{character [Plot parameter]: Graphic the subtitle}
+\item{title.c}{character(1) [Plot parameter]: Graphic the subtitle}
 
-\item{figure.c}{character: File name with '.pdf' extension for the figure;
-if 'interactive' (default), figures will be displayed interactively; if 'none',
-no figure will be generated}
+\item{figure.c}{character(1): File name with '.pdf' extension for the figure;
+if 'interactive' (default), figures will be displayed interactively;
+if 'none', no figure will be generated}
 
-\item{report.c}{character: File name with '.txt' extension for the printed
+\item{report.c}{character(1): File name with '.txt' extension for the printed
 results (call to sink()'); if 'interactive' (default), messages will be
 printed on the screen; if 'none', no verbose will be generated}
 }
 \value{
-\code{SummarizedExperiment} or \code{MultiAssayExperiment} including columns indicating
-the clusters in rowData and colData if 'clusters.vi' has been specified
+\code{SummarizedExperiment} or \code{MultiAssayExperiment} 
+(or \code{ExpressionSet} and \code{MultiDataSet}) including columns 
+indicating the clusters in rowData and colData if clusters.vi' has been 
+specified
 }
 \description{
 Hierarchical clustering of both samples and variables

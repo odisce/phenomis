@@ -42,8 +42,10 @@ testthat::context("Testing 'annotating'")
 
 testthat::test_that("annotating-se-localms", {
   
-  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
-  msdbDF <- read.table(system.file("extdata/local_ms_db.tsv", package = "phenomis"),
+  sacurine.se <- reading(system.file("extdata/sacurine", 
+                                     package = "phenomis"))
+  msdbDF <- read.table(system.file("extdata/local_ms_db.tsv", 
+                                   package = "phenomis"),
                        header = TRUE,
                        sep = "\t",
                        stringsAsFactors = FALSE)

@@ -69,43 +69,50 @@ inspecting(
 )
 }
 \arguments{
-\item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}}
+\item{x}{An S4 object of class \code{SummarizedExperiment}
+or \code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet}
+are still supported)}
 
-\item{pool_as_pool1.l}{Logical: should pool be included (as pool1) in the correlation
-with the dilution factor?}
+\item{pool_as_pool1.l}{logical(1): should pool be included (as pool1)
+in the correlation with the dilution factor?}
 
-\item{pool_cv.n}{Numeric: threshold for the coefficient of variation of the pools}
+\item{pool_cv.n}{numeric(1): threshold for the coefficient of variation 
+of the pools; the default value (30\%) is often used in metabolomics}
 
-\item{loess_span.n}{Numeric: span parameter used in the loess trend estimation}
+\item{loess_span.n}{numeric(1): span parameter used in the loess trend 
+estimation; the default value is set to 1 to prevent overfitting}
 
-\item{sample_intensity.c}{Character: function to be used to display the global
-sample intensity; default: 'mean'}
+\item{sample_intensity.c}{Character: function to be used to display the 
+global sample intensity; default: 'mean'}
 
-\item{title.c}{Character: MultiAssayExperiment: title of the barplot showing the number
-of samples and variables in each dataset; ExpressionSet: title of the multipanel
-graphic displaying the metrics (if NA -default- the title slot from the experimentData
-will be used)}
+\item{title.c}{character(1): MultiAssayExperiment: title of the barplot 
+showing the number of samples and variables in each dataset; ExpressionSet: 
+title of the multipanel graphic displaying the metrics (if NA -default- the 
+title slot from the experimentData will be used)}
 
-\item{plot_dims.l}{(MultiAssayExperiment) Logical: should an overview of the number of samples and
-variables in all datasets be barplotted?}
+\item{plot_dims.l}{(MultiAssayExperiment) logical(1): should an overview of
+the number of samples and variables in all datasets be barplotted?}
 
-\item{figure.c}{Character: File name with '.pdf' extension for the figure;
-if 'interactive' (default), figures will be displayed interactively; if 'none',
-no figure will be generated}
+\item{figure.c}{character(1): File name with '.pdf' extension for the figure;
+if 'interactive' (default), figures will be displayed interactively; 
+if 'none', no figure will be generated}
 
-\item{report.c}{Character: File name with '.txt' extension for the printed
+\item{report.c}{character(1): File name with '.txt' extension for the printed
 results (call to sink()'); if 'interactive' (default), messages will be
 printed on the screen; if 'none', no verbose will be generated}
 }
 \value{
-\code{SummarizedExperiment} or \code{MultiAssayExperiment} including the computed
+\code{SummarizedExperiment} or \code{MultiAssayExperiment} 
+(or \code{ExpressionSet} and \code{MultiDataSet}) including the computed 
 sample and variable metrics in the rowData and colData metadata.
 }
 \description{
-Provides numerical metrics and graphical overview of an ExpressionSet or MultiDataSet instance
-Please note that all variables with a proportion of missing values > 'max_na_prop.n'
+Provides numerical metrics and graphical overview of SummarizedExperiment,
+MultiAssayExperiment, ExpressionSet, or MultiDataSet instance
+Please note that all variables with a proportion of 
+missing values > 'max_na_prop.n'
 or a variance of 0 will be filtered out at the beginning of the method and
-therefore in the output SummarizedExperiments(s)
+therefore in the output object
 }
 \examples{
 sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
@@ -116,6 +123,7 @@ sacurine.se <- transforming(sacurine.se)
 sacurine.se <- inspecting(sacurine.se)
 
 # MultiAssayExperiment
-prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
+prometis.mae <- reading(system.file("extdata/prometis", 
+                                    package = "phenomis"))
 prometis.mae <- inspecting(prometis.mae)
 }

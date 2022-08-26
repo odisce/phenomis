@@ -28,22 +28,25 @@ per dataset}
 subdirectories to be included in the MultiAssayExperiment (by default, all
 subdirectories containing the 3 tables will be considered as datasets)}
 
-\item{output.c}{character(1): Either 'exp' for SummarizedExperiment (or MultiAssayExperiment), or 'set' for ExpressionSet (or MultiDataSet) output formats (the latter are deprecated)}
+\item{output.c}{character(1): Either 'exp' for SummarizedExperiment 
+(or MultiAssayExperiment), or 'set' for ExpressionSet (or MultiDataSet) 
+output formats (the latter are supported for convenience)}
 
 \item{report.c}{character(1): File name for the printed results (call to
 'sink()'); if NA (default), messages will be printed on the screen; if NULL,
 no verbose will be generated}
 }
 \value{
-\code{SummarizedExperiment} (one dataset) or \code{MultiAssayExperiment} (multiple
-datasets) instance containing the dataset(s)
+\code{SummarizedExperiment} (one dataset) or 
+\code{MultiAssayExperiment} (multiple datasets) instance containing the 
+dataset(s)
 }
 \description{
 Reading dataset(s) in the 3 tables 'dataMatrix' (or 'DM'), sampleMetadata'
 (or 'SM') and variableMetadata' (or 'VM') tabular format. In case of a single
-dataset (3 tables in the specified directory), a SummarizedExperiment instance is
-returned. In case of a multiple dataset (several subfolders containing 3
-tables), a MultiAssayExperiment instance is created.
+dataset (3 tables in the specified directory), a SummarizedExperiment 
+instance is returned. In case of a multiple dataset (several subfolders 
+containing 3 tables), a MultiAssayExperiment instance is created.
 }
 \examples{
 data_dir.c <- system.file("extdata", package = "phenomis")

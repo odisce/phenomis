@@ -39,17 +39,22 @@ transforming(
 )
 }
 \arguments{
-\item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet} are deprecated)}
+\item{x}{An S4 object of class \code{SummarizedExperiment} 
+or \code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet}
+are still supported)}
 
-\item{method.vc}{character(): type of transformation (either 'log2', 'log10', 'sqrt', or 'none'); in case of a MultiAssayExperiment, distinct methods may be provided for each dataset}
+\item{method.vc}{character of length 1 or the total number of datasets:
+transformation to be used for each dataset (either 'log2', 
+'log10', 'sqrt', or 'none')}
 
-\item{report.c}{Character: File name with '.txt' extension for the printed
+\item{report.c}{character(1): File name with '.txt' extension for the printed
 results (call to sink()'); if 'interactive' (default), messages will be
 printed on the screen; if 'none', no verbose will be generated}
 }
 \value{
-\code{SummarizedExperiment} (or \code{MultiAssayExperiment}) including the (list of) matrix 
-with transformed intensities
+\code{SummarizedExperiment} or \code{MultiAssayExperiment}
+(or \code{ExpressionSet} and \code{MultiDataSet}) including the (list of) 
+matrix with transformed intensities
 }
 \description{
 A logarithmic or square root transformation may be applied to the data matrix
@@ -61,7 +66,8 @@ sacurine.se <- correcting(sacurine.se)
 sacurine.se <- sacurine.se[, colData(sacurine.se)[, "sampleType"] != "pool"]
 sacurine.se <- transforming(sacurine.se)
 # MultiAssayExperiment
-prometis.mae <- reading(system.file("extdata/prometis", package = "phenomis"))
+prometis.mae <- reading(system.file("extdata/prometis", 
+                                    package = "phenomis"))
 prometis.mae <- transforming(prometis.mae, method.vc = c("log2", "none"))
 # Note: in the 'prometis' example data set from the package, the data are
 # already log2 transformed

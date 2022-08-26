@@ -6,7 +6,8 @@
 \alias{filtering,SummarizedExperiment-method}
 \alias{filtering,MultiDataSet-method}
 \alias{filtering,ExpressionSet-method}
-\title{Filtering of the features (or samples) with a high proportion of NAs or a low variance}
+\title{Filtering of the features (and/or samples) with a high proportion of NAs or
+a low variance}
 \usage{
 filtering(
   x,
@@ -54,32 +55,41 @@ filtering(
 )
 }
 \arguments{
-\item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}}
+\item{x}{An S4 object of class \code{SummarizedExperiment} or
+\code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet}
+are still supported)}
 
 \item{class.c}{character(1): name of the column of the sample metadata giving
 the classification groups: the filtering will be applied on each class
 (default: "" meaning that there are no specific classes to consider)}
 
 \item{max_na_prop.n}{numeric(1): maximum proportion of NAs for a feature (or
-sample) to be kept [default: 0.2] (in case 'class.c' is provided, the maximum
-proportion of NAs for a feature must be achieved in at least one sample class)}
+sample) to be kept (e.g. the default 20% maximum proportion of missing 
+values); in case 'class.c' is provided, the maximum proportion of NAs for a 
+feature must be achieved in at least one sample class)}
 
-\item{min_variance.n}{numeric(1): minimum variance for a feature (or sample) to be kept
-[default: .Machine$double.eps] (in case 'class.c' is provided, the minimum variance
-for a feature must be achieved in all sample classes)}
+\item{min_variance.n}{numeric(1): minimum variance for a feature (or sample)
+to be kept (e.g. the default 0 value to discard constant features
+(or samples); in case 'class.c' is provided, the minimum variance for a 
+feature must be achieved in all sample classes}
 
 \item{dims.vc}{Vector of one or two characters: dimension(s) to which the
-filtering should be applied; either 'features', 'samples', or c('features', 'samples')}
+filtering should be applied; either 'features', 'samples', c('features',
+'samples'), or c('samples', 'features'); in the two latter cases, the 
+dimensions indicated in the dims.vc are filtered sequentially}
 
 \item{report.c}{character(1): File name with '.txt' extension for the printed
 results (call to sink()'); if 'interactive' (default), messages will be
 printed on the screen; if 'none', no verbose will be generated}
 }
 \value{
-\code{SummarizedExperiment} or \code{MultiAssayExperiment} including the filtered data and metadata
+\code{SummarizedExperiment} or \code{MultiAssayExperiment} 
+(or \code{ExpressionSet} and \code{MultiDataSet}) including the filtered 
+data and metadata
 }
 \description{
-Filtering of the features (or samples) with a high proportion of NAs or a low variance
+Filtering of the features (and/or samples) with a high proportion of NAs or
+a low variance
 }
 \examples{
 sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
@@ -108,15 +118,18 @@ filtering(prometis.mae)
 
 # MultiDataSet
 
-prometis.mset <- reading(system.file("extdata/prometis", package="phenomis"), output.c = "set")
+prometis.mset <- reading(system.file("extdata/prometis", package="phenomis"),
+                         output.c = "set")
 filtering(prometis.mset)
 for (set.c in names(prometis.mset)) {
 eset <- prometis.mset[[set.c]]
 exprs.mn <- Biobase::exprs(eset)
 exprs.mn[exprs.mn < quantile(c(exprs.mn), 0.2)] <- NA
 Biobase::exprs(eset) <- exprs.mn
-prometis.mset <- MultiDataSet::add_eset(prometis.mset, eset, dataset.type = set.c,
-                                        GRanges = NA, overwrite = TRUE, warnings = FALSE)
+prometis.mset <- MultiDataSet::add_eset(prometis.mset, eset,
+                                        dataset.type = set.c,
+                                        GRanges = NA, overwrite = TRUE,
+                                        warnings = FALSE)
 }
 filtering(prometis.mset)
 }

@@ -6,7 +6,8 @@ package: "`r pkg_ver('phenomis')`"
 vignette: >
   %\VignetteIndexEntry{phenomis-vignette}
   %\VignetteEncoding{UTF-8}
-  %\VignetteKeywords{BatchEffect, Clustering, MassSpectrometry, Metabolomics, Normalization, Proteomics, QualityControl, StatisticalMethod, Transcriptomics}  
+  %\VignetteKeywords{BatchEffect, Clustering, MassSpectrometry, Metabolomics, 
+  Normalization, Proteomics, QualityControl, StatisticalMethod, Transcriptomics}  
   %\VignetteEngine{knitr::rmarkdown}
 bibliography: "phenomis-vignette.bib"
 output:
@@ -85,8 +86,10 @@ Note that the `phenomis` package also supports the `ExpressionSet`
 Input (i.e. preprocessed) data consists of a 'variable times sample'
 matrix of intensities (**dataMatrix** numeric matrix), in addition to
 sample and variable metadata (**sampleMetadata** and
-**variableMetadata** data frames). Importantly, the row names from the dataMatrix must be identical to the row names from the vaiableMetadata (feature names), and the column names from
-the dataMatrix must be identical to the row names from sampleMetadata (sample names).
+**variableMetadata** data frames). Importantly, the row names from the 
+dataMatrix must be identical to the row names from the vaiableMetadata 
+(feature names), and the column names from the dataMatrix must be identical to 
+the row names from sampleMetadata (sample names).
 
 Note that 3 sample metadata columns should be specified when working
 with the `correcting` method, namely:
@@ -506,7 +509,8 @@ sacurine.se <- annotating(sacurine.se,
                                           max.results = 3,
                                           prefix = "chebiMZ."),
                           report.c = "none")
-knitr::kable(head(rowData(sacurine.se)[, grep("chebiMZ", colnames(rowData(sacurine.se)))]))
+knitr::kable(head(rowData(sacurine.se)[, grep("chebiMZ", 
+                                              colnames(rowData(sacurine.se)))]))
 ```
 
 2)  by using ChEBI identifiers:
@@ -516,7 +520,8 @@ sacurine.se <- annotating(sacurine.se, database.c = "chebi",
                           param.ls = list(query.type = "chebi.id",
                                           query.col = "database_identifier",
                                           prefix = "chebiID."))
-knitr::kable(head(rowData(sacurine.se)[, grep("chebiID", colnames(rowData(sacurine.se)))]))
+knitr::kable(head(rowData(sacurine.se)[, grep("chebiID", 
+                                              colnames(rowData(sacurine.se)))]))
 
 ```
 

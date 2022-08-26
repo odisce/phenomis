@@ -28,7 +28,8 @@ setMethod("inspecting", signature(x = "MultiAssayExperiment"),
               figure_set.c <- "interactive"
             
             if (plot_dims.l)
-              .barplot_dims(as.list(MultiAssayExperiment::assays(x)), ifelse(!is.na(title.c), title.c, ""))
+              .barplot_dims(as.list(MultiAssayExperiment::assays(x)),
+                            ifelse(!is.na(title.c), title.c, ""))
             
             for (set.c in names(x)) {
               
@@ -135,7 +136,8 @@ setMethod("inspecting", signature(x = "MultiDataSet"),
               figure_set.c <- "interactive"
             
             if (plot_dims.l)
-              .barplot_dims(MultiDataSet::as.list(x), ifelse(!is.na(title.c), title.c, ""))
+              .barplot_dims(MultiDataSet::as.list(x),
+                            ifelse(!is.na(title.c), title.c, ""))
             
             for (set.c in names(x)) {
               
@@ -271,11 +273,14 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     message("observations: ", nrow(data.mn))
     message("variables: ", ncol(data.mn))
     message("missing: ", format(sum(is.na(data.mn)), big.mark = ","),
-            " (", round(sum(is.na(data.mn)) / cumprod(dim(data.mn))[2] * 100), "%)")
+            " (", round(sum(is.na(data.mn)) / cumprod(dim(data.mn))[2] * 100),
+            "%)")
     message("0 values: ",
-            format(sum(abs(data.mn) < .Machine[["double.eps"]], na.rm = TRUE), big.mark = ","),
+            format(sum(abs(data.mn) < .Machine[["double.eps"]], na.rm = TRUE),
+                   big.mark = ","),
             " (", round(sum(abs(data.mn) < .Machine[["double.eps"]],
-                            na.rm = TRUE) / cumprod(dim(data.mn))[2] * 100), "%)")
+                            na.rm = TRUE) / cumprod(dim(data.mn))[2] * 100),
+            "%)")
     message("min: ", signif(min(data.mn, na.rm = TRUE), 2))
     message("mean: ", signif(mean(data.mn, na.rm = TRUE), 2))
     message("median: ", signif(stats::median(data.mn, na.rm = TRUE), 2))
@@ -336,45 +341,60 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   feat_allna.vl <- apply(data.mn, 2,
                          function(feat.vn) all(is.na(feat.vn)))
   if (sum(feat_allna.vl, na.rm = TRUE)) {
+    warn_set.c <- ifelse(!is.na(set.c) && set.c != "",
+                         paste0(" in the '", set.c, "' dataset"), "")
+    warn_na_var.c <- paste(colnames(data.mn)[feat_allna.vl], collapse = ", ")
     warning("The following feature(s) have NA only",
-            ifelse(!is.na(set.c) && set.c != "", paste0(" in the '", set.c, "' dataset"), ""),
+            warn_set.c,
             ":\n",
-            paste(colnames(data.mn)[feat_allna.vl], collapse = ", "))
+            warn_na_var.c)
     check.l <- FALSE
   }
   
   samp_allna.vl <- apply(data.mn, 1,
                          function(samp.vn) all(is.na(samp.vn)))
   if (sum(samp_allna.vl, na.rm = TRUE)) {
+    warn_set.c <- ifelse(!is.na(set.c) && set.c != "",
+                         paste0(" in the '", set.c, "' dataset"), "")
+    warn_allna.c <- paste(rownames(data.mn)[samp_allna.vl], collapse = ", ")
     warning("The following sample(s) have NA only",
-            ifelse(!is.na(set.c) && set.c != "", paste0(" in the '", set.c, "' dataset"), ""),
+            warn_set.c,
             ":\n",
-            paste(rownames(data.mn)[samp_allna.vl], collapse = ", "))
+            warn_allna.c)
     check.l <- FALSE
   }
   
   feat_zerovar.vl <- apply(data.mn, 2,
-                           function(feat.vn) stats::var(feat.vn, na.rm = TRUE) < .Machine$double.eps)
+                           function(feat.vn)
+                             stats::var(feat.vn, na.rm = TRUE) < .Machine$double.eps)
   if (sum(feat_zerovar.vl, na.rm = TRUE)) {
+    warn_set.c <- ifelse(!is.na(set.c) && set.c != "",
+                         paste0(" in the '", set.c, "' dataset"), "")
+    warn_zerovar_feat.c <- paste(colnames(data.mn)[feat_zerovar.vl], collapse = ", ")
     warning("The following feature(s) have zero variance",
-            ifelse(!is.na(set.c) && set.c != "", paste0(" in the '", set.c, "' dataset"), ""),
+            warn_set.c,
             ":\n",
-            paste(colnames(data.mn)[feat_zerovar.vl], collapse = ", "))
+            warn_zerovar_feat.c)
     check.l <- FALSE
   }
   
   samp_zerovar.vl <- apply(data.mn, 1,
                            function(samp.vn) stats::var(samp.vn, na.rm = TRUE) < .Machine$double.eps)
   if (sum(samp_zerovar.vl, na.rm = TRUE)) {
+    warn_set.c <- ifelse(!is.na(set.c) && set.c != "",
+                         paste0(" in the '", set.c, "' dataset"), "")
+    warn_zerovar_samp.c <- paste(rownames(data.mn)[samp_zerovar.vl], collapse = ", ")
     warning("The following sample(s) have zero variance",
-            ifelse(!is.na(set.c) && set.c != "", paste0(" in the '", set.c, "' dataset"), ""),
+            warn_set.c,
             ":\n",
-            paste(rownames(data.mn)[samp_zerovar.vl], collapse = ", "))
+            warn_zerovar_samp.c)
     check.l <- FALSE
   }
   
   if (!check.l)
-    stop("Please remove the sample(s) and/or feature(s) with NA only or 0 variance by using the 'filtering' method, and apply the 'inspecting' function again on the filtered dataset.")
+    stop("Please remove the sample(s) and/or feature(s) with NA only 
+         or 0 variance by using the 'filtering' method, 
+         and apply the 'inspecting' function again on the filtered dataset.")
   
 }
 
@@ -394,10 +414,11 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                              fig.pdfC = 'none', info.txtC = 'none'))
   
   if (inherits(set.pca, "try-error")) {
+    stop_set.c <- ifelse(set.c != "",
+                         paste0(" for set '", set.c, "'"),
+                         "")
     stop("The PCA could not be computed",
-         ifelse(set.c != "",
-                paste0(" for set '", set.c, "'"),
-                ""),
+         stop_set.c,
          ". Check for the presence of features with a high proportion of NA or a low variance and discard them with the 'filtering' method before starting 'inspecting' again.")
   }
   
@@ -452,14 +473,18 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   
   decile.mn <- t(as.matrix(apply(data.mn,
                               1,
-                              function(x) stats::quantile(x, 0.1 * seq_len(9), na.rm = TRUE))))
+                              function(x) stats::quantile(x, 0.1 * seq_len(9),
+                                                          na.rm = TRUE))))
   
   decile_zscore.mn <- apply(decile.mn, 2, .zscore)
   
-  decile_zscore_max.vn <- apply(decile_zscore.mn, 1, function(samp.vn) samp.vn[which.max(abs(samp.vn))])
+  decile_zscore_max.vn <- apply(decile_zscore.mn, 1,
+                                function(samp.vn)
+                                  samp.vn[which.max(abs(samp.vn))])
   
   samp.df[, "deci_pval"] <- vapply(decile_zscore_max.vn,
-                                   function(zsco.n) 2 * (1 - stats::pnorm(abs(zsco.n))),
+                                   function(zsco.n)
+                                     2 * (1 - stats::pnorm(abs(zsco.n))),
                                    FUN.VALUE = numeric(1))
   
   return(list(samp.df = samp.df,
@@ -486,7 +511,8 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     } else {
       temp.df[, "blank_mean"] <- apply(data.mn[blank.vl, , drop = FALSE],
                                      2,
-                                     function(feat.vn) mean(feat.vn, na.rm = TRUE))
+                                     function(feat.vn)
+                                       mean(feat.vn, na.rm = TRUE))
     }
     
     if (sum(blank.vl) == 1) {
@@ -494,7 +520,8 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
     } else {
       temp.df[, "blank_sd"] <- apply(data.mn[blank.vl, , drop = FALSE],
                                    2,
-                                   function(feat.vn) stats::sd(feat.vn, na.rm = TRUE))
+                                   function(feat.vn)
+                                     stats::sd(feat.vn, na.rm = TRUE))
     }
     
     temp.df[, "blank_CV"] <- temp.df[, "blank_sd"] / temp.df[, "blank_mean"]
@@ -512,14 +539,16 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
       temp.df[, "sample_mean"] <- data.mn[samp.vl, ]
     } else {
       temp.df[, "sample_mean"] <- apply(data.mn[samp.vl, , drop = FALSE], 2,
-                                      function(feat.vn) mean(feat.vn, na.rm = TRUE))
+                                      function(feat.vn)
+                                        mean(feat.vn, na.rm = TRUE))
     }
     
     if (sum(samp.vl) == 1) {
       temp.df[, "sample_sd"] <- rep(0, nrow(feat.df))
     } else {
       temp.df[, "sample_sd"] <- apply(data.mn[samp.vl, , drop = FALSE], 2,
-                                    function(feat.vn) stats::sd(feat.vn, na.rm = TRUE))
+                                    function(feat.vn)
+                                      stats::sd(feat.vn, na.rm = TRUE))
     }
     
     temp.df[, "sample_CV"] <- temp.df[, "sample_sd"] / temp.df[, "sample_mean"]
@@ -542,14 +571,16 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
       temp.df[, "pool_mean"] <- data.mn[pool.vl, ]
     } else {
       temp.df[, "pool_mean"] <- apply(data.mn[pool.vl, , drop = FALSE], 2,
-                                    function(feat.vn) mean(feat.vn, na.rm = TRUE))
+                                    function(feat.vn)
+                                      mean(feat.vn, na.rm = TRUE))
     }
     
     if (sum(pool.vl) == 1) {
       temp.df[, "pool_sd"] <- rep(0, nrow(feat.df))
     } else {
       temp.df[, "pool_sd"] <- apply(data.mn[pool.vl, , drop = FALSE], 2,
-                                  function(feat.vn) stats::sd(feat.vn, na.rm = TRUE))
+                                  function(feat.vn)
+                                    stats::sd(feat.vn, na.rm = TRUE))
     }
     
     feat.df[, "pool_CV"] <- temp.df[, "pool_sd"] / temp.df[, "pool_mean"]
@@ -602,12 +633,14 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
       poolDil_pval.vn <- poolDil_cor.vn <- rep(NA, length(var.vn))
       
       poolDil_cor.vn[var.vl] <- apply(data.mn[pool.vi, var.vl, drop = FALSE], 2,
-                                       function(feat.vn) stats::cor(dilVn, feat.vn))
+                                       function(feat.vn)
+                                         stats::cor(dilVn, feat.vn))
       
       feat.df[, "poolDil_cor"] <- poolDil_cor.vn
       
       poolDil_pval.vn[var.vl] <- apply(data.mn[pool.vi, var.vl, drop = FALSE], 2,
-                                       function(feat.vn) stats::cor.test(dilVn, feat.vn)[["p.value"]])
+                                       function(feat.vn)
+                                         stats::cor.test(dilVn, feat.vn)[["p.value"]])
       
       feat.df[, "poolDil_pval"] <- poolDil_pval.vn
       
@@ -660,16 +693,28 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   ## tit: Title
   
   graphics::par(mar = marLs[["tit"]])
-  graphics::plot(0:1, bty = "n", type = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "")
+  graphics::plot(0:1, bty = "n", type = "n", xaxt = "n",
+                 yaxt = "n", xlab = "", ylab = "")
   graphics::text(1, 0.95, adj = 0, cex = 1.2, labels = title.c)
-  graphics::text(1, 0.75, adj = 0, labels = paste0("NAs: ",
-                                                   round(length(which(is.na(c(data.mn)))) / cumprod(dim(data.mn))[2] * 100), "%"))
-  graphics::text(1, 0.68, adj = 0, labels = paste0("0 values: ",
-                                                   round(sum(abs(data.mn) < .Machine[["double.eps"]], na.rm = TRUE) / cumprod(dim(data.mn))[2] * 100, 2), "%"))
-  graphics::text(1, 0.61, adj = 0, labels = paste0("min: ", signif(min(data.mn, na.rm = TRUE), 2)))
-  graphics::text(1, 0.54, adj = 0, labels = paste0("median: ", signif(stats::median(data.mn, na.rm = TRUE), 2)))
-  graphics::text(1, 0.47, adj = 0, labels = paste0("mean: ", signif(mean(data.mn, na.rm = TRUE), 2)))
-  graphics::text(1, 0.40, adj = 0, labels = paste0("max: ", signif(max(data.mn, na.rm = TRUE), 2)))
+  graphics::text(1, 0.75, adj = 0,
+                 labels = paste0("NAs: ",
+                                 round(length(which(is.na(c(data.mn)))) / cumprod(dim(data.mn))[2] * 100), "%"))
+  graphics::text(1, 0.68, adj = 0,
+                 labels = paste0("0 values: ",
+                                 round(sum(abs(data.mn) < .Machine[["double.eps"]], na.rm = TRUE) / cumprod(dim(data.mn))[2] * 100, 2), "%"))
+  graphics::text(1, 0.61, adj = 0,
+                 labels = paste0("min: ", signif(min(data.mn,
+                                                     na.rm = TRUE), 2)))
+  graphics::text(1, 0.54, adj = 0,
+                 labels = paste0("median: ",
+                                 signif(stats::median(data.mn,
+                                                      na.rm = TRUE), 2)))
+  graphics::text(1, 0.47, adj = 0,
+                 labels = paste0("mean: ",
+                                 signif(mean(data.mn, na.rm = TRUE), 2)))
+  graphics::text(1, 0.40, adj = 0,
+                 labels = paste0("max: ",
+                                 signif(max(data.mn, na.rm = TRUE), 2)))
   if ("sampleType" %in% colnames(samp.df) &&
       "pool" %in% samp.df[, "sampleType"])
     graphics::text(1,
@@ -677,7 +722,8 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                    adj = 0,
                    labels = paste0("CVpool<",
                                    round(pool_cv.n * 100), "%: ",
-                                   round(sum(feat.df[, "pool_CV"] < pool_cv.n, na.rm = TRUE) / ncol(data.mn) * 100),
+                                   round(sum(feat.df[, "pool_CV"] < pool_cv.n,
+                                             na.rm = TRUE) / ncol(data.mn) * 100),
                                    "%"))
   
   ## sca: Color scale
@@ -728,7 +774,8 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   }
   
   if (lenN < length(valVn))
-    stop("The length of in vector must be inferior to the length of the length parameter.")
+    stop("The length of in vector must be inferior 
+         to the length of the length parameter.")
   
   if (length(valVn) < lenN)
     valVn <- seq(from = min(valVn), to = max(valVn),
@@ -741,7 +788,8 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
   for (n in seq_along(preValVn))
     if (min(valVn) < preValVn[n] && preValVn[n] < max(valVn)) {
       preLabVn <- c(preLabVn, preValVn[n])
-      preAtVn <- c(preAtVn, which(abs(valVn - preValVn[n]) == min(abs(valVn - preValVn[n])))[1])
+      preAtVn <- c(preAtVn,
+                   which(abs(valVn - preValVn[n]) == min(abs(valVn - preValVn[n])))[1])
     }
   
   return(list(atVn = preAtVn,
@@ -937,18 +985,23 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                   line = 2,
                   side = 1)
   
-  graphics::mtext(paste0(toupper(substr(sample_intensity.c, 1, 1)), substr(sample_intensity.c, 2, nchar(sample_intensity.c)), " of variable intensities"),
+  graphics::mtext(paste0(toupper(substr(sample_intensity.c, 1, 1)),
+                         substr(sample_intensity.c, 2,
+                                nchar(sample_intensity.c)),
+                         " of variable intensities"),
                   cex = 0.7,
                   line = 2,
                   side = 2)
   
-  if ("batch" %in% colnames(samp.df) && length(unique(samp.df[, "batch"])) > 1) {
+  if ("batch" %in% colnames(samp.df) &&
+      length(unique(samp.df[, "batch"])) > 1) {
     
     graphics::abline(v = cumsum(batch.table) + 0.5,
                      col = "red")
     
     graphics::mtext(names(batch.table),
-                    at = batch.table / 2 + c(0, cumsum(batch.table[-length(batch.table)])),
+                    at = batch.table / 2 + c(0,
+                                             cumsum(batch.table[-length(batch.table)])),
                     cex = 0.7)
     
     for (batC in names(batch.table)) {
@@ -962,7 +1015,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
         batch_sample.vi <- batch_seq.vi
       
       graphics::lines(batch_seq.vi,
-                      .loess(sample_means.vn, batch_sample.vi, batch_seq.vi, loess_span.n),
+                      .loess(sample_means.vn,
+                             batch_sample.vi,
+                             batch_seq.vi,
+                             loess_span.n),
                       col = .sample_palette("sample"))
       
       if ("sampleType" %in% colnames(samp.df) &&
@@ -972,7 +1028,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                                    grep("^pool$", samp.df[, "sampleType"]))
         
         graphics::lines(batch_seq.vi,
-                        .loess(sample_means.vn, batch_pool.vi, batch_seq.vi, loess_span.n),
+                        .loess(sample_means.vn,
+                               batch_pool.vi,
+                               batch_seq.vi,
+                               loess_span.n),
                         col = .sample_palette("pool"))
         
       }
@@ -990,7 +1049,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
       batch_sample.vi <- batch_seq.vi
     
     graphics::lines(batch_seq.vi,
-                    .loess(sample_means.vn, batch_sample.vi, batch_seq.vi, loess_span.n),
+                    .loess(sample_means.vn,
+                           batch_sample.vi,
+                           batch_seq.vi,
+                           loess_span.n),
                     col = .sample_palette("sample"))
     
     if ("sampleType" %in% colnames(samp.df) &&
@@ -1000,7 +1062,10 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                                  grep("^pool$", samp.df[, "sampleType"]))
       
       graphics::lines(batch_seq.vi,
-                      .loess(sample_means.vn, batch_pool.vi, batch_seq.vi, loess_span.n),
+                      .loess(sample_means.vn,
+                             batch_pool.vi,
+                             batch_seq.vi,
+                             loess_span.n),
                       col = .sample_palette("pool"))
       
       
@@ -1116,10 +1181,14 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
                      cex = 0.7,
                      col = sample_color.vc[obsHotVi],
                      labels = rownames(data.mn)[obsHotVi])
-    graphics::text(score_pca.mn[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi), show_pred.vi[1]],
-                     score_pca.mn[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi), show_pred.vi[2]],
-                     col = sample_color.vc[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi)],
-                     labels = sample_label.vc[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi)])
+    graphics::text(score_pca.mn[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi),
+                                show_pred.vi[1]],
+                     score_pca.mn[setdiff(seq_len(nrow(score_pca.mn)), obsHotVi),
+                                  show_pred.vi[2]],
+                     col = sample_color.vc[setdiff(seq_len(nrow(score_pca.mn)),
+                                                   obsHotVi)],
+                     labels = sample_label.vc[setdiff(seq_len(nrow(score_pca.mn)),
+                                                      obsHotVi)])
   } else
     graphics::text(score_pca.mn[, show_pred.vi[1]],
                      score_pca.mn[, show_pred.vi[2]],
@@ -1166,7 +1235,7 @@ setMethod("inspecting", signature(x = "ExpressionSet"),
 .allDigits <- function(string) { ## from the Hmisc package (all.digits)
   k <- length(string)
   result <- logical(k)
-  for (i in seq_len(4)) {
+  for (i in seq_len(k)) {
     st <- string[i]
     ls <- nchar(st)
     ex <- substring(st, seq_len(ls), seq_len(ls))

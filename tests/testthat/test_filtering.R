@@ -52,7 +52,8 @@ testthat::test_that("filtering-mae", {
                            nrow = 2,
                            dimnames = list(NULL, c("metabo", "proteo")))
   
-  testthat::expect_equal(vapply(names(prometis.mae), function(set.c) dim(prometis.mae[[set.c]]),
+  testthat::expect_equal(vapply(names(prometis.mae), 
+                                function(set.c) dim(prometis.mae[[set.c]]),
                                 FUN.VALUE = integer(2)),
                          expect_dims.mn)
   
@@ -60,15 +61,20 @@ testthat::test_that("filtering-mae", {
 
 testthat::test_that("filtering-mset", {
 
-   prometis.mset <- reading(system.file("extdata/prometis", package = "phenomis"), output.c = "set")
+   prometis.mset <- reading(system.file("extdata/prometis", 
+                                        package = "phenomis"), 
+                            output.c = "set")
    
    for (set.c in names(prometis.mset)) {
      eset <- prometis.mset[[set.c]]
      exprs.mn <- Biobase::exprs(eset)
      exprs.mn[exprs.mn < quantile(c(exprs.mn), 0.2)] <- NA
      Biobase::exprs(eset) <- exprs.mn
-     prometis.mset <- MultiDataSet::add_eset(prometis.mset, eset, dataset.type = set.c,
-                                             GRanges = NA, overwrite = TRUE, warnings = FALSE)
+     prometis.mset <- MultiDataSet::add_eset(prometis.mset, eset, 
+                                             dataset.type = set.c,
+                                             GRanges = NA, 
+                                             overwrite = TRUE, 
+                                             warnings = FALSE)
    }
    
    prometis.mset <- filtering(prometis.mset)
@@ -83,15 +89,19 @@ testthat::test_that("filtering-mset", {
 
 testthat::test_that("filtering-mset-gene", {
   
-  prometis.mset <- reading(system.file("extdata/prometis", package = "phenomis"), output.c = "set")
+  prometis.mset <- reading(system.file("extdata/prometis", 
+                                       package = "phenomis"), 
+                           output.c = "set")
   
   for (set.c in names(prometis.mset)) {
     eset <- prometis.mset[[set.c]]
     exprs.mn <- Biobase::exprs(eset)
     exprs.mn[exprs.mn < quantile(c(exprs.mn), 0.2)] <- NA
     Biobase::exprs(eset) <- exprs.mn
-    prometis.mset <- MultiDataSet::add_eset(prometis.mset, eset, dataset.type = set.c,
-                                            GRanges = NA, overwrite = TRUE, warnings = FALSE)
+    prometis.mset <- MultiDataSet::add_eset(prometis.mset, eset, 
+                                            dataset.type = set.c,
+                                            GRanges = NA, overwrite = TRUE, 
+                                            warnings = FALSE)
   }
   
   prometis.mset <- filtering(prometis.mset, class.c = "gene")

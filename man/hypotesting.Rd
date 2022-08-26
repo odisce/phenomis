@@ -94,58 +94,64 @@ hypotesting(
 )
 }
 \arguments{
-\item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}}
+\item{x}{An S4 object of class \code{SummarizedExperiment} or
+\code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet}
+are still supported)}
 
-\item{test.c}{Character: One of the 9 available hypothesis tests can be selected
-(either 'ttest', 'limma', 'wilcoxon', 'anova', 'kruskal', 'pearson', 'spearman',
-'limma2ways', 'limma2waysInter', 'anova2ways', 'anova2waysInter')}
+\item{test.c}{character(1): One of the 9 available hypothesis tests can be
+selected (either 'ttest', 'limma', 'wilcoxon', 'anova', 'kruskal', 'pearson',
+'spearman', limma2ways', 'limma2waysInter', 'anova2ways', 'anova2waysInter')}
 
-\item{factor_names.vc}{(Vector of) character(s): Factor(s) of interest (up to two),
-i.e. name(s) of a column from the pData(x)}
+\item{factor_names.vc}{(Vector of) character(s): Factor(s) of interest
+(up to two), i.e. name(s) of a column from the pData(x)}
 
-\item{factor_levels.ls}{List: for each factor of interest (up to two), the levels
-of the factor can be specified (i.e. re-ordered) by including a character vector
-with those levels in the list; by default (no specification), the two vectors
-are set to "default".}
+\item{factor_levels.ls}{List: for each factor of interest (up to two),
+the levels of the factor can be specified (i.e. re-ordered) by including a
+character vector with those levels in the list; by default
+(no specification), the two vectors are set to "default".}
 
-\item{adjust.c}{Character: Name of the method for correction of multiple testing
-(the p.adjust function is used)}
+\item{adjust.c}{character(1): Name of the method for correction of multiple
+testing (the p.adjust function is used)}
 
-\item{adjust_thresh.n}{Numeric: Threshold for (corrected) p-values}
+\item{adjust_thresh.n}{numeric(1): Threshold for (corrected) p-values}
 
-\item{signif_maxprint.i}{Interger: Maximum number of significant feature to display
-on the screen (by default, 'NA', all significant features are displayed)}
+\item{signif_maxprint.i}{integer(1): Maximum number of significant feature to
+display on the screen (by default, 'NA', all significant features are
+displayed)}
 
-\item{title.c}{Character: Title of the graphics}
+\item{title.c}{character(1): Title of the graphics}
 
-\item{display_signif.l}{Character: In case of two sample tests (or
-correlation test), should individual boxplots (or scatterplots) of significant
-features be shown?}
+\item{display_signif.l}{logical(1): In case of two sample tests (or
+correlation test), should individual boxplots (or scatterplots) of 
+significant features be shown?}
 
-\item{prefix.c}{Character: prefix to be added to the supplementary columns from
-the variableMetadata to prevent overwriting of pre-existing columns with identical
-names [default: ""]}
+\item{prefix.c}{character(1): prefix to be added to the supplementary columns 
+from the variableMetadata to prevent overwriting of pre-existing columns with
+identical names [default: ""]}
 
-\item{figure.c}{Character: File name with '.pdf' extension for the figure (for
-venn diagrams, e.g. in the 'anova2ways' test, the extension will be internally
-changed to '.tiff' for compatibility with the VennDiagram package); if
-'interactive' (default), figures will be displayed interactively; if 'none',
-no figure will be generated}
+\item{figure.c}{character(1): File name with '.pdf' extension for the figure
+(for venn diagrams, e.g. in the 'anova2ways' test, the extension will be
+internally changed to '.tiff' for compatibility with the 
+VennDiagram package); if interactive' (default), figures will be displayed 
+interactively; if 'none', no figure will be generated}
 
-\item{report.c}{Character: File name with '.txt' extension for the printed
+\item{report.c}{character(1): File name with '.txt' extension for the printed
 results (call to sink()'); if 'interactive' (default), messages will be
 printed on the screen; if 'none', no verbose will be generated}
 }
 \value{
-\code{SummarizedExperiment} or \code{MultiAssayExperiment} including the difference in
-means/medians or correlations and the adjusted p-values in feature metadata
+\code{SummarizedExperiment} or \code{MultiAssayExperiment} 
+(or \code{ExpressionSet} and \code{MultiDataSet}) including the difference 
+in means/medians or correlations and the adjusted p-values in feature 
+metadata
 }
 \description{
-The hypotesting method is a wrapper of the main R functions for hypothesis testing
-and corrections for multiple testing. The list of available tests includes 
-two sample tests (t-test and Wilcoxon rank test, but also the limma test), 
-analysis of variance (for one and two factors) and Kruskal-Wallis rank test, 
-and correlation tests (by using either the pearson or the spearman correlation).
+The hypotesting method is a wrapper of the main R functions for
+hypothesis testing and corrections for multiple testing. The list of
+available tests includes two sample tests (t-test and Wilcoxon rank test,
+but also the limma test), analysis of variance (for one and two factors)
+and Kruskal-Wallis rank test, and correlation tests (by using either the
+pearson or the spearman correlation).
 }
 \examples{
 sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
@@ -176,6 +182,7 @@ prometis.mae <- hypotesting(prometis.mae, "limma", "gene")
 
 # MultiDataSet
 
-prometis.mset <- reading(system.file("extdata/prometis", package="phenomis"), output.c = "set")
+prometis.mset <- reading(system.file("extdata/prometis", package="phenomis"),
+                         output.c = "set")
 prometis.mset <- hypotesting(prometis.mset, "limma", "gene")
 }

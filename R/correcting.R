@@ -14,28 +14,32 @@ setMethod("correcting", signature(x = "MultiAssayExperiment"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (!(length(method.vc) %in% c(1, length(x)))) {
-              stop("'The length of 'method.vc' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'method.vc' should either be 1
+                   or equal to the number of datasets")
             } else if (length(method.vc) == 1) {
               method.vc <- rep(method.vc, length(x))
             }
             names(method.vc) <- names(x)
             
             if (!(length(reference.vc) %in% c(1, length(x)))) {
-              stop("'The length of 'reference.vc' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'reference.vc' should either be 1
+                   or equal to the number of datasets")
             } else if (length(reference.vc) == 1) {
               reference.vc <- rep(reference.vc, length(x))
             }
             names(reference.vc) <- names(x)
             
             if (!(length(loess_span.vn) %in% c(1, length(x)))) {
-              stop("'The length of 'loess_span.vn' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'loess_span.vn' should either be 1
+                   or equal to the number of datasets")
             } else if (length(loess_span.vn) == 1) {
               loess_span.vn <- rep(loess_span.vn, length(x))
             }
             names(loess_span.vn) <- names(x)
             
             if (!(length(serrf_corvar.vi) %in% c(1, length(x)))) {
-              stop("'The length of 'serrf_corvar.vi' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'serrf_corvar.vi' should either be 1
+                   or equal to the number of datasets")
             } else if (length(serrf_corvar.vi) == 1) {
               serrf_corvar.vi <- rep(serrf_corvar.vi, length(x))
             }
@@ -103,16 +107,20 @@ setMethod("correcting", signature(x = "SummarizedExperiment"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (length(method.vc) != 1)
-              stop("'method.vc' should be of length 1 for an 'SummarizedExperiment'")
+              stop("'method.vc' should be of length 1
+                   for an 'SummarizedExperiment'")
             
             if (length(reference.vc) != 1)
-              stop("'reference.vc' should be of length 1 for an 'SummarizedExperiment'")
+              stop("'reference.vc' should be of length 1
+                   for an 'SummarizedExperiment'")
             
             if (length(loess_span.vn) != 1)
-              stop("'loess_span.vn' should be of length 1 for an 'SummarizedExperiment'")
+              stop("'loess_span.vn' should be of length 1
+                   for an 'SummarizedExperiment'")
             
             if (length(serrf_corvar.vi) != 1)
-              stop("'serrf_corvar.vi' should be of length 1 for an 'SummarizedExperiment'")
+              stop("'serrf_corvar.vi' should be of length 1
+                   for an 'SummarizedExperiment'")
             
             if (!(report.c %in% c("none", "interactive")))
               sink(report.c, append = TRUE)
@@ -158,28 +166,32 @@ setMethod("correcting", signature(x = "MultiDataSet"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (!(length(method.vc) %in% c(1, length(x)))) {
-              stop("'The length of 'method.vc' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'method.vc' should either be 1
+                   or equal to the number of datasets")
             } else if (length(method.vc) == 1) {
               method.vc <- rep(method.vc, length(x))
             }
             names(method.vc) <- names(x)
             
             if (!(length(reference.vc) %in% c(1, length(x)))) {
-              stop("'The length of 'reference.vc' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'reference.vc' should either be 1
+                   or equal to the number of datasets")
             } else if (length(reference.vc) == 1) {
               reference.vc <- rep(reference.vc, length(x))
             }
             names(reference.vc) <- names(x)
             
             if (!(length(loess_span.vn) %in% c(1, length(x)))) {
-              stop("'The length of 'loess_span.vn' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'loess_span.vn' should either be 1
+                   or equal to the number of datasets")
             } else if (length(loess_span.vn) == 1) {
               loess_span.vn <- rep(loess_span.vn, length(x))
             }
             names(loess_span.vn) <- names(x)
             
             if (!(length(serrf_corvar.vi) %in% c(1, length(x)))) {
-              stop("'The length of 'serrf_corvar.vi' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'serrf_corvar.vi' should either be 1 
+                  or equal to the number of datasets")
             } else if (length(serrf_corvar.vi) == 1) {
               serrf_corvar.vi <- rep(serrf_corvar.vi, length(x))
             }
@@ -253,16 +265,20 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (length(method.vc) != 1)
-              stop("'method.vc' should be of length 1 for an 'ExpressionSet'")
+              stop("'method.vc' should be of length 1
+                   for an 'ExpressionSet'")
             
             if (length(reference.vc) != 1)
-              stop("'reference.vc' should be of length 1 for an 'ExpressionSet'")
+              stop("'reference.vc' should be of length 1
+                   for an 'ExpressionSet'")
             
             if (length(loess_span.vn) != 1)
-              stop("'loess_span.vn' should be of length 1 for an 'ExpressionSet'")
+              stop("'loess_span.vn' should be of length 1
+                   for an 'ExpressionSet'")
             
             if (length(serrf_corvar.vi) != 1)
-              stop("'serrf_corvar.vi' should be of length 1 for an 'ExpressionSet'")
+              stop("'serrf_corvar.vi' should be of length 1
+                   for an 'ExpressionSet'")
             
             if (!(report.c %in% c("none", "interactive")))
               sink(report.c, append = TRUE)
@@ -291,8 +307,10 @@ setMethod("correcting", signature(x = "ExpressionSet"),
             
           })
 
-.correcting <- function(data.mn, ## data (matrix of numerics; samples x variables)
-                        samp.df, ## sample metadata (data frame; samples x sample metadata)
+.correcting <- function(data.mn, ## data (matrix of numerics;
+                                 ##       samples x variables)
+                        samp.df, ## sample metadata (data frame;
+                                 ##       samples x sample metadata)
                         method.c,
                         reference.c,
                         loess_span.n,
@@ -307,7 +325,8 @@ setMethod("correcting", signature(x = "ExpressionSet"),
     stop("'reference' should be set to 'pool' for the serrf method.")
   
   if (sum(grepl(reference.c, samp.df[, "sampleType"])) == 0)
-    stop("No '", reference.c, "' reference sample type found in the 'sampleType' column of the sampleMetadata.")
+    stop("No '", reference.c, "' reference sample type found
+         in the 'sampleType' column of the sampleMetadata.")
   
   ref_data.mn <- data.mn[samp.df[, "sampleType"] == reference.c, ]
   ref_samp.df <- samp.df[samp.df[, "sampleType"] == reference.c, ]
@@ -320,7 +339,8 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                                        FUN.VALUE = logical(1))))
   
   if (sum(ref_nazeros.vl)) {
-    message(sum(ref_nazeros.vl), " features with 'NA' or 0 values in all reference samples removed from the data.")
+    message(sum(ref_nazeros.vl), " features with 'NA' or 0 values
+            in all reference samples removed from the data.")
     data.mn <- ref_data.mn[, !ref_nazeros.vl]
   }
   
@@ -412,7 +432,8 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   message("Correction method: ", method.c)
   message("Reference observations: ", reference.c)
   
-  ## computing means of all pools (or samples) for each variable (medians used in Fan et al., 2019)
+  ## computing means of all pools (or samples) for each variable
+  ## (medians used in Fan et al., 2019)
   
   ref_mean.vn <- apply(data.mn[samp.df[, "sampleType"] == reference.c, ], 2,
                        function(feat.vn) {
@@ -436,10 +457,12 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   batch_samp.ls <- split(as.data.frame(samp.df),
                          f = samp.df[, "batch"])
   
-  ## checking extrapolation: are there pools at the first and last observations of each batch
+  ## checking extrapolation: are there pools at the first and
+  ## last observations of each batch
   
   pool_extra.ml <- matrix(FALSE, nrow = 2, ncol = length(batch_data.ls),
-                          dimnames = list(c("first", "last"), names(batch_data.ls)))
+                          dimnames = list(c("first", "last"),
+                                          names(batch_data.ls)))
   
   for (batch.c in names(batch_samp.ls)) {
     batch_sampleType.vc <- batch_samp.ls[[batch.c]][, "sampleType"]
@@ -448,12 +471,18 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   }
   
   if (!all(c(pool_extra.ml))) {
-    warnings("Reference samples are missing at the first and/or last position of the following batches:\n")
+    warnings("Reference samples are missing at the first and/or
+             last position of the following batches:\n")
     pool_extra_batch.vi <- which(!apply(pool_extra.ml, 2, all))
-    for (i in seq_along(pool_extra_batch.vi))
+    for (i in seq_along(pool_extra_batch.vi)) {
+      message_missing.c <- paste(rownames(pool_extra.ml)[!pool_extra.ml[,
+                                                                        pool_extra_batch.vi[i]]],
+                                 collapse = ", ")
       message(names(pool_extra_batch.vi)[i], ": ",
-              paste(rownames(pool_extra.ml)[!pool_extra.ml[, pool_extra_batch.vi[i]]], collapse = ", "))
-    message("Extrapolating loess fits for these batches may result in inaccurate modeling!")
+              message_missing.c)
+    }
+    message("Extrapolating loess fits for these batches may result
+            in inaccurate modeling!")
   }
   
   ## normalizing
@@ -477,7 +506,8 @@ setMethod("correcting", signature(x = "ExpressionSet"),
       
       if (length(batch_ref.vi) < 5)
         message("less than 5 '", reference.c,
-                "'; linear regression will be performed instead of loess regression for this batch.")
+                "'; linear regression will be performed instead of
+                loess regression for this batch.")
       
       batch_pred.mn <- .loess_pred(data.mn = batch_data.mn,
                                    ref.vi = batch_ref.vi,
@@ -511,7 +541,8 @@ setMethod("correcting", signature(x = "ExpressionSet"),
   
   
   if (method.c == "loess")
-    normalized.mn <- sweep(normalized.mn, MARGIN = 2, STATS = ref_mean.vn, FUN = "*")
+    normalized.mn <- sweep(normalized.mn, MARGIN = 2, STATS = ref_mean.vn,
+                           FUN = "*")
   
   
   
@@ -568,91 +599,16 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                         ref_mean.vn,
                         ref_median.vn,
                         pred_median.vn) {
-  # Fan et al. (2019). Systematic Error Removal Using Random Forest for Normalizing Large-Scale Untargeted Lipidomics Data, Anal. Chem., vol. 91, nᵒ 5, p. 3590‑3596, doi: 10.1021/acs.analchem.8b05592.
-  
-  if (FALSE) {
-    
-    se <- phenomis::reading("//fouet/spi/scidospace/studies/fan2019_serrf/input")
-    # class: SummarizedExperiment 
-    # dim: 268 1299 
-    # metadata(3): experimentData annotation protocolData
-    # assays(1): exprs
-    # rownames(268): 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267 CSH_negESI
-    # #512_268
-    # rowData names(1): name
-    # colnames(1299): QC000_1 sample01_2 ... MG007524_1298 QC027_1299
-    # colData names(4): label injectionOrder sampleType batch
-    data.mn <- t(SummarizedExperiment::assay(se))
-    samp.df <- as.data.frame(SummarizedExperiment::colData(se))
-    table(samp.df[, "sampleType"])
-    # qc   sample validate 
-    # 125     1162       12 
-    ref.vi <- which(samp.df[, "sampleType"] == "qc")
-    all.vi <- which(samp.df[, "sampleType"] %in% c("qc", "sample"))
-    pred.vi <- setdiff(all.vi, ref.vi)
-    
-    ref_mean.vn <- apply(data.mn[ref.vi, ], 2,
-                         function(feat.vn) {
-                           mean(feat.vn, na.rm = TRUE)
-                         })
-    ref_median.vn <- apply(data.mn[ref.vi, ], 2,
-                           function(feat.vn) {
-                             median(feat.vn, na.rm = TRUE)
-                           })
-    pred_median.vn <- apply(data.mn[pred.vi, ], 2,
-                            function(feat.vn) {
-                              median(feat.vn, na.rm = TRUE)
-                            })
-    
-    RSD <- function(y.vn) {
-      out.vn <- grDevices::boxplot.stats(y.vn)$out
-      y.vn <- y.vn[!y.vn %in% out.vn]
-      sd(y.vn, na.rm = TRUE) / mean(y.vn, na.rm = TRUE)
-    }
-    rsd_ref.vn <- apply(data.mn[ref.vi, ], 2, RSD)
-    median(rsd_ref.vn, na.rm = TRUE)
-    # 0.2648957
-    sum(rsd_ref.vn < 0.2)
-    # 20
-    
-    val.vi <- which(samp.df[, "sampleType"] == "validate")
-    rsd_val.vn <- apply(data.mn[val.vi, ], 2, RSD)
-    median(rsd_val.vn, na.rm = TRUE)
-    # 0.2712883
-    sum(rsd_val.vn < 0.2)
-    # 48
-    
-    table(samp.df[, "batch"])
-    # A   B   C   D 
-    # 335 336 335 293
-    
-    data.mn <- data.mn[samp.df[, "batch"] == "A" &
-                         samp.df[, "sampleType"] %in% c("qc", "sample"), ]
-    samp.df <- samp.df[samp.df[, "batch"] == "A" &
-                         samp.df[, "sampleType"] %in% c("qc", "sample"), ]
-    ref.vi <- which(samp.df[, "sampleType"] == "qc")
-    all.vi <- which(samp.df[, "sampleType"] %in% c("qc", "sample"))
-    
-  }
+  # Fan et al. (2019). Systematic Error Removal Using Random Forest for
+  # Normalizing Large-Scale Untargeted Lipidomics Data,
+  # Anal. Chem., vol. 91, nᵒ 5, p. 3590‑3596, doi: 10.1021/acs.analchem.8b05592.
   
   pred.vi <- setdiff(all.vi, ref.vi)
   
   ref.mn <- data.mn[ref.vi, ]
-  # dim  class    mode typeof   size NAs min    mean  median     max
-  # 32 x 268 matrix numeric double 0.1 Mb   0  54 1.5e+04 2.6e+03 5.2e+05
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
-  # QC000_1                                      167879                 75578 ...                4505
-  # QC001_13                                     176061                 80020 ...                4428
-  # ...                                             ...                   ... ...                 ...
   pred.mn <- data.mn[pred.vi, ]
-  # dim  class    mode typeof   size NAs min    mean median     max
-  # 300 x 268 matrix numeric double 0.7 Mb   0  33 1.6e+04  3e+03 1.3e+06
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
-  # GB001617_3                                      158256                 76082 ...                4775
-  # GB001333_4                                      164492                 74334 ...               16860
-  # ...                                                ...                   ... ...                 ...
-  
-  ## Replacing 0 and NA values
+
+  # Replacing 0 and NA values
   
   data.mn <- apply(data.mn, 2,
                    function(feat.vn) {
@@ -667,49 +623,20 @@ setMethod("correcting", signature(x = "ExpressionSet"),
                      return(feat.vn)
                    })
   
+  # Scaling
+  
   ref_scale.mn <- scale(ref.mn)
-  # dim  class    mode typeof   size NAs  min    mean median max
-  # 32 x 268 matrix numeric double 0.1 Mb   0 -3.5 1.2e-19 -0.046 5.3
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
-  # QC000_1                           -1.90451172338088     0.132135427289209 ...  -0.696518422434394
-  # QC001_13                          -1.42072719055146      1.27662742513196 ...  -0.895800980827142
-  # ...                                             ...                   ... ...                 ...
-  
   pred_scale.mn <- scale(pred.mn)
-  # dim  class    mode typeof   size NAs min     mean median max
-  # 300 x 268 matrix numeric double 0.7 Mb   0  -6 -1.9e-18  -0.14  14
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
-  # GB001617_3                           -1.77042066525214   -0.0171287004585374 ...  -0.953897043390401
-  # GB001333_4                           -1.53185850924212    -0.417106013566082 ...    2.67059620913055
-  # ...                                                ...                   ... ...                 ...
- 
-  # https://github.com/slfan2013/Shiny-SERRF/blob/master/app.R (lines 429-434)
-  # if(is.null(dim(target[,batch.[!sampleType.=='qc']%in%current_batch]))){ # !!!
-  #   target_scale = scale(target[,batch.[!sampleType.=='qc']%in%current_batch])#!!!
-  # }else{
-  #   # target_scale = scale(target[,batch.[!sampleType.=='qc']%in%current_batch])#!!!
-  #   target_scale = t(apply(target[,batch.[!sampleType.=='qc']%in%current_batch],1,scale))
-  # }
   
-   
+  # Correlation matrices
+
   ref_cor.mn <- cor(ref_scale.mn, method = "spearman")
-  # dim  class    mode typeof   size NAs   min mean median max
-  # 268 x 268 matrix numeric double 0.6 Mb   0 -0.83 0.32   0.35   1
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ...
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1                                         1    -0.237536656891496 ...
-  # 1_ISTD CUDA [M-H]- _2                                            -0.237536656891496                     1 ...
-  # ...                                                                             ...                   ... ...
   pred_cor.mn <- cor(pred_scale.mn, method = "spearman")
-  # dim  class    mode typeof   size NAs   min mean median max
-  # 268 x 268 matrix numeric double 0.6 Mb   0 -0.52 0.24   0.22   1
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ...
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1                                         1     -0.15484466100001 ...
-  # 1_ISTD CUDA [M-H]- _2                                             -0.15484466100001                     1 ...
-  # ...                                                                             ...                   ... ...
   
+  # Normalizing (each j variable successively)
+ 
   serrf.mn <- data.mn
   
-  # normalizing each j variable successively
   for (j in seq_len(ncol(data.mn))) {
     
     # computing the corvar.i closest features to j
@@ -721,7 +648,8 @@ setMethod("correcting", signature(x = "ExpressionSet"),
     corvar_j.vi <- integer()
     length.i <- corvar.i
     while (length(corvar_j.vi) < corvar.i) {
-      corvar_j.vi <- intersect(ref_cor_ord.vi[seq_len(length.i)], pred_cor_ord.vi[seq_len(length.i)])
+      corvar_j.vi <- intersect(ref_cor_ord.vi[seq_len(length.i)],
+                               pred_cor_ord.vi[seq_len(length.i)])
       corvar_j.vi <- corvar_j.vi[corvar_j.vi != j]
       length.i <- length.i + 1
     }
@@ -730,61 +658,21 @@ setMethod("correcting", signature(x = "ExpressionSet"),
     
     # restricting to these features
     train_x.mn <- ref_scale.mn[, corvar_j.vi, drop = FALSE] # train_data_x
-    # dim  class    mode typeof size NAs  min     mean median max
-    # 32 x 10 matrix numeric double 0 Mb   0 -2.5 -2.3e-19 -0.022 3.1
-    # CSH_negESI #310_223 CSH_negESI #253_207 ... CSH_negESI #308_221 CSH_negESI #056_165
-    # QC000_1     -1.81083581640008   -1.71031527622648 ...  -0.396876886946608   -1.19774162024675
-    # QC001_13   -0.994798098720113   -1.26326466164329 ...  -0.174995307501646   0.286638287385274
-    # ...                       ...                 ... ...                 ...                 ...    
-    
-    # https://github.com/slfan2013/Shiny-SERRF/blob/master/app.R (lines 508-512)
-    # if(is.null(dim(e_current_batch[sel_var, !train.index_current_batch=='qc']))){
-    #   test_data_x = t(scale(e_current_batch[sel_var, !train.index_current_batch=='qc']))
-    # }else{
-    #   test_data_x = apply(e_current_batch[sel_var, !train.index_current_batch=='qc'],1,scale)
-    # }
-    
     train_y.vn <- scale(ref.mn[, j], scale = FALSE) # train_data_y
-    # [,1]
-    # QC000_1  -32210.031
-    # QC001_13 -24028.031
-    # QC002_24  -7971.031
-    # ...
-    
-    ## https://github.com/slfan2013/Shiny-SERRF/blob/master/app.R (lines 492-503)
-    # factor = sd(e_current_batch[j, train.index_current_batch=='qc'])/sd(e_current_batch[j, !train.index_current_batch=='qc'])
-    # if(factor==0 | is.nan(factor) | factor<1 | is.na(factor)){#!!!
-    #   train_data_y = scale(e_current_batch[j, train.index_current_batch=='qc'],scale=F) 
-    # }else{
-    #   # print(j)
-    #   # print("!!")
-    #   if(sum(train.index_current_batch=='qc')*2>=sum(!train.index_current_batch=='qc')){
-    #     train_data_y = (e_current_batch[j, train.index_current_batch=='qc'] - mean(e_current_batch[j, train.index_current_batch=='qc']))/factor ### need to be careful with outlier!
-    #   }else{
-    #     train_data_y = scale(e_current_batch[j, train.index_current_batch=='qc'],scale=F)
-    #   }
-    # }
-    
     test_x.mn <- pred_scale.mn[, corvar_j.vi, drop = FALSE] # test_data_x
-    # dim  class    mode typeof size NAs min    mean median max
-    # 300 x 10 matrix numeric double 0 Mb   0  -6 1.1e-16  0.024 7.9
-    # CSH_negESI #310_223 CSH_negESI #253_207 ... CSH_negESI #308_221
-    # GB001617_3     -1.69911986893783  -0.328240246310566 ...   -1.26045383089589
-    # GB001333_4     -2.05491369499401   0.250014045552577 ...  -0.937513831509041
-    # ...                          ...                 ... ...                 ...    
-    
+
     # discarding the features with NA only
     missing.vl <- apply(rbind(train_x.mn,
-                              test_x.mn), 2, function(feat.vn) sum(is.na(feat.vn)) > 0)
+                              test_x.mn), 2,
+                        function(feat.vn) sum(is.na(feat.vn)) > 0)
     
     stopifnot(sum(!missing.vl) > 0)
     
     train_x.mn <- train_x.mn[, !missing.vl, drop = FALSE]
     test_x.mn <- test_x.mn[, !missing.vl, drop = FALSE]
     
-    if(!is.matrix(test_x.mn)){
-      test_x.mn = t(test_x.mn)
-    }
+    if (!is.matrix(test_x.mn))
+      test_x.mn <- t(test_x.mn)
     
     # random forest prediction
     train.df <- data.frame(y = train_y.vn, train_x.mn)
@@ -795,65 +683,24 @@ setMethod("correcting", signature(x = "ExpressionSet"),
       
     } else {
       
-      
-      colnames(train.df) <- c("y", paste0("V",seq_len(ncol(train.df)-1)))
-      # y      V1 ...      V9     V10
-      # numeric numeric ... numeric numeric
-      # nRow nCol size NAs
-      # 32   11 0 Mb   0
-      # y                 V1 ...                 V9               V10
-      # QC000_1   -32210.03125  -1.81083581640008 ... -0.396876886946608 -1.19774162024675
-      # QC001_13  -24028.03125 -0.994798098720113 ... -0.174995307501646 0.286638287385274
-      # ...                ...                ... ...                ...               ...    
-      
+      colnames(train.df) <- c("y", paste0("V", seq_len(ncol(train.df) - 1)))
+
       model.rf <- ranger::ranger(y~., data = train.df,
                                  seed = 1)
-      # Ranger result
-      # 
-      # Call:
-      #   ranger::ranger(y ~ ., data = train.df, seed = 123) 
-      # 
-      # Type:                             Regression 
-      # Number of trees:                  500 
-      # Sample size:                      32 
-      # Number of independent variables:  10 
-      # Mtry:                             3 
-      # Target node size:                 5 
-      # Variable importance mode:         none 
-      # Splitrule:                        variance 
-      # OOB prediction error (MSE):       32501847 
-      # R squared (OOB):                  0.88637     
-      
+
       # predictions
       test.df <- data.frame(test_x.mn)
       colnames(test.df) <- colnames(train.df)[-1]
-      # V1      V2 ...      V9     V10
-      # numeric numeric ... numeric numeric
-      # nRow nCol size NAs
-      # 300   10 0 Mb   0
-      # V1                 V2 ...                 V9                  V10
-      # GB001617_3   -1.69911986893783 -0.328240246310566 ...  -1.26045383089589    -1.21241783824721
-      # GB001333_4   -2.05491369499401  0.250014045552577 ... -0.937513831509041 -0.00517607160025233
-      # ...                        ...                ... ...                ...                  ...    
-      
+
       serrf_refj.vn <- data.mn[ref.vi, j] / (predict(model.rf, data = train.df)[["predictions"]] + attributes(ref_scale.mn)[["scaled:center"]][j]) * ref_mean.vn[j]
-      # QC000_1 QC001_13 QC002_24 QC003_35 QC004_46 QC005_57  ...
-      # 222577.9 227054.4 235039.4 230702.6 231319.2 232316.5 ...
       serrf_prej.vn <- data.mn[pred.vi, j] / (predict(model.rf, data = test.df)[["predictions"]] + attributes(pred_scale.mn)[["scaled:center"]][j]) * pred_median.vn[j]
-      # GB001617_3 GB001333_4 GB001191_5 GB001827_6 GB001722_7 GB001468_8 ...
-      # 181208.1   190537.0   176214.0   169492.8   154464.9   207938.8   ...
-      serrf_prej.vn[serrf_prej.vn < 0] <- data.mn[pred.vi, j][serrf_prej.vn < 0]
+       serrf_prej.vn[serrf_prej.vn < 0] <- data.mn[pred.vi, j][serrf_prej.vn < 0]
       
       serrf_refj.vn <- serrf_refj.vn / median(serrf_refj.vn, na.rm = TRUE) * ref_median.vn[j]
-      # QC000_1 QC001_13 QC002_24 QC003_35 QC004_46 QC005_57 
-      # 198455.2 202446.6 209566.1 205699.4 206249.2 207138.3 
       serrf_prej.vn <- serrf_prej.vn / median(serrf_prej.vn, na.rm = TRUE) * pred_median.vn[j]
-      # GB001617_3 GB001333_4 GB001191_5 GB001827_6 GB001722_7 GB001468_8 
-      # 181525.7   190871.0   176522.9   169789.9   154735.6   208303.3 
-      
+
       serrf.mn[ref.vi, j] <- serrf_refj.vn
       serrf.mn[pred.vi, j] <- serrf_prej.vn
-      
       
       infinite.vl <- !is.finite(serrf.mn[, j])
       if (sum(infinite.vl, na.rm = TRUE)) {
@@ -862,26 +709,14 @@ setMethod("correcting", signature(x = "ExpressionSet"),
       }
       
       out.vn <- grDevices::boxplot.stats(serrf.mn[, j], coef = 3)$out
-      # GB001671_44 GB001071_45 
-      # 125606.8    131423.6       
-      
+     
       serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] %in% out.vn] <- (data.mn[pred.vi, j] - ((predict(model.rf, data = test.df)[["predictions"]] + attributes(pred_scale.mn)[["scaled:center"]][j]) - pred_median.vn[j]))[serrf.mn[pred.vi, j] %in% out.vn]
-      # GB001671_44 GB001071_45 
-      # 138052.1    144032.6 
-      serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0] <- data.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0]
+     serrf.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0] <- data.mn[pred.vi, j][serrf.mn[pred.vi, j] < 0]
       
     } # else line 730
     
   } # for j line 669
-  # dim  class    mode typeof   size NAs min    mean  median     max
-  # 332 x 268 matrix numeric double 0.7 Mb   0  12 1.5e+04 2.8e+03 1.2e+06
-  # 1_ISTD Ceramide (d18:1/17:0) [M+HCOO]- _1 1_ISTD CUDA [M-H]- _2 ... CSH_negESI #511_267
-  # QC000_1                               198455.191764912      78483.1481600026 ...    3323.61798375818
-  # GB001617_3                            181525.708111505      83018.0677372365 ...    3566.84739188515
-  # ...                                                ...                   ... ...                 ...
-  # GB004332_334                          252818.668012687      83761.1518829466 ...    2895.39117668156
-  # QC031_335                             206936.414154495      77197.8876432423 ...    3289.95247381775
-  
+
   return(serrf.mn)
   
 }

@@ -8,7 +8,8 @@ setMethod("normalizing", signature(x = "MultiAssayExperiment"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (!(length(method.vc) %in% c(1, length(x)))) {
-              stop("'The length of 'method.vc' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'method.vc' should either be 1 
+                   or equal to the number of datasets")
             } else if (length(method.vc) == 1) {
               method.vc <- rep(method.vc, length(x))
             }
@@ -52,7 +53,8 @@ setMethod("normalizing", signature(x = "SummarizedExperiment"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (length(method.vc) != 1) {
-              stop("'method.vc' should be of length 1 for an 'SummarizedExperiment'")
+              stop("'method.vc' should be of length 1 for 
+                   a 'SummarizedExperiment'")
             } else
               method.c <- method.vc
             
@@ -97,7 +99,8 @@ setMethod("normalizing", signature(x = "MultiDataSet"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (!(length(method.vc) %in% c(1, length(x)))) {
-              stop("'The length of 'method.vc' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'method.vc' should either be 1 
+                   or equal to the number of datasets")
             } else if (length(method.vc) == 1) {
               method.vc <- rep(method.vc, length(x))
             }
@@ -148,7 +151,8 @@ setMethod("normalizing", signature(x = "ExpressionSet"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (length(method.vc) != 1) {
-              stop("'method.vc' should be of length 1 for an 'SummarizedExperiment'")
+              stop("'method.vc' should be of length 1 
+                   for a 'SummarizedExperiment'")
             } else
               method.c <- method.vc
             

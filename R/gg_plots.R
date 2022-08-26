@@ -8,8 +8,10 @@
 #' @param title.c Character: plot title
 #' @param xlab.c Character: x label
 #' @param ylab.c Character: y label
-#' @param row_levels.vc Vector of characters: levels of rownames (default: NA: alphabetical order will be used)
-#' @param col_levels.vc Vector of characters: levels of colnames (default: NA: alphabetical order will be used)
+#' @param row_levels.vc Vector of characters: levels of rownames (default: NA: 
+#' alphabetical order will be used)
+#' @param col_levels.vc Vector of characters: levels of colnames (default: NA: 
+#' alphabetical order will be used)
 #' @param palette.vc Character: either the name of an RColorBrewer palette
 #' (default: 'Set1'; 'Paired' can be useful for parallel plotting) or a vector
 #' manually defining the colors
@@ -21,9 +23,9 @@
 #' @param cex_bar.i Integer: size of bar value text (default: 10)
 #' @param cex_title.i Integer: size of title text (default: 28)
 #' @param bar_just.n Numeric: adjustment of bar value text (default : 0.9)
-
 #' @param figure.c Character: either 'interactive' for interactive display,
-#' 'my_barplot.pdf' for figure saving (only the extension matters), or 'none' to prevent plotting
+#' 'my_barplot.pdf' for figure saving (only the extension matters), or 'none' 
+#' to prevent plotting
 #' @return invisible ggplot2 object
 #' @export
 #' @examples
@@ -59,7 +61,11 @@ gg_barplot <- function(data.mn,
                                    "minimal",
                                    "void")[3],
                        flip.l = FALSE,
-                       legend_position.c = c("none", "bottom", "left", "top", "right")[2],
+                       legend_position.c = c("none",
+                                             "bottom",
+                                             "left",
+                                             "top",
+                                             "right")[2],
                        cex_axis.i = 18,
                        cex_bar.i = 10,
                        cex_title.i = 28,
@@ -71,7 +77,8 @@ gg_barplot <- function(data.mn,
   data.df <- as.data.frame(data.mn)
   data.df[, "rownames"] <- rownames(data.df)
   
-  longer.tib <- tidyr::pivot_longer(data.df, colnames(data.df)[colnames(data.df) != "rownames"])
+  longer.tib <- tidyr::pivot_longer(data.df,
+                                    colnames(data.df)[colnames(data.df) != "rownames"])
   
   if (length(row_levels.vc) > 1) {
     stopifnot(all(row_levels.vc %in% rownames(data.mn)))
@@ -96,8 +103,10 @@ gg_barplot <- function(data.mn,
                    theme.c = theme.c,
                    flip.l = flip.l,
                    legend_position.c = legend_position.c,
-                   geom_text.ls = list(axis.i = cex_axis.i, bar.i = cex_bar.i,
-                                       bar_just.n = bar_just.n, title.i = cex_title.i),
+                   geom_text.ls = list(axis.i = cex_axis.i,
+                                       bar.i = cex_bar.i,
+                                       bar_just.n = bar_just.n,
+                                       title.i = cex_title.i),
                    figure.c = figure.c)
   
   return(invisible(p))
@@ -117,7 +126,11 @@ gg_barplot <- function(data.mn,
                         palette.vc = "Set1",
                         theme.c = "default",
                         flip.l = FALSE,
-                        legend_position.c = c("none", "bottom", "left", "top", "right")[2],
+                        legend_position.c = c("none",
+                                              "bottom",
+                                              "left",
+                                              "top",
+                                              "right")[2],
                         geom_text.ls = list(axis.i = 18, bar.i = 10,
                                             bar_just.n = 1.5, title.i = 28),
                         figure.c = c("interactive",
@@ -167,7 +180,9 @@ gg_barplot <- function(data.mn,
   if(log10.l) {
     p <- p + ggplot2::scale_y_log10(limits = ylim.vn)
   } else if (any(!is.na(ylim.vn))) {
-    p <- p + eval(parse(text = paste0("ggplot2::ylim(", ylim.vn[1], ", ", ylim.vn[2], ")")))
+    p <- p + eval(parse(text = paste0("ggplot2::ylim(",
+                                      ylim.vn[1], ", ",
+                                      ylim.vn[2], ")")))
   }
   
   # theme
@@ -195,9 +210,11 @@ gg_barplot <- function(data.mn,
                              y.c,
                              "), ",
                              ifelse(flip.l, "h", "v"),
-                             "just = ", geom_text.ls[['bar_just.n']], ", fontface = 'bold',
+                             "just = ",
+                             geom_text.ls[['bar_just.n']], ", fontface = 'bold',
                                position = ggplot2::position_dodge(0.9),
-                               size = ", geom_text.ls[['bar.i']], ")")))
+                               size = ",
+                             geom_text.ls[['bar.i']], ")")))
   
   p <- p +
     ggplot2::labs(title = title.c, x = xlab.c, y = ylab.c) +
@@ -221,7 +238,7 @@ gg_barplot <- function(data.mn,
     if (filename_ext.c == "pdf")
       grDevices::pdf(figure.c)
     
-    print(p)
+    show(p)
     
     if (filename_ext.c == "pdf")
       grDevices::dev.off()
@@ -250,11 +267,13 @@ gg_barplot <- function(data.mn,
 #' @param palette.vc Character: either the name of an RColorBrewer palette
 #' (default: 'Set1'; 'Paired' can be useful for parallel plotting) or a vector
 #' manually defining the colors
-#' @param size.ls List of sizes for dots (default is 0.7), labels (default is 16),
-#' ticks (14) and title (20)
+#' @param theme.c character(1): name of the ggplot theme
+#' @param size.ls List of sizes for dots (default is 0.7), labels 
+#' (default is 16), ticks (14) and title (20)
 #' @param figure.c Character: either 'interactive' for interactive display or
 #' 'my_barplot.pdf' for figure saving (only the extension matters)
-#' @return character vector of outlier labels (same dimension as the number of rows from data.tb)
+#' @return character vector of outlier labels (same dimension as the number of 
+#' rows from data.tb)
 #' @export
 #' @examples
 #' sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
@@ -273,6 +292,15 @@ gg_boxplot <- function(data.tb,
                        ylab.c = "",
                        label.vc = "",
                        palette.vc = "Set1",
+                       theme.c = c("default",
+                                   "bw",
+                                   "classic",
+                                   "dark",
+                                   "gray",
+                                   "linedraw",
+                                   "light",
+                                   "minimal",
+                                   "void")[3],
                        size.ls = list(dot.n = 0.7,
                                       lab.i = 20,
                                       tick.i = 20,
@@ -291,7 +319,8 @@ gg_boxplot <- function(data.tb,
       size.ls[[size.c]] <- size_default.vi[size.c]
   }
   
-  filename_ext.c <-  utils::tail(unlist(strsplit(basename(figure.c), ".", fixed = TRUE)), 1)
+  filename_ext.c <-  utils::tail(unlist(strsplit(basename(figure.c), ".",
+                                                 fixed = TRUE)), 1)
   
   if (is.na(xlab.c))
     xlab.c <- ifelse(x.c == "", y.c, "")
@@ -312,10 +341,20 @@ gg_boxplot <- function(data.tb,
   }
   
   # color palette
-  if (color.c != "")
+  
+  if (color.c != "" && !is.factor(data.tb[[color.c]]))
+    data.tb[[color.c]] <- factor(data.tb[[color.c]],
+                                 levels = unique(data.tb[[color.c]]))
+  
+  stopifnot(x.c == "" || x.c %in% colnames(data.tb))
+  stopifnot(y.c %in% colnames(data.tb))
+  if (color.c != "") {
+    stopifnot(color.c %in% colnames(data.tb))
     aes.c <- paste0("ggplot2::ggplot(data.tb, ggplot2::aes(x = ",
-                    ifelse(x.c == "", "''", x.c), ", y = ", y.c, ", color = ", color.c, "))")
-  else
+                    ifelse(x.c == "", "''", x.c),
+                    ", y = ", y.c,
+                    ", color = ", color.c, "))")
+  } else
     aes.c <- paste0("ggplot2::ggplot(data.tb, ggplot2::aes(x = ",
                     ifelse(x.c == "", "''", x.c), ", y = ", y.c, "))")
   
@@ -324,14 +363,20 @@ gg_boxplot <- function(data.tb,
   p <- p +
     ggplot2::geom_boxplot(lwd = 2)
   
-
+  # theme
+  
+  if (theme.c != "default")
+    p <- p + eval(parse(text = paste0("ggplot2::theme_", theme.c, "()")))
+  
+  # outlier
+  
   is_outlier <- function(values.vn, index.vc) {
     out.vl <- values.vn < quantile(values.vn, 0.25, na.rm = TRUE) - 1.5 * IQR(values.vn, na.rm = TRUE) |
       values.vn > quantile(values.vn, 0.75, na.rm = TRUE) + 1.5 * IQR(values.vn, na.rm = TRUE)
     out.vi <- as.numeric(index.vc[out.vl])
     out.vi[!is.na(out.vi)]
   }
-
+  
   if (x.c == "") {
     outlier.vi <- is_outlier(data.tb[[y.c]], as.character(seq_len(nrow(data.tb))))
   } else {
@@ -340,22 +385,22 @@ gg_boxplot <- function(data.tb,
     x.vuc <- unique(x.vc)
     for (x.uc in x.vuc) {
       index.vi <- which(x.vc == x.uc)
-      outlier.vi <- c(outlier.vi, is_outlier(data.tb[[y.c]][index.vi], as.character(index.vi)))
+      outlier.vi <- c(outlier.vi, is_outlier(data.tb[[y.c]][index.vi],
+                                             as.character(index.vi)))
     }
   }
-
+  
   outlier.vc <- character(nrow(data.tb))
   outlier.vc[outlier.vi] <- label.vc[outlier.vi]
-
+  
   p <- p + eval(parse(text = paste0("ggrepel::geom_text_repel(ggplot2::aes(x = ",
-                                    ifelse(x.c == "", "''", x.c), ", y = ", y.c, ", label = outlier.vc))")))
-
+                                    ifelse(x.c == "", "''", x.c),
+                                    ", y = ", y.c, ", label = outlier.vc))")))
+  
   if (length(palette.vc) == 1 &&
       palette.vc %in% rownames(RColorBrewer::brewer.pal.info))
-    p <- p + ggplot2::scale_colour_brewer(palette = palette.vc)
+    p <- p + ggplot2::scale_color_brewer(palette = palette.vc)
   else {
-    if (is.factor(data.tb[[color.c]]))
-      names(palette.vc) <- levels(data.tb[[color.c]])
     p <- p + ggplot2::scale_color_manual(values = palette.vc)
   }
   
@@ -364,9 +409,12 @@ gg_boxplot <- function(data.tb,
                   x = xlab.c, y = ylab.c) +
     ggplot2::geom_dotplot(binaxis = "y", stackdir = "center",
                           dotsize = size.ls[["dot.n"]]) +
-    ggplot2::theme(plot.title = ggplot2::element_text(size = size.ls[["title.i"]], face = "bold"),
-                   axis.title.x = ggplot2::element_text(size = size.ls[["lab.i"]], face = "bold"),
-                   axis.title.y = ggplot2::element_text(size = size.ls[["lab.i"]], face = "bold"),
+    ggplot2::theme(plot.title = ggplot2::element_text(size = size.ls[["title.i"]],
+                                                      face = "bold"),
+                   axis.title.x = ggplot2::element_text(size = size.ls[["lab.i"]],
+                                                        face = "bold"),
+                   axis.title.y = ggplot2::element_text(size = size.ls[["lab.i"]],
+                                                        face = "bold"),
                    axis.text = ggplot2::element_text(size = size.ls[["tick.i"]]),
                    legend.title = ggplot2::element_blank(),
                    legend.position = "none")
@@ -374,7 +422,7 @@ gg_boxplot <- function(data.tb,
   if (filename_ext.c == "pdf")
     grDevices::pdf(figure.c)
   
-  print(p)
+  show(p)
   
   if (filename_ext.c == "pdf")
     grDevices::dev.off()
@@ -389,20 +437,23 @@ gg_boxplot <- function(data.tb,
 #' Pie with ggplot2
 #' 
 #' @param data.tb Tibble (or data frame) containing the information
-#' @param y.c Character: name of the column with the factor to be displayed; alternatively,
-#' name of the column with the counts (in this case set the name of the column with
-#' the names of the factor levels with the 'color.c' argument)
-#' @param color.c Character: optional name of the column with the names of the factor levels
+#' @param y.c Character: name of the column with the factor to be displayed; 
+#' alternatively, name of the column with the counts (in this case set the name 
+#' of the column with the names of the factor levels with the 'color.c' 
+#' argument)
+#' @param color.c Character: optional name of the column with the names of the 
+#' factor levels
 #' @param title.c Character: plot title
 #' @param palette.vc Character: either the name of an RColorBrewer palette
 #' (default: 'Set1'; 'Paired' can be useful for parallel plotting) or a vector
 #' manually defining the colors
-#' @param label.c Character: (relative) counts to be displayed on the pie; either
-#' 'none' (default), 'value' or 'percent'
+#' @param label.c Character: (relative) counts to be displayed on the pie; 
+#' either 'none' (default), 'value' or 'percent'
 #' @param geom_text.ls List of sizes for lab.i (default 7), legend_title.i (16),
 #' legend_text.i (14), and title.i (16)
 #' @param figure.c Character: either 'interactive' for interactive display,
-#' 'my_pie.pdf' for figure saving (only the extension matters), or 'none' to prevent plotting
+#' 'my_pie.pdf' for figure saving (only the extension matters), or 'none' 
+#' to prevent plotting
 #' @return invisible ggplot2 object
 #' @export
 #' @examples
@@ -416,7 +467,10 @@ gg_pie <- function(data.tb,
                    title.c = "",
                    palette.vc = "Set1",
                    label.c = c("none", "value", "percent")[1],
-                   geom_text.ls = list(lab.i = 7, legend_title.i = 16, legend_text.i = 14, title.i = 16),
+                   geom_text.ls = list(lab.i = 7,
+                                       legend_title.i = 16,
+                                       legend_text.i = 14,
+                                       title.i = 16),
                    figure.c = c("interactive",
                                 "my_pie.pdf",
                                 "none")[1]) {
@@ -424,7 +478,10 @@ gg_pie <- function(data.tb,
   if (!tibble::is_tibble(data.tb))
     data.tb <- tibble::as_tibble(data.tb)
   
-  geom_text_default.vn <- c(lab.i = 7, legend_title.i = 16, legend_text.i = 14, title.i = 16)
+  geom_text_default.vn <- c(lab.i = 7,
+                            legend_title.i = 16,
+                            legend_text.i = 14,
+                            title.i = 16)
   for (geom_text.c in names(geom_text_default.vn)) {
     if (!(geom_text.c %in% names(geom_text.ls)))
       geom_text.ls[[geom_text.c]] <- geom_text_default.vn[geom_text.c]
@@ -441,8 +498,8 @@ gg_pie <- function(data.tb,
       if (is.character(y.fc)) {
         y.fc <- factor(y.fc)
       } else
-        stop("When color.c is '', the y.c column of data.frame must be a factor or character vector.",
-             call. = FALSE)
+        stop("When color.c is '', the y.c column of data.frame 
+             must be a factor or character vector.")
     }
     data.tb <- eval(parse(text = paste0("dplyr::summarize(dplyr::group_by(data.tb, ",
                                         y.c, "), n = dplyr::n())")))
@@ -450,8 +507,10 @@ gg_pie <- function(data.tb,
     y.c <- "n"
   }
   
-  aes.c <- paste0("ggplot2::ggplot(data.tb, ggplot2::aes(x = '', y = ", y.c, ", fill = ", color.c, "))")
-  p <- eval(parse(text = aes.c)) + ggplot2::geom_bar(width = 1, stat = "identity")
+  aes.c <- paste0("ggplot2::ggplot(data.tb, ggplot2::aes(x = '', y = ", y.c,
+                  ", fill = ", color.c, "))")
+  p <- eval(parse(text = aes.c)) + ggplot2::geom_bar(width = 1,
+                                                     stat = "identity")
   
   # color palette
   if (length(palette.vc) == 1 &&
@@ -467,7 +526,8 @@ gg_pie <- function(data.tb,
     if (data_col.i <= palette_col.i) {
       p <- p + ggplot2::scale_fill_brewer(palette = palette.vc)
     } else {
-      fill_values.vc <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(palette_col.i, palette.vc))(data_col.i)
+      fill_values.vc <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(palette_col.i,
+                                                                             palette.vc))(data_col.i)
       p <- p + ggplot2::scale_fill_manual(values = fill_values.vc)
     }
     
@@ -483,7 +543,8 @@ gg_pie <- function(data.tb,
       panel.grid = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_blank(),
-      plot.title = ggplot2::element_text(size = geom_text.ls[["title.i"]], face = "bold"),
+      plot.title = ggplot2::element_text(size = geom_text.ls[["title.i"]],
+                                         face = "bold"),
       legend.title = ggplot2::element_text(size = geom_text.ls[["legend_title.i"]]), 
       legend.text = ggplot2::element_text(size = geom_text.ls[["legend_text.i"]])
     ) +
@@ -504,7 +565,7 @@ gg_pie <- function(data.tb,
                                         y.c, "/100)), position = ggplot2::position_stack(0.5)size = ",
                                         geom_text.ls[["lab.i"]], ")")))
     } else
-      stop("'label.c' must be either 'none', 'value', or 'percent'", call. = FALSE)
+      stop("'label.c' must be either 'none', 'value', or 'percent'")
   } 
   
   if (filename_ext.c != "none") {
@@ -512,7 +573,7 @@ gg_pie <- function(data.tb,
     if (filename_ext.c == "pdf")
       grDevices::pdf(figure.c)
     
-    print(p)
+    show(p)
     
     if (filename_ext.c == "pdf")
       grDevices::dev.off()
@@ -541,9 +602,11 @@ gg_pie <- function(data.tb,
 #' @param signif_shape.vi Integer vector: shapes for significant (respectively,
 #' non significant) features; default is 16 (respectively, 1)
 #' @param class_name.vc Character vector: names of the two compared class labels
-#' @param class_color.vc Character vector: colors of the two compared class labels
-#' @param size.ls List of sizes for classes (default: 5), xy labels (default: 16),
-#' points (default: 3), ticks (default: 14) and title (default: 20)
+#' @param class_color.vc Character vector: colors of the two compared class 
+#' labels
+#' @param size.ls List of sizes for classes (default: 5), xy labels 
+#' (default: 16), points (default: 3), ticks (default: 14) and title 
+#' (default: 20)
 #' @param figure.c Character: either 'interactive' (respectively,
 #' 'interactive_plotly') for interactive display with ggplot2 (respectively,
 #' with plotly::ggplotly [default]), or 'my_volcanoplot.pdf' (respectively
@@ -594,9 +657,9 @@ gg_volcanoplot <- function(fold_change.vn,
                                           tick.i = 14,
                                           title.i = 20),
                            figure.c = c("interactive",
-                                      "interactive_plotly",
-                                      "my_volcanoplot.pdf",
-                                      "my_volcanoplot.html")[2]) {
+                                        "interactive_plotly",
+                                        "my_volcanoplot.pdf",
+                                        "my_volcanoplot.html")[2]) {
   
   size_default.vi <- c(class.i = 5, lab.i = 16, point.i = 3, tick.i = 14,
                        title.i = 20)
@@ -606,7 +669,8 @@ gg_volcanoplot <- function(fold_change.vn,
       size.ls[[size.c]] <- size_default.vi[size.c]
   }
   
-  filename_ext.c <-  utils::tail(unlist(strsplit(basename(figure.c), ".", fixed = TRUE)), 1)
+  filename_ext.c <-  utils::tail(unlist(strsplit(basename(figure.c), ".",
+                                                 fixed = TRUE)), 1)
   
   stopifnot(identical(length(fold_change.vn), length(adjusted_pvalue.vn)))
   
@@ -628,7 +692,7 @@ gg_volcanoplot <- function(fold_change.vn,
   
   volcano.df[, "shape"] <- volcano.df[, "color"] <- ifelse(adjusted_pvalue.vn <= adjust_thresh.n,
                                                            "yes", "no")
-
+  
   
   aes.c <- "ggplot2::ggplot(volcano.df, ggplot2::aes(x = fold_change, y = log_pval, color = color, shape = shape, text = label.vc))"
   
@@ -662,9 +726,12 @@ gg_volcanoplot <- function(fold_change.vn,
                          x = xlab.c,
                          y = paste0("-log10(", ifelse(adjust_method.c != "",
                                                       adjust_method.c, "p-value"), ")")) +
-    ggplot2::theme(plot.title = ggplot2::element_text(size = size.ls[["title.i"]], face = "bold"),
-                   axis.title.x = ggplot2::element_text(size = size.ls[["lab.i"]], face = "bold"),
-                   axis.title.y = ggplot2::element_text(size = size.ls[["lab.i"]], face = "bold"),
+    ggplot2::theme(plot.title = ggplot2::element_text(size = size.ls[["title.i"]], 
+                                                      face = "bold"),
+                   axis.title.x = ggplot2::element_text(size = size.ls[["lab.i"]], 
+                                                        face = "bold"),
+                   axis.title.y = ggplot2::element_text(size = size.ls[["lab.i"]], 
+                                                        face = "bold"),
                    axis.text = ggplot2::element_text(size = size.ls[["tick.i"]]),
                    legend.title = ggplot2::element_blank(),
                    legend.position = "none")
@@ -676,13 +743,15 @@ gg_volcanoplot <- function(fold_change.vn,
       class_color.vc <- rep("black", 2)
     
     p <- p + ggplot2::annotate(geom = "text",
-                               x = 0.95 * min(volcano.df[, "fold_change"], na.rm = TRUE),
+                               x = 0.95 * min(volcano.df[, "fold_change"],
+                                              na.rm = TRUE),
                                y = 0,
                                label = class_name.vc[1],
                                color = class_color.vc[1],
                                size = size.ls[["class.i"]]) +
       ggplot2::annotate(geom = "text",
-                        x = 0.95 * max(volcano.df[, "fold_change"], na.rm = TRUE),
+                        x = 0.95 * max(volcano.df[, "fold_change"],
+                                       na.rm = TRUE),
                         y = 0,
                         label = class_name.vc[2],
                         color = class_color.vc[2],
@@ -705,7 +774,7 @@ gg_volcanoplot <- function(fold_change.vn,
       
     } else {
       
-      print(p)
+      show(p)
       
       return(invisible(p))
       
@@ -716,7 +785,7 @@ gg_volcanoplot <- function(fold_change.vn,
     if (filename_ext.c == "pdf")
       grDevices::pdf(figure.c)
     
-    print(p)
+    show(p)
     
     if (filename_ext.c == "pdf")
       grDevices::dev.off()
@@ -742,8 +811,9 @@ gg_volcanoplot <- function(fold_change.vn,
 #' @param lwd.i Integer: Width of the circle's circumference
 #' @param inverted.l Logical: Should the Venn diagram be flipped along its
 #' vertical axis (pairwise venn only)
-#' @param figure.c Character: Filename for image output (with either .tiff, .png,
-#' or .svg extensions); if 'none' (default) the grid object is displayed interactively
+#' @param figure.c Character: Filename for image output (with either .tiff, 
+#' .png, or .svg extensions); if 'none' (default) the grid object is displayed 
+#' interactively
 #' @return invisible grid object
 #' @export
 #' @examples
@@ -776,15 +846,15 @@ vennplot <- function(input.ls,
                          deparse(substitute(input.ls))))
   
   if (!is.list(input.ls))
-    stop("'input.ls' must be a list for Venn plot", call. = FALSE)
+    stop("'input.ls' must be a list for Venn plot")
   
   if (length(input.ls) > 5)
-    stop("'input.ls' list must be of maximum length 5 for Venn plot", call. = FALSE)
+    stop("'input.ls' list must be of maximum length 5 for Venn plot")
   
   cat.i <- length(input.ls)
   
   if (length(palette.vc) < cat.i)
-    stop("'palette.vc' must contain at least 'length(input.ls)' colors", call. = FALSE)
+    stop("'palette.vc' must contain at least 'length(input.ls)' colors")
   
   if (figure.c == "none") {
     filename.c <- NULL
@@ -792,8 +862,7 @@ vennplot <- function(input.ls,
     filename.c <- figure.c
     ext.c <- tail(unlist(strsplit(basename(filename.c), ".", fixed = TRUE)), 1)
     if (!(ext.c %in% c("tiff", "png", "svg")))
-      stop("Filename extension must be either 'tiff', 'png', or 'svg'",
-           call. = FALSE)
+      stop("Filename extension must be either 'tiff', 'png', or 'svg'")
   }
   
   futile.logger::flog.threshold(futile.logger::ERROR,

@@ -36,8 +36,9 @@ category name along the circle, with 0 at 12 o'clock; if NA, (-50, 50),
 \item{inverted.l}{Logical: Should the Venn diagram be flipped along its
 vertical axis (pairwise venn only)}
 
-\item{figure.c}{Character: Filename for image output (with either .tiff, .png,
-or .svg extensions); if 'none' (default) the grid object is displayed interactively}
+\item{figure.c}{Character: Filename for image output (with either .tiff, 
+.png, or .svg extensions); if 'none' (default) the grid object is displayed 
+interactively}
 }
 \value{
 invisible grid object

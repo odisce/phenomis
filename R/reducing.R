@@ -256,8 +256,11 @@ setMethod("reducing", signature(x = "ExpressionSet"),
             
           })
 
-.reducing <- function(data.mn, ## data (matrix of numerics; samples x variables)
-                      feat.df, ## feature metadata (dataframe; features x metadata)
+
+.reducing <- function(data.mn, ## data (matrix of numerics; 
+                      ## samples x variables)
+                      feat.df, ## feature metadata (dataframe; 
+                      ## features x metadata)
                       cor_method.c = "pearson",
                       cor_threshold.n = 0.9,
                       rt_tol.n = 6,
@@ -279,6 +282,135 @@ setMethod("reducing", signature(x = "ExpressionSet"),
   
   # correlation between features
   
+  cor.mi <- .cor_mi(data.mn,
+                    cor_method.c,
+                    cor_threshold.n)
+  
+  # RT difference
+  
+  corrt.mi <- .corrt_mi(feat.df = feat.df,
+                        rt_colname.c = rt_colname.c,
+                        cor.mi = cor.mi,
+                        rt_tol.n = rt_tol.n)
+  
+  # known m/z loss
+  
+  corrtmz.ls <- .corrtmz(feat.df = feat.df,
+                         mz_colname.c = mz_colname.c,
+                         corrt.mi = corrt.mi,
+                         mzdiff_tol.n = mzdiff_tol.n,
+                         mzdiff_db.df = mzdiff_db.df)
+  corrtmz.mi <- corrtmz.ls[["corrtmz.mi"]]
+  corrtmz.mc <- corrtmz.ls[["corrtmz.mc"]]
+  mzdiff.mn <- corrtmz.ls[["mzdiff.mn"]]
+  
+  # connex components of the corr + RT adjacency matrix
+  
+  corrtmz.igraph <- igraph::graph_from_adjacency_matrix(corrtmz.mi,
+                                                        mode = "undirected")
+  
+  components.ls <- igraph::components(corrtmz.igraph)
+  
+  group.vi <- rep(NA_integer_, nrow(feat.df))
+  names(group.vi) <- rownames(feat.df)
+  group.vi[names(components.ls[["membership"]])] <- components.ls[["membership"]]
+  
+  annot.ls <- .reduce_annot(group.vi = group.vi,
+                            feat.df = feat.df,
+                            mzdiff_db.df = mzdiff_db.df,
+                            mz_colname.c = mz_colname.c,
+                            mzdiff.mn = mzdiff.mn,
+                            corrtmz.mc = corrtmz.mc)
+  
+  feat.df[, "redund_is"] <- as.numeric(!(annot.ls[["relat.vc"]] %in% c("", "M")))
+  feat.df[, "redund_group"] <- group.vi
+  feat.df[, "redund_iso_add_frag"] <- annot.ls[["isoadfra.vc"]]
+  feat.df[, "redund_repres"] <- annot.ls[["repres.vc"]]
+  feat.df[, "redund_relative"] <- annot.ls[["relat.vc"]]
+  
+  # ordering the features according to the component
+  
+  data.mn <- data.mn[, order(group.vi), drop = FALSE]
+  feat.df <- feat.df[order(group.vi), , drop = FALSE]
+  
+  group.vi <- feat.df[, "redund_group"]
+  group_na.vi <- which(is.na(group.vi))
+  
+  if (length(group_na.vi) > 1) {
+    
+    group_na_min.i <- group_na.vi[1]
+    group_order.vi <- c(seq_len(group_na_min.i - 1),
+                        rep(group_na_min.i, 
+                            length(group.vi) - group_na_min.i + 1))
+    feat_order.vi <- order(group_order.vi,
+                           feat.df[, mz_colname.c],
+                           feat.df[, rt_colname.c])
+    data.mn <- data.mn[, feat_order.vi, drop = FALSE]
+    feat.df <- feat.df[feat_order.vi, , drop = FALSE]
+    
+  }
+  
+  message(length(table(feat.df[, "redund_group"])), " groups")
+  
+  message(sum(feat.df[, "redund_is"]), " chemically redundant features (",
+          round(sum(feat.df[, "redund_is"]) / nrow(feat.df) * 100), "%)")
+  
+  list(data.mn = data.mn,
+       feat.df = feat.df,
+       adjacency.mi = corrtmz.mi)
+  
+}
+
+
+.mzdiff_db <- function() {
+  # table of referenced losses (fragments, adducts, isotopes)
+  
+  mzdiff_db.df <- read.table(system.file("extdata/mzdiff_db.tsv", 
+                                         package = "phenomis"),
+                             header = TRUE,
+                             quote = "",
+                             sep = "\t",
+                             stringsAsFactors = FALSE)
+  
+  mzdiff_db.df[ , "losses_or_gains"] <- gsub(" ", "", 
+                                             mzdiff_db.df[ , "losses_or_gains"])
+  
+  
+  
+  add_and_frag.vi <- integer(nrow(mzdiff_db.df))
+  
+  loss_or_gain.vc <- vapply(mzdiff_db.df[ , "losses_or_gains"],
+                            function(loss_or_gain.c) {
+                              if (substr(loss_or_gain.c, 1, 1) %in% c("+", "-"))
+                                loss_or_gain.c <- substr(loss_or_gain.c, 2, 
+                                                         nchar(loss_or_gain.c))
+                              loss_or_gain.c
+                            }, FUN.VALUE = character(1))
+  
+  for (add_and_frag.c in c("(CH3OH)",
+                           "(H2O)",
+                           "(HCOOH)",
+                           "(NaCl)",
+                           "2(H2O)",
+                           "2(HCOOH)",
+                           "(NaCl)")) {
+    
+    dup.vi <- which(loss_or_gain.vc == add_and_frag.c)
+    stopifnot(length(dup.vi) == 2)
+    
+    add_and_frag.vi[dup.vi[2]] <- 1
+    
+  }
+  
+  mzdiff_db.df[, "add_and_frag_dup"] <- add_and_frag.vi
+  
+  mzdiff_db.df
+}
+
+.cor_mi <- function(data.mn = data.mn,
+                    cor_method.c = cor_method.c,
+                    cor_threshold.n = cor_threshold.n) {
+  
   if (any(is.na(data.mn))) {
     cor.mn <- stats::cor(data.mn,
                          method = cor_method.c,
@@ -297,14 +429,24 @@ setMethod("reducing", signature(x = "ExpressionSet"),
   cor.mi[cor.mi > 0] <- 1
   mode(cor.mi) <- "integer"
   cor_sel.vi <- rowSums(cor.mi, na.rm = TRUE) > 0
-  cor.mi <- cor.mi[cor_sel.vi, cor_sel.vi]
   
-  # RT difference
+  cor.mi[cor_sel.vi, cor_sel.vi]
   
-  if (!(rt_colname.c %in% colnames(feat.df)))
+  
+}
+
+
+.corrt_mi <- function(feat.df,
+                      rt_colname.c,
+                      cor.mi,
+                      rt_tol.n) {
+  
+  if (!(rt_colname.c %in% colnames(feat.df))) {
+    stop_rt_col.c <- paste(colnames(feat.df), collapse = ", ")
     stop("The 'rt_colname.c' value '", rt_colname.c,
          "' was not found in the columns from the variable metadata:\n",
-         paste(colnames(feat.df), collapse = ", "))
+         stop_rt_col.c)
+  }
   
   rt.vn <- feat.df[rownames(cor.mi), rt_colname.c]
   if (any(is.na(rt.vn)))
@@ -329,14 +471,24 @@ setMethod("reducing", signature(x = "ExpressionSet"),
   mode(corrt.mi) <- "integer"
   
   corrt_sel.vi <- rowSums(corrt.mi, na.rm = TRUE) > 0
-  corrt.mi <- corrt.mi[corrt_sel.vi, corrt_sel.vi]
   
-  # known m/z loss
+  corrt.mi[corrt_sel.vi, corrt_sel.vi]
   
-  if (!(mz_colname.c %in% colnames(feat.df)))
+}
+
+
+.corrtmz <- function(feat.df,
+                     mz_colname.c,
+                     corrt.mi,
+                     mzdiff_tol.n,
+                     mzdiff_db.df) {
+  
+  if (!(mz_colname.c %in% colnames(feat.df))) {
+    stop_colvar.c <- paste(colnames(feat.df), collapse = ", ")
     stop("The 'mz_colname.c' value '", mz_colname.c,
          "' was not found in the columns from the variable metadata:\n",
-         paste(colnames(feat.df), collapse = ", "))
+         stop_colvar.c)
+  }
   
   ## annotation of all pairwise differences of corrt.mi features
   mz.vn <- feat.df[rownames(corrt.mi), mz_colname.c]
@@ -356,7 +508,8 @@ setMethod("reducing", signature(x = "ExpressionSet"),
                              function(mzdiff.i) {
                                mzdiff.n <- mzdiff.vn[mzdiff.i]
                                mzmin.n <- mzmin.vn[mzdiff.i]
-                               paste(which(abs(c(mzdiff_db.df[, "delta_mass"], mzmin.n) - mzdiff.n) <= mzdiff_tol.n),
+                               paste(which(abs(c(mzdiff_db.df[, "delta_mass"], 
+                                                 mzmin.n) - mzdiff.n) <= mzdiff_tol.n),
                                      collapse = "_")
                              }, character(1))
   
@@ -367,7 +520,8 @@ setMethod("reducing", signature(x = "ExpressionSet"),
   dim(corrtmz.mc) <- dim(corrt.mi)
   dimnames(corrtmz.mc) <- dimnames(corrt.mi)
   
-  ## adjacency matrix of pairs of features with correlation, RT match and loss annotation
+  ## adjacency matrix of pairs of features with correlation, RT match and 
+  ## loss annotation
   corrtmz.mi <- corrtmz.mc != ""
   mode(corrtmz.mi) <- "integer"
   
@@ -375,16 +529,19 @@ setMethod("reducing", signature(x = "ExpressionSet"),
   corrtmz.mi <- corrtmz.mi[corrtmz_sel.vi, corrtmz_sel.vi]
   corrtmz.mc <- corrtmz.mc[corrtmz_sel.vi, corrtmz_sel.vi]
   
-  # connex components of the corr + RT adjacency matrix
+  list(corrtmz.mi = corrtmz.mi,
+       corrtmz.mc = corrtmz.mc,
+       mzdiff.mn = mzdiff.mn)
   
-  corrtmz.igraph <- igraph::graph_from_adjacency_matrix(corrtmz.mi,
-                                                        mode = "undirected")
-  
-  components.ls <- igraph::components(corrtmz.igraph)
-  
-  group.vi <- rep(NA_integer_, nrow(feat.df))
-  names(group.vi) <- rownames(feat.df)
-  group.vi[names(components.ls[["membership"]])] <- components.ls[["membership"]]
+}
+
+
+.reduce_annot <- function(group.vi,
+                          feat.df,
+                          mzdiff_db.df,
+                          mz_colname.c,
+                          mzdiff.mn,
+                          corrtmz.mc) {
   
   repres.vc <- character(nrow(feat.df))
   names(repres.vc) <- rownames(feat.df)
@@ -399,7 +556,8 @@ setMethod("reducing", signature(x = "ExpressionSet"),
     ## features from the component
     group_feat.vc <- names(group.vi)[which(group.vi == group.i)]
     
-    ion_sel.c <- group_feat.vc[which.max(feat.df[group_feat.vc, "redund_samp_mean"])]
+    ion_sel.c <- group_feat.vc[which.max(feat.df[group_feat.vc, 
+                                                 "redund_samp_mean"])]
     
     repres.vc[group_feat.vc] <- ion_sel.c
     
@@ -424,82 +582,15 @@ setMethod("reducing", signature(x = "ExpressionSet"),
             annot.c <- paste(vapply(annot_split.vc,
                                     function(annot_split.c) {
                                       
-                                      if (as.numeric(annot_split.c) > nrow(mzdiff_db.df)) {
-                                        ## The 2M annotation is coded as nrow(mzdiff_db.df) + 1
-                                        
-                                        if (sign.i > 0) {
-                                          
-                                          code.c <- paste0("+(", floor(feat.df[linked.c, mz_colname.c] * 1e4) / 1e4, ")")
-                                          
-                                        } else {
-                                          
-                                          code.c <- paste0("-(", floor(feat.df[group_feat.c, mz_colname.c] * 1e4) / 1e4, ")")
-                                          
-                                        }
-                                        
-                                        return(code.c)
-                                        
-                                        
-                                      } else {
-                                        
-                                        code.c <- mzdiff_db.df[as.numeric(annot_split.c), "losses_or_gains"]
-                                        
-                                        if (sign.i > 0) {
-                                          
-                                          if (!(substr(code.c, 1, 1) %in% c("+", "-"))) {
-                                            code.c <- paste0("+", code.c)
-                                          } else if (substr(code.c, 1, 1) == "-") {
-                                            code.c <- gsub("@", "-",
-                                                           gsub("-", "+",
-                                                                gsub("+", "@", code.c, fixed = TRUE), fixed = TRUE),
-                                                           fixed = TRUE)
-                                          }
-                                          
-                                          # if (!(substr(code.c, 1, 1) %in% c("+", "-")))
-                                          #   code.c <- paste0("+", code.c)
-                                          
-                                        } else {
-                                          
-                                          if (!(substr(code.c, 1, 1) %in% c("+", "-"))) {
-                                            if (code.c != "(H2O-CO)")
-                                              code.c <- gsub("@", "-",
-                                                             gsub("-", "+",
-                                                                  gsub("+", "@", code.c,
-                                                                       fixed = TRUE),
-                                                                  fixed = TRUE),
-                                                             fixed = TRUE)
-                                            code.c <- paste0("-", code.c)
-                                          } else if (substr(code.c, 1, 1) == "+") {
-                                            code.c <- gsub("@", "-",
-                                                           gsub("-", "+",
-                                                                gsub("+", "@", code.c,
-                                                                     fixed = TRUE),
-                                                                fixed = TRUE),
-                                                           fixed = TRUE)
-                                            
-                                          }
-                                          
-                                          # code.c <- gsub("@", "-",
-                                          #                gsub("-", "+",
-                                          #                     gsub("+", "@", code.c, fixed = TRUE), fixed = TRUE),
-                                          #                fixed = TRUE)
-                                          # 
-                                          # if (!(substr(code.c, 1, 1) %in% c("+", "-")))
-                                          #   code.c <- paste0("-", code.c)
-                                          
-                                        }
-                                        
-                                        return(code.c)
-                                        
-                                        # return(paste0(code.c, "(",
-                                        #               floor(mzdiff_db.df[as.numeric(annot_split.c), "delta_mass"] * 1e4) / 1e4,
-                                        #               ")")) 
-                                        
-                                      }
+                                      .reduce_annot_mz(annot_split.c = annot_split.c,
+                                                       mzdiff_db.df = mzdiff_db.df,
+                                                       feat.df = feat.df,
+                                                       linked.c = linked.c,
+                                                       group_feat.c = group_feat.c,
+                                                       mz_colname.c = mz_colname.c,
+                                                       sign.i = sign.i)
                                       
                                     }, character(1)), collapse = "|")
-            
-            
             
           } else
             annot.c <- ""
@@ -507,12 +598,17 @@ setMethod("reducing", signature(x = "ExpressionSet"),
         }
         
         if (annot.c != "")
-          group_feat_isoadfra.vc <- c(group_feat_isoadfra.vc, paste0("@", linked.c, "|", annot.c))
+          group_feat_isoadfra.vc <- c(group_feat_isoadfra.vc, paste0("@", 
+                                                                     linked.c, 
+                                                                     "|", 
+                                                                     annot.c))
         
         
       }
       
-      isoadfra.vc[group_feat.c] <- paste(group_feat_isoadfra.vc, collapse = "|")
+      isoadfra.vc[group_feat.c] <- paste(group_feat_isoadfra.vc, 
+                                         collapse = "|")
+      
     }
     
     ## annotation relative to the representative ion within a group
@@ -530,70 +626,19 @@ setMethod("reducing", signature(x = "ExpressionSet"),
         annot_split.vc <- unlist(strsplit(annot.c, split = "_"))
         
         if (sign.i < 0)
-          annot_split.vc <- annot_split.vc[mzdiff_db.df[as.numeric(annot_split.vc), "type"] != "isotope"]
+          annot_split.vc <- annot_split.vc[mzdiff_db.df[as.numeric(annot_split.vc), 
+                                                        "type"] != "isotope"]
         
         if (length(annot_split.vc)) {
           
           annot.c <- paste(vapply(annot_split.vc,
                                   function(annot_split.c) {
                                     
-                                    if (as.numeric(annot_split.c) > nrow(mzdiff_db.df)) {
-                                      ## The 2M annotation is coded as nrow(mzdiff_db.df) + 1
-                                      
-                                      if (sign.i > 0) {
-                                        
-                                        code.c <- "[2M]"
-                                        
-                                      } else {
-                                        
-                                        code.c <- "[0.5M]"
-                                        
-                                      }
-                                      
-                                      return(code.c)
-                                      
-                                      
-                                    } else {
-                                      
-                                      code.c <- mzdiff_db.df[as.numeric(annot_split.c), "losses_or_gains"]
-                                      
-                                      if (sign.i > 0) {
-                                        
-                                        if (!(substr(code.c, 1, 1) %in% c("+", "-"))) {
-                                          code.c <- paste0("+", code.c)
-                                        } else if (substr(code.c, 1, 1) == "-") {
-                                          code.c <- gsub("@", "-",
-                                                         gsub("-", "+",
-                                                              gsub("+", "@", code.c, fixed = TRUE), fixed = TRUE),
-                                                         fixed = TRUE)
-                                        }
-                                        
-                                      } else {
-                                        
-                                        if (!(substr(code.c, 1, 1) %in% c("+", "-"))) {
-                                          if (code.c != "(H2O-CO)")
-                                            code.c <- gsub("@", "-",
-                                                           gsub("-", "+",
-                                                                gsub("+", "@", code.c,
-                                                                     fixed = TRUE),
-                                                                fixed = TRUE),
-                                                           fixed = TRUE)
-                                          code.c <- paste0("-", code.c)
-                                        } else if (substr(code.c, 1, 1) == "+") {
-                                          code.c <- gsub("@", "-",
-                                                         gsub("-", "+",
-                                                              gsub("+", "@", code.c,
-                                                                   fixed = TRUE),
-                                                              fixed = TRUE),
-                                                         fixed = TRUE)
-                                          
-                                        }
-                                        
-                                      }
-                                      
-                                      return(paste0("[M", code.c, "]"))
-                                      
-                                    }
+                                    .reduce_annot_ion(annot_split.c = annot_split.c,
+                                                      mzdiff_db.df = mzdiff_db.df,
+                                                      sign.i = sign.i)
+                                    
+                                    
                                     
                                   }, character(1)), collapse = "|")
           
@@ -608,83 +653,169 @@ setMethod("reducing", signature(x = "ExpressionSet"),
     
   }
   
-  feat.df[, "redund_is"] <- as.numeric(!(relat.vc %in% c("", "M")))
-  feat.df[, "redund_group"] <- group.vi
-  feat.df[, "redund_iso_add_frag"] <- isoadfra.vc
-  feat.df[, "redund_repres"] <- repres.vc
-  feat.df[, "redund_relative"] <- relat.vc
-  
-  # ordering the features according to the component
-  
-  data.mn <- data.mn[, order(group.vi), drop = FALSE]
-  feat.df <- feat.df[order(group.vi), , drop = FALSE]
-  
-  group.vi <- feat.df[, "redund_group"]
-  group_na.vi <- which(is.na(group.vi))
-  
-  if (length(group_na.vi) > 1) {
-    
-    group_na_min.i <- group_na.vi[1]
-    group_order.vi <- c(seq_len(group_na_min.i - 1),
-                        rep(group_na_min.i, length(group.vi) - group_na_min.i + 1))
-    feat_order.vi <- order(group_order.vi,
-                           feat.df[, mz_colname.c],
-                           feat.df[, rt_colname.c])
-    data.mn <- data.mn[, feat_order.vi, drop = FALSE]
-    feat.df <- feat.df[feat_order.vi, , drop = FALSE]
-    
-  }
-  
-  message(length(table(feat.df[, "redund_group"])), " groups")
-  
-  message(sum(feat.df[, "redund_is"]), " chemically redundant features (",
-          round(sum(feat.df[, "redund_is"]) / nrow(feat.df) * 100), "%)")
-  
-  list(data.mn = data.mn,
-       feat.df = feat.df,
-       adjacency.mi = corrtmz.mi)
+  list(isoadfra.vc = isoadfra.vc,
+       relat.vc = relat.vc,
+       repres.vc = repres.vc)
   
 }
 
 
-.mzdiff_db <- function() {
-  # table of referenced losses (fragments, adducts, isotopes)
+.reduce_annot_mz <- function(annot_split.c,
+                             mzdiff_db.df,
+                             feat.df,
+                             linked.c,
+                             group_feat.c,
+                             mz_colname.c,
+                             sign.i) {
   
-  mzdiff_db.df <- read.table(system.file("extdata/mzdiff_db.tsv", package = "phenomis"),
-                             header = TRUE,
-                             quote = "",
-                             sep = "\t",
-                             stringsAsFactors = FALSE)
-  
-  mzdiff_db.df[ , "losses_or_gains"] <- gsub(" ", "", mzdiff_db.df[ , "losses_or_gains"])
-  
-  
-  
-  add_and_frag.vi <- integer(nrow(mzdiff_db.df))
-  
-  loss_or_gain.vc <- vapply(mzdiff_db.df[ , "losses_or_gains"],
-                            function(loss_or_gain.c) {
-                              if (substr(loss_or_gain.c, 1, 1) %in% c("+", "-"))
-                                loss_or_gain.c <- substr(loss_or_gain.c, 2, nchar(loss_or_gain.c))
-                              loss_or_gain.c
-                            }, FUN.VALUE = character(1))
-  
-  for (add_and_frag.c in c("(CH3OH)",
-                           "(H2O)",
-                           "(HCOOH)",
-                           "(NaCl)",
-                           "2(H2O)",
-                           "2(HCOOH)",
-                           "(NaCl)")) {
+  if (as.numeric(annot_split.c) > nrow(mzdiff_db.df)) {
+    ## The 2M annotation is coded as nrow(mzdiff_db.df) + 1
     
-    dup.vi <- which(loss_or_gain.vc == add_and_frag.c)
-    stopifnot(length(dup.vi) == 2)
+    if (sign.i > 0) {
+      
+      code.c <- paste0("+(", floor(feat.df[linked.c, mz_colname.c] * 1e4) / 1e4, ")")
+      
+    } else {
+      
+      code.c <- paste0("-(", floor(feat.df[group_feat.c, mz_colname.c] * 1e4) / 1e4, ")")
+      
+    }
     
-    add_and_frag.vi[dup.vi[2]] <- 1
+    return(code.c)
+    
+  } else {
+    
+    code.c <- mzdiff_db.df[as.numeric(annot_split.c), 
+                           "losses_or_gains"]
+    
+    if (sign.i > 0) {
+      
+      if (!(substr(code.c, 1, 1) %in% c("+", "-"))) {
+        code.c <- paste0("+", code.c)
+      } else if (substr(code.c, 1, 1) == "-") {
+        code.c <- gsub("@", "-",
+                       gsub("-", "+",
+                            gsub("+", "@", 
+                                 code.c, 
+                                 fixed = TRUE), 
+                            fixed = TRUE),
+                       fixed = TRUE)
+      }
+      
+      # if (!(substr(code.c, 1, 1) %in% c("+", "-")))
+      #   code.c <- paste0("+", code.c)
+      
+    } else {
+      
+      if (!(substr(code.c, 1, 1) %in% c("+", "-"))) {
+        if (code.c != "(H2O-CO)")
+          code.c <- gsub("@", "-",
+                         gsub("-", "+",
+                              gsub("+", "@", 
+                                   code.c,
+                                   fixed = TRUE),
+                              fixed = TRUE),
+                         fixed = TRUE)
+        code.c <- paste0("-", code.c)
+      } else if (substr(code.c, 1, 1) == "+") {
+        code.c <- gsub("@", "-",
+                       gsub("-", "+",
+                            gsub("+", "@", 
+                                 code.c,
+                                 fixed = TRUE),
+                            fixed = TRUE),
+                       fixed = TRUE)
+        
+      }
+      
+      # code.c <- gsub("@", "-",
+      #                gsub("-", "+",
+      #                     gsub("+", "@", code.c, fixed = TRUE), fixed = TRUE),
+      #                fixed = TRUE)
+      # 
+      # if (!(substr(code.c, 1, 1) %in% c("+", "-")))
+      #   code.c <- paste0("-", code.c)
+      
+    }
+    
+    return(code.c)
+    
+    # return(paste0(code.c, "(",
+    #               floor(mzdiff_db.df[as.numeric(annot_split.c), "delta_mass"] * 1e4) / 1e4,
+    #               ")")) 
     
   }
   
-  mzdiff_db.df[, "add_and_frag_dup"] <- add_and_frag.vi
+}
+
+.reduce_annot_ion <- function(annot_split.c,
+                              mzdiff_db.df,
+                              sign.i) {
   
-  mzdiff_db.df
+  
+  
+  if (as.numeric(annot_split.c) > nrow(mzdiff_db.df)) {
+    ## The 2M annotation is coded as nrow(mzdiff_db.df) + 1
+    
+    if (sign.i > 0) {
+      
+      code.c <- "[2M]"
+      
+    } else {
+      
+      code.c <- "[0.5M]"
+      
+    }
+    
+    return(code.c)
+    
+    
+  } else {
+    
+    code.c <- mzdiff_db.df[as.numeric(annot_split.c), 
+                           "losses_or_gains"]
+    
+    if (sign.i > 0) {
+      
+      if (!(substr(code.c, 1, 1) %in% c("+", "-"))) {
+        code.c <- paste0("+", code.c)
+      } else if (substr(code.c, 1, 1) == "-") {
+        code.c <- gsub("@", "-",
+                       gsub("-", "+",
+                            gsub("+", "@", 
+                                 code.c, 
+                                 fixed = TRUE), 
+                            fixed = TRUE),
+                       fixed = TRUE)
+      }
+      
+    } else {
+      
+      if (!(substr(code.c, 1, 1) %in% c("+", "-"))) {
+        if (code.c != "(H2O-CO)")
+          code.c <- gsub("@", "-",
+                         gsub("-", "+",
+                              gsub("+", "@", 
+                                   code.c,
+                                   fixed = TRUE),
+                              fixed = TRUE),
+                         fixed = TRUE)
+        code.c <- paste0("-", code.c)
+      } else if (substr(code.c, 1, 1) == "+") {
+        code.c <- gsub("@", "-",
+                       gsub("-", "+",
+                            gsub("+", "@", 
+                                 code.c,
+                                 fixed = TRUE),
+                            fixed = TRUE),
+                       fixed = TRUE)
+        
+      }
+      
+    }
+    
+    return(paste0("[M", code.c, "]"))
+    
+  }
+  
 }

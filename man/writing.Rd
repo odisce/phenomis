@@ -6,8 +6,9 @@
 \alias{writing,SummarizedExperiment-method}
 \alias{writing,MultiDataSet-method}
 \alias{writing,ExpressionSet-method}
-\title{Exporting a SummarizedExperiment (or MultiAssayExperiment) instance into (subfolders with)
-the 3 tabulated files 'dataMatrix.tsv', sampleMetadata.tsv', 'variableMetadata.tsv'}
+\title{Exporting a SummarizedExperiment (or MultiAssayExperiment) instance into 
+(subfolders with) the 3 tabulated files 'dataMatrix.tsv', 
+sampleMetadata.tsv', 'variableMetadata.tsv'}
 \usage{
 writing(
   x,
@@ -55,14 +56,17 @@ writing(
 )
 }
 \arguments{
-\item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}}
+\item{x}{An S4 object of class \code{SummarizedExperiment} or 
+\code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet}
+are still supported)}
 
 \item{dir.c}{character(1): directory where each dataset should be written}
 
 \item{prefix.c}{character(1): prefix to be used (followed by '_') in the
 'dataMatrix.tsv', 'sampleMetadata.tsv', and 'variableMetadata.tsv' file names}
 
-\item{files.ls}{list: alternatively to the dir.c argument, the full names of the files can be provided as a list}
+\item{files.ls}{list: alternatively to the dir.c argument, the full names of 
+the files can be provided as a list}
 
 \item{overwrite.l}{logical(1): should existing files be overwritten?}
 
@@ -74,11 +78,12 @@ printed on the screen; if 'none', no verbose will be generated}
 No object returned.
 }
 \description{
-Note that the \code{dataMatrix} is transposed before export (e.g., the samples
-are written column wise in the 'dataMatrix.tsv' exported file).
+Note that the \code{dataMatrix} is transposed before export (e.g., the 
+samples are written column wise in the 'dataMatrix.tsv' exported file).
 }
 \examples{
-metabo.se <- reading(system.file("extdata/prometis/metabo", package="phenomis"))
+metabo.se <- reading(system.file("extdata/prometis/metabo", 
+                     package="phenomis"))
 \donttest{
 writing(metabo.se, dir.c = file.path(getwd(), "metabo"))
 }

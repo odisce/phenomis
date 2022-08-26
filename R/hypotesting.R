@@ -10,16 +10,28 @@ setMethod("hypotesting", signature(x = "MultiAssayExperiment"),
                               "limma2ways", "limma2waysInter",
                               "anova2ways", "anova2waysInter")[2],
                    factor_names.vc,
-                   factor_levels.ls = list(factor1.vc = "default", factor2.vc = "default"),
-                   adjust.c = c("holm", "hochberg", "hommel", "bonferroni", "BH",
-                                "BY", "fdr", "none")[5],
+                   factor_levels.ls = list(factor1.vc = "default",
+                                           factor2.vc = "default"),
+                   adjust.c = c("holm",
+                                "hochberg",
+                                "hommel",
+                                "bonferroni",
+                                "BH",
+                                "BY",
+                                "fdr",
+                                "none")[5],
                    adjust_thresh.n = 0.05,
                    signif_maxprint.i = NA,
                    title.c = NA,
                    display_signif.l = FALSE,
                    prefix.c = "",
-                   figure.c = c("none", "interactive", "interactive_plotly", "myfile.pdf")[2],
-                   report.c = c("none", "interactive", "myfile.txt")[2]) {
+                   figure.c = c("none",
+                                "interactive",
+                                "interactive_plotly",
+                                "myfile.pdf")[2],
+                   report.c = c("none",
+                                "interactive",
+                                "myfile.txt")[2]) {
             
             if (!(report.c %in% c("none", "interactive")))
               sink(report.c, append = TRUE)
@@ -28,7 +40,9 @@ setMethod("hypotesting", signature(x = "MultiAssayExperiment"),
             if (report_set.c != "none")
               report_set.c <- "interactive"
             
-            if (!(figure.c %in% c("none", "interactive", "interactive_plotly"))) {
+            if (!(figure.c %in% c("none",
+                                  "interactive",
+                                  "interactive_plotly"))) {
               grDevices::pdf(figure.c)
               figure_set.c <- "interactive"
             } else
@@ -36,7 +50,8 @@ setMethod("hypotesting", signature(x = "MultiAssayExperiment"),
             
             for (set.c in names(x)) {
               
-              main.c <- paste0(ifelse(!is.na(title.c), paste0(title.c, ", "), ""),
+              main.c <- paste0(ifelse(!is.na(title.c),
+                                      paste0(title.c, ", "), ""),
                                set.c)
               
               if (report.c != "none")
@@ -67,7 +82,9 @@ setMethod("hypotesting", signature(x = "MultiAssayExperiment"),
               
             }
             
-            if (!(figure.c %in% c("none", "interactive", "interactive_plotly")))
+            if (!(figure.c %in% c("none",
+                                  "interactive",
+                                  "interactive_plotly")))
               grDevices::dev.off()
             
             if (!(report.c %in% c("none", "interactive")))
@@ -92,16 +109,28 @@ setMethod("hypotesting", signature(x = "SummarizedExperiment"),
                               "limma2ways", "limma2waysInter",
                               "anova2ways", "anova2waysInter")[2],
                    factor_names.vc,
-                   factor_levels.ls = list(factor1.vc = "default", factor2.vc = "default"),
-                   adjust.c = c("holm", "hochberg", "hommel", "bonferroni", "BH",
-                                "BY", "fdr", "none")[5],
+                   factor_levels.ls = list(factor1.vc = "default",
+                                           factor2.vc = "default"),
+                   adjust.c = c("holm",
+                                "hochberg",
+                                "hommel",
+                                "bonferroni",
+                                "BH",
+                                "BY",
+                                "fdr",
+                                "none")[5],
                    adjust_thresh.n = 0.05,
                    signif_maxprint.i = NA,
                    title.c = NA,
                    display_signif.l = FALSE,
                    prefix.c = "",
-                   figure.c = c("none", "interactive", "interactive_plotly", "myfile.pdf")[2],
-                   report.c = c("none", "interactive", "myfile.txt")[2]) {
+                   figure.c = c("none",
+                                "interactive",
+                                "interactive_plotly",
+                                "myfile.pdf")[2],
+                   report.c = c("none",
+                                "interactive",
+                                "myfile.txt")[2]) {
             
             if (!(report.c %in% c("none", "interactive")))
               sink(report.c, append = TRUE)
@@ -110,10 +139,15 @@ setMethod("hypotesting", signature(x = "SummarizedExperiment"),
             
             factorVl <- factor_names.vc %in% colnames(colData(x))
             
-            if (sum(!factorVl))
-              stop("The following factor(s) '", paste(factor_names.vc[!factorVl], collapse = "', '"),
+            if (sum(!factorVl)) {
+              unknown_factor.c <- paste(factor_names.vc[!factorVl],
+                                        collapse = "', '")
+              coldata_column.c <- paste(colnames(colData(x)), collapse = "', '")
+              stop("The following factor(s) '",
+                   unknown_factor.c,
                    "' was/were not found in the column names of colData(x): '",
-                   paste(colnames(colData(x)), collapse = "', '"), "'")
+                   coldata_column.c, "'")
+            }
             
             testVc <- c("ttest", "limma", "wilcoxon",
                         "anova", "kruskal",
@@ -121,8 +155,11 @@ setMethod("hypotesting", signature(x = "SummarizedExperiment"),
                         "limma2ways", "limma2waysInter",
                         "anova2ways", "anova2waysInter")
             
-            if (!test.c %in% testVc)
-              stop("'test.c = ", test.c, ": 'test.c' must be in '", paste(testVc, collapse = "', '"), "'")
+            if (!test.c %in% testVc) {
+              avail_test.c <- paste(testVc, collapse = "', '")
+              stop("'test.c = ", test.c, ": 'test.c' must be in '",
+                   avail_test.c, "'")
+            }
             
             # Hypothesis testing
             
@@ -182,7 +219,8 @@ setMethod("hypotesting", signature(x = "SummarizedExperiment"),
             ## Printing significant features
             
             signiColVl <- grepl("_signif", colnames(metric.mn))
-            signiVl <- rowSums(metric.mn[, signiColVl, drop = FALSE], na.rm = TRUE) > 0
+            signiVl <- rowSums(metric.mn[, signiColVl, drop = FALSE],
+                               na.rm = TRUE) > 0
             
             if (report.c != "none") {
               if (sum(signiVl) > 0) {
@@ -196,7 +234,8 @@ setMethod("hypotesting", signature(x = "SummarizedExperiment"),
                              adjust_thresh.n = adjust_thresh.n)
                 
               } else
-                message("\nNo significant variable found at the selected ", adjust_thresh.n, " level.")
+                message("\nNo significant variable found at the selected ",
+                        adjust_thresh.n, " level.")
               
             }
             
@@ -224,16 +263,28 @@ setMethod("hypotesting", signature(x = "MultiDataSet"),
                              "limma2ways", "limma2waysInter",
                              "anova2ways", "anova2waysInter")[2],
                    factor_names.vc,
-                   factor_levels.ls = list(factor1.vc = "default", factor2.vc = "default"),
-                   adjust.c = c("holm", "hochberg", "hommel", "bonferroni", "BH",
-                               "BY", "fdr", "none")[5],
+                   factor_levels.ls = list(factor1.vc = "default",
+                                           factor2.vc = "default"),
+                   adjust.c = c("holm",
+                                "hochberg",
+                                "hommel",
+                                "bonferroni",
+                                "BH",
+                               "BY",
+                               "fdr",
+                               "none")[5],
                    adjust_thresh.n = 0.05,
                    signif_maxprint.i = NA,
                    title.c = NA,
                    display_signif.l = FALSE,
                    prefix.c = "",
-                   figure.c = c("none", "interactive", "interactive_plotly", "myfile.pdf")[2],
-                   report.c = c("none", "interactive", "myfile.txt")[2]) {
+                   figure.c = c("none",
+                                "interactive",
+                                "interactive_plotly",
+                                "myfile.pdf")[2],
+                   report.c = c("none",
+                                "interactive",
+                                "myfile.txt")[2]) {
             
             if (!(report.c %in% c("none", "interactive")))
               sink(report.c, append = TRUE)
@@ -242,7 +293,9 @@ setMethod("hypotesting", signature(x = "MultiDataSet"),
             if (report_set.c != "none")
               report_set.c <- "interactive"
             
-            if (!(figure.c %in% c("none", "interactive", "interactive_plotly"))) {
+            if (!(figure.c %in% c("none",
+                                  "interactive",
+                                  "interactive_plotly"))) {
               grDevices::pdf(figure.c)
               figure_set.c <- "interactive"
             } else
@@ -250,7 +303,8 @@ setMethod("hypotesting", signature(x = "MultiDataSet"),
             
             for (set.c in names(x)) {
               
-              main.c <- paste0(ifelse(!is.na(title.c), paste0(title.c, ", "), ""),
+              main.c <- paste0(ifelse(!is.na(title.c),
+                                      paste0(title.c, ", "), ""),
                                set.c)
               
               if (report.c != "none")
@@ -305,16 +359,28 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
                              "limma2ways", "limma2waysInter",
                              "anova2ways", "anova2waysInter")[2],
                    factor_names.vc,
-                   factor_levels.ls = list(factor1.vc = "default", factor2.vc = "default"),
-                   adjust.c = c("holm", "hochberg", "hommel", "bonferroni", "BH",
-                               "BY", "fdr", "none")[5],
+                   factor_levels.ls = list(factor1.vc = "default",
+                                           factor2.vc = "default"),
+                   adjust.c = c("holm",
+                                "hochberg",
+                                "hommel",
+                                "bonferroni",
+                                "BH",
+                               "BY",
+                               "fdr",
+                               "none")[5],
                    adjust_thresh.n = 0.05,
                    signif_maxprint.i = NA,
                    title.c = NA,
                    display_signif.l = FALSE,
                    prefix.c = "",
-                   figure.c = c("none", "interactive", "interactive_plotly", "myfile.pdf")[2],
-                   report.c = c("none", "interactive", "myfile.txt")[2]) {
+                   figure.c = c("none",
+                                "interactive",
+                                "interactive_plotly",
+                                "myfile.pdf")[2],
+                   report.c = c("none",
+                                "interactive",
+                                "myfile.txt")[2]) {
             
             if (!(report.c %in% c("none", "interactive")))
               sink(report.c, append = TRUE)
@@ -323,10 +389,14 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
             
             factorVl <- factor_names.vc %in% colnames(Biobase::pData(x))
             
-            if (sum(!factorVl))
-              stop("The following factor(s) '", paste(factor_names.vc[!factorVl], collapse = "', '"),
+            if (sum(!factorVl)) {
+              unknown_factor.c <- paste(factor_names.vc[!factorVl],
+                                        collapse = "', '")
+              avail_column.c <- paste(colnames(Biobase::pData(x)), collapse = "', '")
+              stop("The following factor(s) '", unknown_factor.c,
                    "' was/were not found in the column names of pData(x): '",
-                   paste(colnames(Biobase::pData(x)), collapse = "', '"), "'")
+                   avail_column.c, "'")
+            }
             
             testVc <- c("ttest", "limma", "wilcoxon",
                         "anova", "kruskal",
@@ -334,8 +404,11 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
                         "limma2ways", "limma2waysInter",
                         "anova2ways", "anova2waysInter")
             
-            if (!test.c %in% testVc)
-              stop("'test.c = ", test.c, ": 'test.c' must be in '", paste(testVc, collapse = "', '"), "'")
+            if (!test.c %in% testVc) {
+              avail_test.c <- paste(testVc, collapse = "', '")
+              stop("'test.c = ", test.c, ": 'test.c' must be in '",
+                   avail_test.c, "'")
+            }
             
             # Hypothesis testing
             
@@ -395,7 +468,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
             ## Printing significant features
             
             signiColVl <- grepl("_signif", colnames(metric.mn))
-            signiVl <- rowSums(metric.mn[, signiColVl, drop = FALSE], na.rm = TRUE) > 0
+            signiVl <- rowSums(metric.mn[, signiColVl, drop = FALSE],
+                               na.rm = TRUE) > 0
             
             if (report.c != "none") {
               if (sum(signiVl) > 0) {
@@ -409,7 +483,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
                              adjust_thresh.n = adjust_thresh.n)
                 
               } else
-                message("\nNo significant variable found at the selected ", adjust_thresh.n, " level.")
+                message("\nNo significant variable found at the selected ",
+                        adjust_thresh.n, " level.")
               
             }
             
@@ -514,7 +589,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   
   factorNameLengthN <- length(factorNameC)
   if (factorNameLengthN != 1)
-    stop("'length(factorNameC) = ", factorNameLengthN, "': A single 'factorName' is required")
+    stop("'length(factorNameC) = ", factorNameLengthN,
+         "': A single 'factorName' is required")
   
   factorVcn <- samp.df[, factorNameC]
   # either of 'character' or 'numeric' mode at this stage
@@ -534,7 +610,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     } else {
       factorModeC <- mode(factorVc)
       if (factorModeC != "character")
-        stop("'mode(factorVc) = ", factorModeC, "': Factor must be of 'character' mode.")
+        stop("'mode(factorVc) = ", factorModeC,
+             "': Factor must be of 'character' mode.")
       factorFc <- factor(factorVc)
     }
     
@@ -546,23 +623,32 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     
     factorLevelsDefaultN <- nlevels(factorFc)
     
-    if (test.c %in% c("ttest", "limma", "wilcoxon") && factorLevelsDefaultN != 2) {
-      stop("'nlevels(factorFc) = ", factorLevelsDefaultN, "': The factor must have 2 levels.")
+    if (test.c %in% c("ttest", "limma", "wilcoxon") &&
+        factorLevelsDefaultN != 2) {
+      stop("'nlevels(factorFc) = ", factorLevelsDefaultN,
+           "': The factor must have 2 levels.")
     } else if (test.c %in% "anova" && factorLevelsDefaultN < 3) {
-      stop("'nlevels(factorFc) = ", factorLevelsDefaultN, "': The factor must have 3 levels or more.")
+      stop("'nlevels(factorFc) = ", factorLevelsDefaultN,
+           "': The factor must have 3 levels or more.")
     }
     
-    if (length(factorLevelsSelectedVc) > 1 || factorLevelsSelectedVc != "default") {
+    if (length(factorLevelsSelectedVc) > 1 ||
+        factorLevelsSelectedVc != "default") {
       
       factorLevelsSelectedN <- length(factorLevelsSelectedVc)
       if (factorLevelsDefaultN != factorLevelsSelectedN)
-        stop("'nlevels(factorFc) = ", factorLevelsDefaultN, "'and 'length(factorLevelsVc) = ", factorLevelsSelectedN,
-             "': 'factorLevelsVc' must have the same number of levels as the factor")
+        stop("'nlevels(factorFc) = ", factorLevelsDefaultN,
+             "'and 'length(factorLevelsVc) = ", factorLevelsSelectedN,
+             "': 'factorLevelsVc' must have the same number 
+             of levels as the factor")
       
-      if (!identical(sort(factorLevelsVc), sort(factorLevelsDefaultVc)))
-        stop("'levels(factorFc) = ", paste(factorLevelsDefaultVc, collapse = ', '),
-             "' and 'factorLevelsVc = ", paste(factorLevelsSelectedVc, collapse = ', '),
+      if (!identical(sort(factorLevelsVc), sort(factorLevelsDefaultVc))) {
+        level_default.c <- paste(factorLevelsDefaultVc, collapse = ', ')
+        level_select.c <- paste(factorLevelsSelectedVc, collapse = ', ')
+        stop("'levels(factorFc) = ", level_default.c,
+             "' and 'factorLevelsVc = ", level_select.c,
              "': refLeveslVc' must match all level names of the factor.")
+      }
       
       factorFc <- factor(factorVc, factorLevelsSelectedVc)
       
@@ -575,7 +661,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     
     factorModeC <- mode(factorVn)
     if (factorModeC != "numeric")
-      stop("'mode(factorVn) = ", factorModeC, "': Factor must be of 'numeric' mode.")
+      stop("'mode(factorVn) = ", factorModeC,
+           "': Factor must be of 'numeric' mode.")
     
   }
   
@@ -628,10 +715,12 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     if (test.c == "ttest") {
       hypotest <- function(y) stats::t.test(y ~ factorFc)[["p.value"]]
     } else if (test.c == "wilcoxon") {
-      hypotest <- function(y) stats::wilcox.test(y ~ factorFc, exact = FALSE)[["p.value"]]
+      hypotest <- function(y) stats::wilcox.test(y ~ factorFc,
+                                                 exact = FALSE)[["p.value"]]
     } else if (test.c %in% c("pearson", "spearman")) {
       hypotest <- function(y) stats::cor.test(factorVn, y, method = test.c,
-                                              use = "pairwise.complete.obs", exact = FALSE)[["p.value"]]
+                                              use = "pairwise.complete.obs",
+                                              exact = FALSE)[["p.value"]]
     }
     
     return(apply(data.mn, 2, hypotest))
@@ -715,7 +804,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   if (sum(signiVl) > 30)
     label.vc[adjPvalVn > max(head(sort(adjPvalVn), 30))] <- ""
   
-  gg_volcanoplot(fold_change.vn = metric.mn[, grep(paste0("_", statC), colnames(metric.mn))],
+  gg_volcanoplot(fold_change.vn = metric.mn[, grep(paste0("_", statC),
+                                                   colnames(metric.mn))],
                  adjusted_pvalue.vn = adjPvalVn,
                  adjust_method.c = adjust.c,
                  adjust_thresh.n = adjust_thresh.n,
@@ -730,7 +820,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   
   if (display_signif.l) {
     
-    varSigniVi <- which(metric.mn[, grep(paste0("_signif$"), colnames(metric.mn))] > 0)
+    varSigniVi <- which(metric.mn[, grep(paste0("_signif$"),
+                                         colnames(metric.mn))] > 0)
     
     for (varI in varSigniVi) {
       
@@ -742,11 +833,13 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
         
         mainC <- paste0(varC, "\n(", statC, " = ",
                         signif(metric.mn[varI,
-                                        grep(paste0("_", statC, "$"), colnames(metric.mn))], 2),
+                                        grep(paste0("_", statC, "$"),
+                                             colnames(metric.mn))], 2),
                         ", ",
                         adjust.c, " = ",
                         signif(metric.mn[varI,
-                                        grep(paste0("_", adjust.c, "$"), colnames(metric.mn))], 2),
+                                        grep(paste0("_", adjust.c, "$"),
+                                             colnames(metric.mn))], 2),
                         ", R2 = ", signif(summary(mod)$r.squared, 2), ")")
         if (!is.na(title.c))
           mainC <- paste0(title.c, ", ", mainC)
@@ -835,7 +928,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   
   # pairwise test
   pairAdjustMN <- apply(pairPvalMN, 2,
-                        function(pairPvalVn) stats::p.adjust(pairPvalVn, method = adjust.c))
+                        function(pairPvalVn) stats::p.adjust(pairPvalVn,
+                                                             method = adjust.c))
   pairSigniMI <- pairAdjustMN <= adjust_thresh.n
   mode(pairSigniMI) <- "integer"
   
@@ -898,8 +992,10 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
                        tukeyHsdMN <- stats::TukeyHSD(aovModel)[["factorFc"]]
                        
                        padjVn <- diffVn <- rep(NA_real_, length(pairNamesVc))
-                       names(padjVn) <- names(diffVn) <- vapply(pairNamesVc, function(pairC) {
-                         paste(rev(unlist(strsplit(pairC, ".", fixed = TRUE))), collapse = "-")
+                       names(padjVn) <- names(diffVn) <- vapply(pairNamesVc,
+                                                                function(pairC) {
+                         paste(rev(unlist(strsplit(pairC, ".", fixed = TRUE))),
+                               collapse = "-")
                        }, FUN.VALUE = character(1))
                        
                        diffVn[rownames(tukeyHsdMN)] <- tukeyHsdMN[, "diff"]
@@ -925,11 +1021,16 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     kruskalMN <- t(apply(data.mn, 2, function(varVn) {
       
       kruskalPvalN <- stats::kruskal.test(varVn ~ factorFc)[["p.value"]]
-      nemenyiPvalMN <- PMCMRplus::kwAllPairsNemenyiTest(varVn, factorFc, "Tukey")[["p.value"]]
+      nemenyiPvalMN <- PMCMRplus::kwAllPairsNemenyiTest(varVn,
+                                                        factorFc,
+                                                        "Tukey")[["p.value"]]
       
       nemenyiPvalVn <- c(nemenyiPvalMN[lower.tri(nemenyiPvalMN, diag = TRUE)])
-      names(nemenyiPvalVn) <- paste0(rep(rownames(nemenyiPvalMN), ncol(nemenyiPvalMN)),
-                                     "-", rep(colnames(nemenyiPvalMN), each = nrow(nemenyiPvalMN)))[c(lower.tri(nemenyiPvalMN, diag = TRUE))]
+      names(nemenyiPvalVn) <- paste0(rep(rownames(nemenyiPvalMN),
+                                         ncol(nemenyiPvalMN)),
+                                     "-",
+                                     rep(colnames(nemenyiPvalMN),
+                                         each = nrow(nemenyiPvalMN)))[c(lower.tri(nemenyiPvalMN, diag = TRUE))]
       padjVn <- rep(NA_real_, length(pairNamesVc))
       names(padjVn) <- vapply(pairNamesVc, function(pairC) {
         paste(rev(unlist(strsplit(pairC, ".", fixed = TRUE))), collapse = "-")
@@ -950,7 +1051,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     pairDiffMN <- vapply(pairNamesVc, function(pairC) {
       pairVc <- unlist(strsplit(pairC, ".", fixed = TRUE))
       pairSamplesVi <- which(factorFc %in% pairVc)
-      pairFactorFc <- factor(as.character(factorFc)[pairSamplesVi], levels = pairVc)
+      pairFactorFc <- factor(as.character(factorFc)[pairSamplesVi],
+                             levels = pairVc)
       apply(data.mn[pairSamplesVi, ], 2,
             function(varVn)
               diff(as.numeric(tapply(varVn, pairFactorFc,
@@ -992,7 +1094,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   
   for (pairC in pairNamesVc)
     aovNamesVc <- c(aovNamesVc,
-                    paste0(prefix.c, pairC, c("_diff", paste0("_", adjust.c), "_signif")))
+                    paste0(prefix.c, pairC, c("_diff", paste0("_", adjust.c),
+                                              "_signif")))
   
   return(list(pairNamesVc = pairNamesVc,
               aovNamesVc = aovNamesVc))
@@ -1014,7 +1117,9 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     
     pairmetric.mn <- metric.mn[, grep(pairC, colnames(metric.mn), fixed = TRUE)]
     
-    pairFactorFc <- factorFc[factorFc %in% unlist(strsplit(pairC, ".", fixed = TRUE)), drop = TRUE]
+    pairFactorFc <- factorFc[factorFc %in% unlist(strsplit(pairC, ".",
+                                                           fixed = TRUE)),
+                             drop = TRUE]
     
     pairAdjPvalVn <- pairmetric.mn[, grep(adjust.c, colnames(pairmetric.mn))]
     pairSigniVl <- pairAdjPvalVn <= adjust_thresh.n
@@ -1048,7 +1153,9 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   }
   
   pvalAdjVn <- metric.mn[, paste0(test.c, "_", factorNameC, "_", adjust.c)]
-  pvalSigniVi <- which(metric.mn[, paste0(test.c, "_", factorNameC, "_signif")] > 0)
+  pvalSigniVi <- which(metric.mn[,
+                                 paste0(test.c, "_",
+                                        factorNameC, "_signif")] > 0)
   
   if (sum(pvalSigniVi)) {
     
@@ -1133,7 +1240,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   for (colC in colnames(metric.mn))
     feat.df[, colC] <- metric.mn[, colC]
   
-  metric.mn <- metric.mn[do.call("order", as.list(as.data.frame(pvalAdjustMN))), ,
+  metric.mn <- metric.mn[do.call("order",
+                                 as.list(as.data.frame(pvalAdjustMN))), ,
                        drop = FALSE]
   
   ## graphic
@@ -1304,7 +1412,8 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
     
     anova2waysNamesC <- c(anova2waysNamesC,
                           paste0(paste0(test.c, "_",
-                                        factor_names.vc[1], ":", factor_names.vc[2],
+                                        factor_names.vc[1], ":",
+                                        factor_names.vc[2],
                                         "_"),
                                  c(adjust.c, "signif")))
     
@@ -1328,11 +1437,13 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   
   if (sum(metricSigniVi)) {
     
-    metricSigniLs <- apply(metricSigniMN, 2, function(signiVn) which(signiVn > 0))
+    metricSigniLs <- apply(metricSigniMN, 2,
+                           function(signiVn) which(signiVn > 0))
     
     metricSigniNamesVc <- factor_names.vc
     if (grepl("Inter$", test.c))
-      metricSigniNamesVc <- c(metricSigniNamesVc, paste(factor_names.vc, collapse = ":"))
+      metricSigniNamesVc <- c(metricSigniNamesVc, paste(factor_names.vc,
+                                                        collapse = ":"))
     names(metricSigniLs) <- metricSigniNamesVc
     
     mainC <- test.c
@@ -1364,6 +1475,7 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
   if (is.na(signif_maxprint.i))
     signif_maxprint.i <- nrow(metricSigniMN)
   
+  message_thefirst.c <- paste0("The first ", signif_maxprint.i, " are")
   message("\n", nrow(metricSigniMN), " variable",
           ifelse(nrow(metricSigniMN) > 1, "s", ""),
           " (", round(nrow(metricSigniMN) / nrow(metric.mn) * 100), "%) ",
@@ -1374,13 +1486,14 @@ setMethod("hypotesting", signature(x = "ExpressionSet"),
                  "It is",
                  ifelse(nrow(metricSigniMN) <= signif_maxprint.i,
                         "They are",
-                        paste0("The first ", signif_maxprint.i, " are"))),
+                        message_thefirst.c)),
           " displayed below",
           ifelse(nrow(metricSigniMN) > 1,
                  " (sorted by increasing corrected p-values)",
                  ""),
           ":\n")
-  print(metricSigniMN[seq_len(min(signif_maxprint.i, nrow(metricSigniMN))), , drop = FALSE])
+  print(metricSigniMN[seq_len(min(signif_maxprint.i, nrow(metricSigniMN))), ,
+                      drop = FALSE])
   
 }
 

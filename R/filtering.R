@@ -223,9 +223,13 @@ setMethod("filtering", signature(x = "ExpressionSet"),
     class.vc <- as.character(samp.df[, class.c])
     filter.vl <- apply(data.mn, 2,
                        function(feat.vn) {
-                         class_na.vl <- tapply(feat.vn, class.vc, function(x) sum(is.na(x))/length(x)) > max_na_prop.n
-                         class_zerovar.vl <- tapply(feat.vn, class.vc, function(x) stats::var(x, na.rm = TRUE)) < min_variance.n
-                         if(any(is.na(class_zerovar.vl)))
+                         class_na.vl <- tapply(feat.vn, class.vc,
+                                               function(x)
+                                                 sum(is.na(x))/length(x)) > max_na_prop.n
+                         class_zerovar.vl <- tapply(feat.vn, class.vc,
+                                                    function(x)
+                                                      stats::var(x, na.rm = TRUE)) < min_variance.n
+                         if (any(is.na(class_zerovar.vl)))
                            class_zerovar.vl[is.na(class_zerovar.vl)] <- TRUE
                          all(class_na.vl) || any(class_zerovar.vl)
                        })
@@ -246,7 +250,8 @@ setMethod("filtering", signature(x = "ExpressionSet"),
   if (sum(filter.vl)) {
     
     if (all(filter.vl))
-      stop("All ", dim.c, " would be discarded (because of too many missing values or too low variances). Please check your dataset or your thresholds.")
+      stop("All ", dim.c, " would be discarded (because of too many missing 
+           values or too low variances). Please check your dataset or your thresholds.")
     
     if (dim.c == "samples") {
       discard.c <- paste(dimnames.ls[[1]][filter.vl], collapse = ", ")
@@ -256,13 +261,15 @@ setMethod("filtering", signature(x = "ExpressionSet"),
       dimnames.ls[[2]] <- dimnames.ls[[2]][!filter.vl]
     }
     
-    if (verbose.l)
+    if (verbose.l) {
+      message_set.c <- ifelse(set.c != "",
+                              paste0(" in '", set.c, "'"),
+                              "")
       message("Discarded ", sum(filter.vl), " ", dim.c,
-              ifelse(set.c != "",
-                     paste0(" in '", set.c, "'"),
-                     ""),
+              message_set.c,
               ": ",
               discard.c)
+    }
     
   }
   

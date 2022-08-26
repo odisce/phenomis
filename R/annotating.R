@@ -4,16 +4,20 @@
 setMethod("annotating", signature(x = "MultiAssayExperiment"),
           function(x,
                    database.c = c("chebi", "local.ms")[1],
-                   param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1],
+                   param.ls = list(query.type = c("mz",
+                                                  "chebi.id")[1],
                                    query.col = "mz",
                                    ms.mode = "pos",
                                    mz.tol = 10,
                                    mz.tol.unit = "ppm",
-                                   fields = c("chebi.id", "name", "formula", "molecular.mass", "monoisotopic.mass"),
+                                   fields = c("chebi.id",
+                                              "name",
+                                              "formula",
+                                              "molecular.mass",
+                                              "monoisotopic.mass"),
                                    fieldsLimit = 1,
                                    max.results = 3,
                                    local.ms.db = data.frame(),
-                                   organism = "hsa",
                                    prefix = paste0(database.c, "."),
                                    sep = "|"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
@@ -56,16 +60,20 @@ setMethod("annotating", signature(x = "MultiAssayExperiment"),
 setMethod("annotating", signature(x = "SummarizedExperiment"),
           function(x,
                    database.c = c("chebi", "local.ms")[1],
-                   param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1],
+                   param.ls = list(query.type = c("mz",
+                                                  "chebi.id")[1],
                                    query.col = "mz",
                                    ms.mode = "pos",
                                    mz.tol = 10,
                                    mz.tol.unit = "ppm",
-                                   fields = c("chebi.id", "name", "formula", "molecular.mass", "monoisotopic.mass"),
+                                   fields = c("chebi.id",
+                                              "name",
+                                              "formula",
+                                              "molecular.mass",
+                                              "monoisotopic.mass"),
                                    fieldsLimit = 1,
                                    max.results = 3,
                                    local.ms.db = data.frame(),
-                                   organism = "hsa",
                                    prefix = paste0(database.c, "."),
                                    sep = "|"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
@@ -78,10 +86,12 @@ setMethod("annotating", signature(x = "SummarizedExperiment"),
                    call. = FALSE)
             
             availableDatabasesVc <- c("chebi", "local.ms", "kegg")
-            if (!(database.c %in% availableDatabasesVc))
-              stop("'database.c' must be in either: '", paste(availableDatabasesVc,
-                                                              collapse = "', '"), "'.",
-                   call. = FALSE)
+            if (!(database.c %in% availableDatabasesVc)) {
+              available_database.c <- paste(availableDatabasesVc,
+                                            collapse = "', '")
+              stop("'database.c' must be in either: '",
+                   available_database.c, "'.")
+            }
             
             SummarizedExperiment::rowData(x) <- .annotating(SummarizedExperiment::rowData(x),
                                                             database.c = database.c,
@@ -103,16 +113,20 @@ setMethod("annotating", signature(x = "SummarizedExperiment"),
 setMethod("annotating", signature(x = "MultiDataSet"),
           function(x,
                    database.c = c("chebi", "local.ms")[1],
-                   param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1],
+                   param.ls = list(query.type = c("mz",
+                                                  "chebi.id")[1],
                                    query.col = "mz",
                                    ms.mode = "pos",
                                    mz.tol = 10,
                                    mz.tol.unit = "ppm",
-                                   fields = c("chebi.id", "name", "formula", "molecular.mass", "monoisotopic.mass"),
+                                   fields = c("chebi.id",
+                                              "name",
+                                              "formula",
+                                              "molecular.mass",
+                                              "monoisotopic.mass"),
                                    fieldsLimit = 1,
                                    max.results = 3,
                                    local.ms.db = data.frame(),
-                                   organism = "hsa",
                                    prefix = paste0(database.c, "."),
                                    sep = "|"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
@@ -160,16 +174,20 @@ setMethod("annotating", signature(x = "MultiDataSet"),
 setMethod("annotating", signature(x = "ExpressionSet"),
           function(x,
                    database.c = c("chebi", "local.ms")[1],
-                   param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1],
+                   param.ls = list(query.type = c("mz",
+                                                  "chebi.id")[1],
                                    query.col = "mz",
                                    ms.mode = "pos",
                                    mz.tol = 10,
                                    mz.tol.unit = "ppm",
-                                   fields = c("chebi.id", "name", "formula", "molecular.mass", "monoisotopic.mass"),
+                                   fields = c("chebi.id",
+                                              "name",
+                                              "formula",
+                                              "molecular.mass",
+                                              "monoisotopic.mass"),
                                    fieldsLimit = 1,
                                    max.results = 3,
                                    local.ms.db = data.frame(),
-                                   organism = "hsa",
                                    prefix = paste0(database.c, "."),
                                    sep = "|"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
@@ -182,10 +200,12 @@ setMethod("annotating", signature(x = "ExpressionSet"),
                    call. = FALSE)
             
             availableDatabasesVc <- c("chebi", "local.ms", "kegg")
-            if (!(database.c %in% availableDatabasesVc))
-              stop("'database.c' must be in either: '", paste(availableDatabasesVc,
-                                                              collapse = "', '"), "'.",
-                   call. = FALSE)
+            if (!(database.c %in% availableDatabasesVc)) {
+              available_database.c <- paste(availableDatabasesVc,
+                                            collapse = "', '")
+              stop("'database.c' must be in either: '",
+                   available_database.c, "'.")
+            }
             
             Biobase::fData(x) <- .annotating(Biobase::fData(x),
                                              database.c = database.c,
@@ -210,7 +230,8 @@ setMethod("annotating", signature(x = "ExpressionSet"),
 #' @examples
 #' annotating_parameters()
 #' annotating_parameters("chebi")
-annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]) {
+annotating_parameters <- function(database.c = c("chebi",
+                                                 "local.ms")[1]) {
   
   .annot_param_default(database.c = database.c,
                        printL = TRUE)
@@ -218,12 +239,14 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
 }
 
 
-.annotating <- function(feat.df, # variable metadata (dataframe or DataFrame; variables x variable metadata)
+.annotating <- function(feat.df, # variable metadata (dataframe or DataFrame;
+                                 # variables x variable metadata)
                         database.c,
                         param.ls,
                         verboseL) {
   
-  paramDefaultLs <- .annot_param_check(database.c = database.c, param.ls = param.ls)
+  paramDefaultLs <- .annot_param_check(database.c = database.c,
+                                       param.ls = param.ls)
   
   switch(database.c,
          chebi = {feat.df <- .annot_chebi(feat.df = feat.df,
@@ -233,18 +256,16 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
          local.ms = {feat.df <- .annot_local.ms(feat.df = feat.df,
                                                 param.ls = param.ls,
                                                 paramDefaultLs = paramDefaultLs,
-                                                verboseL = verboseL)},
-         kegg = {feat.df <- .annot_kegg(feat.df = feat.df,
-                                        param.ls = param.ls,
-                                        paramDefaultLs = paramDefaultLs,
-                                        verboseL = verboseL)})
+                                                verboseL = verboseL)})
   
   return(feat.df)
   
 }
 
 
-.annot_param_default <- function(database.c = c("chebi", "local.ms", "kegg")[1],
+.annot_param_default <- function(database.c = c("chebi",
+                                                "local.ms",
+                                                "kegg")[1],
                                  printL = FALSE) {
   
   paramDefaultDF <- utils::read.table(system.file("extdata/annot_param_default.tsv",
@@ -268,8 +289,10 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
     for (fieldColC in c("default", "available")) {
       
       fieldDefaultC <- paramDefaultDF["fields", fieldColC]
-      fieldDefaultVc <- unlist(strsplit(fieldDefaultC, split = "|", fixed = TRUE))
-      fieldDefaultC <- fieldDefaultVc[grep(paste0(database.c, " = "), fieldDefaultVc)]
+      fieldDefaultVc <- unlist(strsplit(fieldDefaultC, split = "|",
+                                        fixed = TRUE))
+      fieldDefaultC <- fieldDefaultVc[grep(paste0(database.c, " = "),
+                                           fieldDefaultVc)]
       paramDefaultDF["fields", fieldColC] <- gsub(paste0(database.c, " = "), "",
                                                   fieldDefaultC)
       
@@ -284,12 +307,16 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
       printParamDF["fields", "default"] <- printParamDF["fields", "available"] <- "see below"
     message("Annotating parameters for the query of ", database.c, ":\n")
     print(printParamDF)
+    message_avail.c <- paste(eval(parse(text = paramDefaultDF["fields",
+                                                              "available"])),
+                                    collapse = "', '")
     message("'fields' possible values:\n'",
-            paste(eval(parse(text = paramDefaultDF["fields", "available"])),
-                  collapse = "', '"), "'\n")
+            message_avail.c, "'\n")
+    message_default.c <- paste(eval(parse(text = paramDefaultDF["fields",
+                                                                "default"])),
+                               collapse = "', '")
     message("'fields' default values:\n'",
-            paste(eval(parse(text = paramDefaultDF["fields", "default"])),
-                  collapse = "', '"), "'\n")
+            message_default.c, "'\n")
     
   } else {
     
@@ -308,9 +335,13 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   
   paramErrorVc <- setdiff(names(param.ls), rownames(paramDefaultDF))
   
-  if (length(paramErrorVc) > 0)
-    stop("The following parameter name(s) is/are not recognized by the 'annotating' method for the selected '", database.c, "' database:\n'",
-         paste(paramErrorVc, collapse = "', '"), "'.\n", call. = FALSE)
+  if (length(paramErrorVc) > 0) {
+    param_error.c <- paste(paramErrorVc, collapse = "', '")
+    stop("The following parameter name(s) is/are not recognized by 
+         the 'annotating' method for the selected '", database.c,
+         "' database:\n'",
+         param_error.c, "'.\n")
+  }
   
   # checking the mode of the parameters
   
@@ -319,13 +350,12 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
     if (paramC == "local.ms.db") {
       
       if (!is.data.frame(param.ls[[paramC]]))
-        stop("Parameter '", paramC, "' is expected to be of 'data.frame' class.",
-             call. = FALSE)
+        stop("Parameter '", paramC,
+             "' is expected to be of 'data.frame' class.")
       
     } else if (mode(param.ls[[paramC]]) != paramDefaultDF[paramC, "mode"])
       stop("Parameter '", paramC, "' is expected to be of '",
-           paramDefaultDF[paramC, "mode"], "' mode.",
-           call. = FALSE)
+           paramDefaultDF[paramC, "mode"], "' mode.")
     
   }
   
@@ -337,9 +367,11 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
     availValueVc <- eval(parse(text = paramDefaultDF[availI, "available"]))
     
     if (availParamC %in% names(param.ls) &&
-        !(all(param.ls[[availParamC]] %in% availValueVc)))
+        !(all(param.ls[[availParamC]] %in% availValueVc))) {
+      available_value.c <- paste(availValueVc, collapse = "', '")
       stop("Value(s) for the '", availParamC, "' parameter should be in:\n'",
-           paste(availValueVc, collapse = "', '"), "'", call. = FALSE)
+           available_value.c, "'")
+    }
     
   }
   
@@ -375,8 +407,8 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
                                        names(param.ls))])
   
   if (!(param.ls[["query.col"]] %in% colnames(feat.df)))
-    stop("The '", param.ls[["query.col"]], "' column could not be found in the fData.",
-         call. = FALSE)
+    stop("The '", param.ls[["query.col"]], "' column 
+         could not be found in the fData.")
   
   queryVcn <- feat.df[, param.ls[["query.col"]]]
   
@@ -391,8 +423,8 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   options(warn = optionWarnN)
   
   if (sum(queriableVl) < 1)
-    stop("No numeric were found in the '", param.ls[["query.col"]], "' column for ChEBI query.",
-         call. = FALSE)
+    stop("No numeric were found in the '", param.ls[["query.col"]],
+         "' column for ChEBI query.")
   
   queryVn <- as.numeric(queryVcn[queriableVl])
   
@@ -419,7 +451,8 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
                                        fieldsLimit = param.ls[["fieldsLimit"]],
                                        prefix = param.ls[["prefix"]])
     
-    resultDF <- stats::aggregate(.~mz, resultDF, paste0, collapse = param.ls[["sep"]])
+    resultDF <- stats::aggregate(.~mz, resultDF, paste0,
+                                 collapse = param.ls[["sep"]])
     
   } else if (param.ls[["query.type"]] == "chebi.id") {
     
@@ -433,8 +466,7 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
                                            prefix = param.ls[["prefix"]])
     
   } else
-    stop("'query.type' must be either 'mz' or 'chebi.id' for query of ChEBI.",
-         call. = FALSE)
+    stop("'query.type' must be either 'mz' or 'chebi.id' for query of ChEBI.")
   
   mybiodb$terminate()
   
@@ -482,7 +514,8 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   
   mybiodb$terminate()
   
-  resultDF <- stats::aggregate(.~mz, resultDF, paste0, collapse = param.ls[["sep"]])
+  resultDF <- stats::aggregate(.~mz, resultDF, paste0,
+                               collapse = param.ls[["sep"]])
   
   fdataTempDF <- cbind.data.frame(.fdatarownames = rownames(feat.df),
                                   feat.df,
@@ -498,19 +531,6 @@ annotating_parameters <- function(database.c = c("chebi", "local.ms", "kegg")[1]
   fdataMergeDF[[".fdatarownames"]] <- NULL
   
   return(fdataMergeDF)
-  
-}
-
-
-.annot_kegg <- function(feat.df, param.ls, paramDefaultLs, verboseL) {
-  
-  # param.ls <- list(query.col = "database_identifier", query.type = "chebi")
-  # in progress
-  
-  param.ls <- c(param.ls,
-                paramDefaultLs[setdiff(names(paramDefaultLs),
-                                       names(param.ls))])
-  
   
 }
 

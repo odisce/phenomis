@@ -12,7 +12,8 @@ testthat::test_that("inspecting-se", {
                               0.3160307,
                               tolerance = 1e-6)
   
-  proteo.se <- reading(system.file("extdata/prometis/proteo", package = "phenomis"))
+  proteo.se <- reading(system.file("extdata/prometis/proteo", 
+                                   package = "phenomis"))
   
   proteo.se <- inspecting(proteo.se,
                           figure.c = "none",
@@ -32,7 +33,8 @@ testthat::test_that("inspecting-mae", {
                               figure.c = "none",
                               report.c = "none")
   
-  testthat::expect_equivalent(colData(prometis.mae[["metabo"]])["W634m", "hotel_pval"],
+  testthat::expect_equivalent(colData(prometis.mae[["metabo"]])["W634m", 
+                                                                "hotel_pval"],
                               0.818558,
                               tolerance = 1e-6)
   
@@ -40,7 +42,8 @@ testthat::test_that("inspecting-mae", {
 
 testthat::test_that("inspecting-eset", {
   
-  sacurine.eset <- reading(system.file("extdata/sacurine", package = "phenomis"),
+  sacurine.eset <- reading(system.file("extdata/sacurine", 
+                                       package = "phenomis"),
                            output.c = "set")
   
   sacurine.eset <- inspecting(sacurine.eset,
@@ -51,7 +54,8 @@ testthat::test_that("inspecting-eset", {
                               0.3160307,
                               tolerance = 1e-6)
   
-  proteo.eset <- reading(system.file("extdata/prometis/proteo", package = "phenomis"),
+  proteo.eset <- reading(system.file("extdata/prometis/proteo", 
+                                     package = "phenomis"),
                          output.c = "set")
   
   proteo.eset <- inspecting(proteo.eset,
@@ -66,13 +70,16 @@ testthat::test_that("inspecting-eset", {
 
 testthat::test_that("inspecting-mset", {
   
-  prometis.mset <- reading(system.file("extdata/prometis", package = "phenomis"), output.c = "set")
+  prometis.mset <- reading(system.file("extdata/prometis", 
+                                       package = "phenomis"), 
+                           output.c = "set")
   
   prometis.mset <- inspecting(prometis.mset,
                               figure.c = "none",
                               report.c = "none")
   
-  testthat::expect_equivalent(Biobase::pData(prometis.mset)[["metabo"]]["L824m", "hotel_pval"],
+  testthat::expect_equivalent(Biobase::pData(prometis.mset)[["metabo"]]["L824m", 
+                                                                        "hotel_pval"],
                               0.34770846,
                               tolerance = 1e-6)
   

@@ -14,6 +14,8 @@ gg_boxplot(
   ylab.c = "",
   label.vc = "",
   palette.vc = "Set1",
+  theme.c = c("default", "bw", "classic", "dark", "gray", "linedraw", "light",
+    "minimal", "void")[3],
   size.ls = list(dot.n = 0.7, lab.i = 20, tick.i = 20, title.i = 20),
   figure.c = c("interactive", "my_boxplot.pdf")[1]
 )
@@ -41,14 +43,17 @@ the data, containing the feature labeling for outlier display}
 (default: 'Set1'; 'Paired' can be useful for parallel plotting) or a vector
 manually defining the colors}
 
-\item{size.ls}{List of sizes for dots (default is 0.7), labels (default is 16),
-ticks (14) and title (20)}
+\item{theme.c}{character(1): name of the ggplot theme}
+
+\item{size.ls}{List of sizes for dots (default is 0.7), labels 
+(default is 16), ticks (14) and title (20)}
 
 \item{figure.c}{Character: either 'interactive' for interactive display or
 'my_barplot.pdf' for figure saving (only the extension matters)}
 }
 \value{
-character vector of outlier labels (same dimension as the number of rows from data.tb)
+character vector of outlier labels (same dimension as the number of 
+rows from data.tb)
 }
 \description{
 Boxplot with ggplot2

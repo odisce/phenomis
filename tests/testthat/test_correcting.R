@@ -2,10 +2,12 @@ testthat::context("Testing 'correcting'")
 
 testthat::test_that("correcting-se", {
   
-  sacurine.se <- reading(system.file("extdata/sacurine", package = "phenomis"))
+  sacurine.se <- reading(system.file("extdata/sacurine", 
+                                     package = "phenomis"))
   sacurine.se <- correcting(sacurine.se, method.vc = "loess")
   
-  testthat::expect_equal(assay(sacurine.se)["Testosterone glucuronide", "HU_neg_020"],
+  testthat::expect_equal(assay(sacurine.se)["Testosterone glucuronide", 
+                                            "HU_neg_020"],
                          44136.83,
                          tolerance = 1e-6)
   
@@ -25,11 +27,13 @@ testthat::test_that("correcting-mae", {
                                                         sampleMap = map.df)
   sac.mae <- correcting(sac.mae, method.vc = c("loess", "serrf"))
   
-  testthat::expect_equal(assays(sac.mae)[["sac1"]]["Testosterone glucuronide", "HU_neg_020"],
+  testthat::expect_equal(assays(sac.mae)[["sac1"]]["Testosterone glucuronide", 
+                                                   "HU_neg_020"],
                          44136.83,
                          tolerance = 1e-6)
   
-  testthat::expect_equal(assays(sac.mae)[["sac2"]]["Testosterone glucuronide", "HU_neg_020"],
+  testthat::expect_equal(assays(sac.mae)[["sac2"]]["Testosterone glucuronide", 
+                                                   "HU_neg_020"],
                          64226.78,
                          tolerance = 1e-6)
   

@@ -38,9 +38,11 @@ gg_barplot(
 
 \item{ylab.c}{Character: y label}
 
-\item{row_levels.vc}{Vector of characters: levels of rownames (default: NA: alphabetical order will be used)}
+\item{row_levels.vc}{Vector of characters: levels of rownames (default: NA: 
+alphabetical order will be used)}
 
-\item{col_levels.vc}{Vector of characters: levels of colnames (default: NA: alphabetical order will be used)}
+\item{col_levels.vc}{Vector of characters: levels of colnames (default: NA: 
+alphabetical order will be used)}
 
 \item{palette.vc}{Character: either the name of an RColorBrewer palette
 (default: 'Set1'; 'Paired' can be useful for parallel plotting) or a vector
@@ -62,7 +64,8 @@ manually defining the colors}
 \item{bar_just.n}{Numeric: adjustment of bar value text (default : 0.9)}
 
 \item{figure.c}{Character: either 'interactive' for interactive display,
-'my_barplot.pdf' for figure saving (only the extension matters), or 'none' to prevent plotting}
+'my_barplot.pdf' for figure saving (only the extension matters), or 'none' 
+to prevent plotting}
 }
 \value{
 invisible ggplot2 object

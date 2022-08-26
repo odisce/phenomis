@@ -12,78 +12,88 @@
 annotating(
   x,
   database.c = c("chebi", "local.ms")[1],
-  param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1], query.col = "mz",
-    ms.mode = "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name",
-    "formula", "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3,
-    local.ms.db = data.frame(), organism = "hsa", prefix = paste0(database.c, "."), sep =
-    "|"),
+  param.ls = list(query.type = c("mz", "chebi.id")[1], query.col = "mz", ms.mode =
+    "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name", "formula",
+    "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3, local.ms.db
+    = data.frame(), prefix = paste0(database.c, "."), sep = "|"),
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
 \S4method{annotating}{MultiAssayExperiment}(
   x,
   database.c = c("chebi", "local.ms")[1],
-  param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1], query.col = "mz",
-    ms.mode = "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name",
-    "formula", "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3,
-    local.ms.db = data.frame(), organism = "hsa", prefix = paste0(database.c, "."), sep =
-    "|"),
+  param.ls = list(query.type = c("mz", "chebi.id")[1], query.col = "mz", ms.mode =
+    "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name", "formula",
+    "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3, local.ms.db
+    = data.frame(), prefix = paste0(database.c, "."), sep = "|"),
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
 \S4method{annotating}{SummarizedExperiment}(
   x,
   database.c = c("chebi", "local.ms")[1],
-  param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1], query.col = "mz",
-    ms.mode = "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name",
-    "formula", "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3,
-    local.ms.db = data.frame(), organism = "hsa", prefix = paste0(database.c, "."), sep =
-    "|"),
+  param.ls = list(query.type = c("mz", "chebi.id")[1], query.col = "mz", ms.mode =
+    "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name", "formula",
+    "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3, local.ms.db
+    = data.frame(), prefix = paste0(database.c, "."), sep = "|"),
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
 \S4method{annotating}{MultiDataSet}(
   x,
   database.c = c("chebi", "local.ms")[1],
-  param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1], query.col = "mz",
-    ms.mode = "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name",
-    "formula", "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3,
-    local.ms.db = data.frame(), organism = "hsa", prefix = paste0(database.c, "."), sep =
-    "|"),
+  param.ls = list(query.type = c("mz", "chebi.id")[1], query.col = "mz", ms.mode =
+    "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name", "formula",
+    "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3, local.ms.db
+    = data.frame(), prefix = paste0(database.c, "."), sep = "|"),
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
 \S4method{annotating}{ExpressionSet}(
   x,
   database.c = c("chebi", "local.ms")[1],
-  param.ls = list(query.type = c("mz", "chebi.id", "kegg.id")[1], query.col = "mz",
-    ms.mode = "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name",
-    "formula", "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3,
-    local.ms.db = data.frame(), organism = "hsa", prefix = paste0(database.c, "."), sep =
-    "|"),
+  param.ls = list(query.type = c("mz", "chebi.id")[1], query.col = "mz", ms.mode =
+    "pos", mz.tol = 10, mz.tol.unit = "ppm", fields = c("chebi.id", "name", "formula",
+    "molecular.mass", "monoisotopic.mass"), fieldsLimit = 1, max.results = 3, local.ms.db
+    = data.frame(), prefix = paste0(database.c, "."), sep = "|"),
   report.c = c("none", "interactive", "myfile.txt")[2]
 )
 
-annotating_parameters(database.c = c("chebi", "local.ms", "kegg")[1])
+annotating_parameters(database.c = c("chebi", "local.ms")[1])
 }
 \arguments{
-\item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}}
+\item{x}{An S4 object of class \code{SummarizedExperiment} or
+\code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet}
+are still supported)}
 
-\item{database.c}{character: database to be used for annotation}
+\item{database.c}{character(1): database to be used for annotation; either
+the ChEBI distant database ('chebi'), or a local database ('local.ms')}
 
-\item{param.ls}{list: parameters for database query; see the example below for
-the name and related database of each of them}
+\item{param.ls}{list: parameters for database query; the database can be
+queried by either the mass to charge ratio (mz) or the chebi ID; other query
+parameters include the ionization mode (ms.mode), the mz tolerance (mz.tol;
+e.g. 5 ppm for Orbitrap Mass Spectrometers), the fields to retrieve (fields),
+the maximum number of items to retrieve when a field contains more than one 
+value (fieldsLimit), the maximum number of results to provide for each 
+query (max.results), prefix of the new columns providing the queried
+information in the feature metadata (prefix), separator in case of multiple
+retrieved values (sep), local data base to be queried (local.ms.db); 
+additional information is provided by the vignettes from the biodb and 
+biodbChebi packages on Bioconductor}
 
-\item{report.c}{Character: File name with '.txt' extension for the printed
+\item{report.c}{character(1): File name with '.txt' extension for the printed
 results (call to sink()'); if 'interactive' (default), messages will be
 printed on the screen; if 'none', no verbose will be generated}
 }
 \value{
-\code{SummarizedExperiment} or \code{MultiAssayExperiment} including the appended rowData
-data frame(s)
+\code{SummarizedExperiment} or \code{MultiAssayExperiment} 
+(or \code{ExpressionSet} and \code{MultiDataSet}) 
+including the appended rowData data frame(s)
 }
 \description{
-Annotation with chemical and biological databases
+Annotation with chemical and biological databases by using the 'biodb' 
+package suite. The present implementation currently enables to query the 
+ChEBI database or a local database.
 
 The parameters and their default values are printed for the selected database
 }
@@ -98,10 +108,12 @@ param.ls = list(query.type = "mz", query.col = "mass_to_charge",
 ms.mode = "neg", prefix = "chebiMZ."))
 }
 # mz annotation with local database
-msdbDF <- read.table(system.file("extdata/local_ms_db.tsv", package = "phenomis"),
+msdbDF <- read.table(system.file("extdata/local_ms_db.tsv",
+package = "phenomis"),
 header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 sacurine.se <- annotating(sacurine.se, database.c = "local.ms",
-param.ls = list(query.type = "mz", query.col = "mass_to_charge", ms.mode = "neg",
+param.ls = list(query.type = "mz", query.col = "mass_to_charge",
+ms.mode = "neg",
 mz.tol = 5, mz.tol.unit = "ppm", local.ms.db = msdbDF, prefix = "localMS."))
 rowData(sacurine.se)[!is.na(rowData(sacurine.se)[, "localMS.accession"]), ]
 # annotation from ChEBI identifiers

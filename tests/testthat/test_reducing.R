@@ -6,9 +6,11 @@ testthat::test_that("reducing-se", {
                                    package = "phenomis"),
                        report.c = "none")
   metabo.se <- reducing(metabo.se)
-  testthat::expect_identical(unname(rowData(metabo.se)["glycolic acid", "redund_relative"]),
+  testthat::expect_identical(unname(rowData(metabo.se)["glycolic acid", 
+                                                       "redund_relative"]),
                              "")
-  testthat::expect_identical(as.numeric(table(rowData(metabo.se)[, "redund_group"])),
+  testthat::expect_identical(as.numeric(table(rowData(metabo.se)[, 
+                                                                 "redund_group"])),
                              numeric())
   
   

@@ -52,7 +52,8 @@ setMethod("transforming", signature(x = "SummarizedExperiment"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (length(method.vc) > 1) {
-              stop("Only one method should be provided for a 'SummarizedExperiment' object")
+              stop("Only one method should be provided for a 
+                   'SummarizedExperiment' object")
             } else {
               method.c <- method.vc
             }
@@ -85,7 +86,8 @@ setMethod("transforming", signature(x = "MultiDataSet"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (!(length(method.vc) %in% c(1, length(x)))) {
-              stop("'The length of 'method.vc' should either be 1 or equal to the number of datasets")
+              stop("'The length of 'method.vc' should either be 1 or equal to 
+                   the number of datasets")
             } else if (length(method.vc) == 1) {
               method.vc <- rep(method.vc, length(x))
             }
@@ -136,7 +138,8 @@ setMethod("transforming", signature(x = "ExpressionSet"),
                    report.c = c("none", "interactive", "myfile.txt")[2]) {
             
             if (length(method.vc) > 1) {
-              stop("Only one method should be provided for a 'ExpressionSet' object")
+              stop("Only one method should be provided for an 
+                   'ExpressionSet' object")
             } else {
               method.c <- method.vc
             }
@@ -169,7 +172,8 @@ setMethod("transforming", signature(x = "ExpressionSet"),
     stop("The 'dataMatrix' contains negative values")
   
   if (!(method.c %in% c("log2", "log10", "sqrt", "none")))
-    stop("The transforming method should be either 'log2', 'log10', 'sqrt', or 'none'")
+    stop("The transforming method should be either 'log2', 'log10', 'sqrt', 
+         or 'none'")
   
   ## Number of missing values
   data_na.ml <- is.na(data.mn)

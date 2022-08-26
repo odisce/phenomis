@@ -18,11 +18,13 @@ gg_pie(
 \arguments{
 \item{data.tb}{Tibble (or data frame) containing the information}
 
-\item{y.c}{Character: name of the column with the factor to be displayed; alternatively,
-name of the column with the counts (in this case set the name of the column with
-the names of the factor levels with the 'color.c' argument)}
+\item{y.c}{Character: name of the column with the factor to be displayed; 
+alternatively, name of the column with the counts (in this case set the name 
+of the column with the names of the factor levels with the 'color.c' 
+argument)}
 
-\item{color.c}{Character: optional name of the column with the names of the factor levels}
+\item{color.c}{Character: optional name of the column with the names of the 
+factor levels}
 
 \item{title.c}{Character: plot title}
 
@@ -30,14 +32,15 @@ the names of the factor levels with the 'color.c' argument)}
 (default: 'Set1'; 'Paired' can be useful for parallel plotting) or a vector
 manually defining the colors}
 
-\item{label.c}{Character: (relative) counts to be displayed on the pie; either
-'none' (default), 'value' or 'percent'}
+\item{label.c}{Character: (relative) counts to be displayed on the pie; 
+either 'none' (default), 'value' or 'percent'}
 
 \item{geom_text.ls}{List of sizes for lab.i (default 7), legend_title.i (16),
 legend_text.i (14), and title.i (16)}
 
 \item{figure.c}{Character: either 'interactive' for interactive display,
-'my_pie.pdf' for figure saving (only the extension matters), or 'none' to prevent plotting}
+'my_pie.pdf' for figure saving (only the extension matters), or 'none' 
+to prevent plotting}
 }
 \value{
 invisible ggplot2 object

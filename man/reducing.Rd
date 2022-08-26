@@ -69,63 +69,72 @@ reducing(
 )
 }
 \arguments{
-\item{x}{An S4 object of class \code{SummarizedExperiment} or \code{MultiAssayExperiment}:
-the dataset(s) must contain the dataMatrix and the variableMetadata (with the
-'mz' and 'rt' columns)}
+\item{x}{An S4 object of class \code{SummarizedExperiment} 
+or \code{MultiAssayExperiment} (\code{ExpressionSet} and \code{MultiDataSet}
+are still supported): the dataset(s) must contain the dataMatrix 
+and the variableMetadata (with the mz' and 'rt' columns)}
 
 \item{cor_method.c}{character(1): correlation method (default: 'pearson')}
 
 \item{cor_threshold.n}{numeric(1): correlation threshold (default: 0.9)}
 
-\item{rt_tol.n}{numeric(1): retention time width in seconds (default: 6 s)}
+\item{rt_tol.n}{numeric(1): retention time width in seconds (default: 6 s);
+the time window may be increased when using hydrophilic interaction (HILIC)
+chromatography}
 
-\item{rt_colname.c}{character(1): column name for the retention time in the fData
-(default: 'rt')}
+\item{rt_colname.c}{character(1): column name for the retention time
+in the rowData/fData (default: 'rt')}
 
-\item{mzdiff_tol.n}{numeric(1): tolerance in Da for the matching of m/z differences
-and referenced adducts, isotopes, and fragments (default: 0.005 Da)}
+\item{mzdiff_tol.n}{numeric(1): tolerance in Da for the matching of 
+m/z differences and referenced adducts, isotopes, 
+and fragments (default: 0.005 Da)}
 
-\item{mz_colname.c}{character(1): column name for the m/z in the fData (default: 'mz')}
+\item{mz_colname.c}{character(1): column name for the m/z 
+in the rowData/fData (default: 'mz')}
 
 \item{return_adjacency.l}{logical(1): should the adjacency matrix be returned
-(in addition to the updated ExpressionSet)?}
+(in addition to the updated SummarizedExperiment/ExpressionSet)?}
 
 \item{report.c}{character(1): File name with '.txt' extension for the printed
 results (call to sink()'); if 'interactive' (default), messages will be
 printed on the screen; if 'none', no verbose will be generated}
 }
 \value{
-updated \code{SummarizedExperiment} or \code{MultiAssayExperiment}: the summarized experiment(s)
-now include(s) 5 new columns in the rowData: 'redund_samp_mean', 'redund_is',
-'redund_group', redund_iso_add_frag', 'redund_repres' and 'redund_relative'
-containing, respectively, the redundant features (coded by 1; i.e. features with
-a relative annotation distinct from '' and 'M'), the connected components,
-the m/z diff. chemical annotations, the representative ion of each group, and
-the annotations relative to this representative ion within each group
+updated \code{SummarizedExperiment} or \code{MultiAssayExperiment}
+(or \code{ExpressionSet} and \code{MultiDataSet}): the 
+SummarizedExperiment(s) (resp. ExpressionSet(s)) now include(s) 5 new columns 
+in the rowData (resp. fData): redund_samp_mean', 'redund_is', redund_group', 
+redund_iso_add_frag', redund_repres' and 'redund_relative' containing, 
+respectively, the redundant features (coded by 1; i.e. features 
+with a relative annotation distinct from '' and 'M'), the connected 
+components, the m/z diff. chemical annotations, the representative ion 
+of each group, and the annotations relative to this representative ion 
+within each group
 }
 \description{
 This method groups chemically redundant features from a peak table, based on
 1) correlation of sample profiles, 2) retention time window, 3) referenced
-m/z differences. The initial algorithm is named 'Analytic Correlation Filtration'
-(Monnerie et al., 2019; DOI:10.3390/metabo9110250) and is available in Perl and
-on the Workflow4Metabolomics platform.
+m/z differences. The initial algorithm is named 'Analytic Correlation 
+Filtration' (Monnerie et al., 2019; DOI:10.3390/metabo9110250) and is 
+available in Perl and on the Workflow4Metabolomics platform.
 Here, the algorithm described in the paper was implemented in R as follows:
-An adjacency matrix of all pairs of features is built, containing a 1 when the
-features have a (Pearson) correlation above the (0.9) threshold, a retention time
-difference between the (6) seconds threshold, and an m/z difference belonging to
-referenced adducts, isotopes and fragments m/z difference, and containing a 0 otherwise.
-The connex components of this adjacency matrix are extracted ('igraph' package).
-Within each component, the features are ranked by decreasing average intensity in samples;
-all features except the first one are flagged as 'redundant'.
-Note: the algorithm relies on the 'mzdiff_db.tsv' file referencing the known adducts,
-isotopes, and fragments.
+An adjacency matrix of all pairs of features is built, containing a 1 when 
+the features have a (Pearson) correlation above the (0.9) threshold, a 
+retention time difference between the (6) seconds threshold, and an m/z 
+difference belonging to referenced adducts, isotopes and 
+fragments m/z difference, and containing a 0 otherwise. The connex components
+of this adjacency matrix are extracted ('igraph' package).
+Within each component, the features are ranked 
+by decreasing average intensity in samples; all features except the first one
+are flagged as 'redundant'. Note: the algorithm relies on the 'mzdiff_db.tsv'
+file referencing the known adducts, isotopes, and fragments.
 }
 \examples{
 metabo.se <- reading(system.file("extdata/prometis/metabo",
-                                    package = "phenomis"),
+                                 package = "phenomis"),
                       report.c = "none")
 metabo.se <- reducing(metabo.se,
-                        rt_tol.n = 15)
+                      rt_tol.n = 15)
 # Note: in the 'prometis' example data set from this package, the chemical
 # redundancy has already been filtered out
 }
